@@ -1,5 +1,5 @@
 import { GenericBulkUploadDialog } from "@/components/bulk-upload/GenericBulkUploadDialog";
-import { usePayee } from "../context/payee-provider";
+import { usePayee } from "../hooks/use-payee";
 import { PayeeDeleteDialog } from "./payee-delete-dialog";
 import { PayeeDrawer } from "./payee-drawer";
 import { useQueryClient } from "@tanstack/react-query";

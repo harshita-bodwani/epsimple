@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import { PlusCircle } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import { useAsset } from '../hooks/use-asset'
 
 export function CreateAssetButton() {
