@@ -44,7 +44,6 @@ export function CostTypesPrimaryButtons() {
       )
       toast.success('Template downloaded successfully')
     } catch (error) {
-      console.error('Failed to download template:', error)
       toast.error('Failed to download template', {
         description:
           error instanceof Error ? error.message : 'An error occurred',

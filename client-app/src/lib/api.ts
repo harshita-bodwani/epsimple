@@ -29,9 +29,6 @@ api.interceptors.response.use(
     // Handle common errors
     if (error.response?.status === 401) {
       // Unauthorized - redirect to login
-      // eslint-disable-next-line no-console
-      console.warn('Unauthorized request - redirecting to login')
-
       // Only redirect if we're not already on login/auth pages
       const currentPath = window.location.pathname
       const isAuthPage =
@@ -53,14 +50,10 @@ api.interceptors.response.use(
 
     if (error.response?.status === 403) {
       // Forbidden
-      // eslint-disable-next-line no-console
-      console.warn('Forbidden request')
     }
 
     if (error.response?.status >= 500) {
       // Server errors
-      // eslint-disable-next-line no-console
-      console.error('Server error:', error.response.status)
     }
 
     return Promise.reject(error)

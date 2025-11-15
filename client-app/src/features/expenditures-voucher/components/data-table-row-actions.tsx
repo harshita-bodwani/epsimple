@@ -43,8 +43,8 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
     try {
       await deleteMutation.mutateAsync(expenditure.id)
       setShowDeleteDialog(false)
-    } catch (error) {
-      console.error('Failed to delete expenditure:', error)
+    } catch (_error) {
+      // Error is handled by mutation
     }
   }
 

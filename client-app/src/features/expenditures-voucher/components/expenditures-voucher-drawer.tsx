@@ -149,8 +149,8 @@ export const ExpendituresVoucherDrawer = () => {
       }
       closeDrawer()
       form.reset()
-    } catch (error) {
-      console.error('Failed to save expenditure:', error)
+    } catch (_error) {
+      // Error is handled by mutation
     }
   }
 
