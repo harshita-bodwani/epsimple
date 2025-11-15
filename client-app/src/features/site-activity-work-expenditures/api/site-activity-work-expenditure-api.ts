@@ -158,7 +158,6 @@ export const siteActivityWorkExpenditureApi = {
         toast.success('Site activity work expenditure created successfully')
       },
       onError: (error: Error | unknown) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const message =
           (error as any).response?.data?.message ||
           'Failed to create site activity work expenditure'
@@ -189,7 +188,6 @@ export const siteActivityWorkExpenditureApi = {
         toast.success('Site activity work expenditure updated successfully')
       },
       onError: (error: Error | unknown) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const message =
           (error as any).response?.data?.message ||
           'Failed to update site activity work expenditure'
@@ -214,7 +212,6 @@ export const siteActivityWorkExpenditureApi = {
         toast.success('Site activity work expenditure deleted successfully')
       },
       onError: (error: Error | unknown) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const message =
           (error as any).response?.data?.message ||
           'Failed to delete site activity work expenditure'

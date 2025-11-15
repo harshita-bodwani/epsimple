@@ -87,7 +87,7 @@ export function useBulkUpload(config: BulkUploadConfig) {
 
     // Abort any existing upload
     if (abortController) {
-      console.log('Aborting previous upload')
+      // console.log('Aborting previous upload')
       abortController.abort()
     }
 
@@ -262,7 +262,7 @@ async function bulkUploadWithSSE(
         const errorText = await response.text()
         const errorData = JSON.parse(errorText)
         throw new Error(errorData.message || 'Invalid file format or content')
-      } catch (jsonError) {
+      } catch (_jsonError) {
         throw new Error('Invalid file format or content')
       }
     }
@@ -322,7 +322,7 @@ async function bulkUploadWithSSE(
             ) {
               return
             }
-          } catch (_error) {
+          } catch (error) {
             // Ignore parsing errors for SSE data
           }
         }

@@ -163,7 +163,6 @@ export const assetExpenditureAndActivityWorkApi = {
         toast.success('Asset expenditure created successfully')
       },
       onError: (error: Error | unknown) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const message =
           (error as any).response?.data?.message ||
           'Failed to create asset expenditure'
@@ -194,7 +193,6 @@ export const assetExpenditureAndActivityWorkApi = {
         toast.success('Asset expenditure updated successfully')
       },
       onError: (error: Error | unknown) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const message =
           (error as any).response?.data?.message ||
           'Failed to update asset expenditure'
@@ -219,7 +217,6 @@ export const assetExpenditureAndActivityWorkApi = {
         toast.success('Asset expenditure deleted successfully')
       },
       onError: (error: Error | unknown) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const message =
           (error as any).response?.data?.message ||
           'Failed to delete asset expenditure'
