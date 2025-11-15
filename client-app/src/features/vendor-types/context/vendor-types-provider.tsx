@@ -1,22 +1,9 @@
-import React, { createContext, useContext, useState } from 'react';
+import { useState } from 'react';
+import { VendorTypesContext } from './vendor-types-context';
+import type { VendorTypesContextType } from './vendor-types-context';
 import type { VendorType } from '../api/schema';
 
-interface VendorTypesContextType {
-  selectedVendorType: VendorType | null;
-  setSelectedVendorType: (vendorType: VendorType | null) => void;
-  isDrawerOpen: boolean;
-  setIsDrawerOpen: (isOpen: boolean) => void;
-  isDeleteDialogOpen: boolean;
-  setIsDeleteDialogOpen: (isOpen: boolean) => void;
-  isBulkUploadDialogOpen: boolean;
-  setIsBulkUploadDialogOpen: (isOpen: boolean) => void;
-  openBulkUploadDialog: () => void;
-  closeBulkUploadDialog: () => void;
-}
-
-const VendorTypesContext = createContext<VendorTypesContextType | undefined>(undefined);
-
-export const VendorTypesProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export function VendorTypesProvider({ children }: { children: React.ReactNode }) {
   const [selectedVendorType, setSelectedVendorType] = useState<VendorType | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -25,30 +12,22 @@ export const VendorTypesProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const openBulkUploadDialog = () => setIsBulkUploadDialogOpen(true);
   const closeBulkUploadDialog = () => setIsBulkUploadDialogOpen(false);
 
+  const value: VendorTypesContextType = {
+    selectedVendorType,
+    setSelectedVendorType,
+    isDrawerOpen,
+    setIsDrawerOpen,
+    isDeleteDialogOpen,
+    setIsDeleteDialogOpen,
+    isBulkUploadDialogOpen,
+    setIsBulkUploadDialogOpen,
+    openBulkUploadDialog,
+    closeBulkUploadDialog,
+  };
+
   return (
-    <VendorTypesContext.Provider
-      value={{
-        selectedVendorType,
-        setSelectedVendorType,
-        isDrawerOpen,
-        setIsDrawerOpen,
-        isDeleteDialogOpen,
-        setIsDeleteDialogOpen,
-        isBulkUploadDialogOpen,
-        setIsBulkUploadDialogOpen,
-        openBulkUploadDialog,
-        closeBulkUploadDialog,
-      }}
-    >
+    <VendorTypesContext.Provider value={value}>
       {children}
     </VendorTypesContext.Provider>
   );
-};
-
-export const useVendorTypes = () => {
-  const context = useContext(VendorTypesContext);
-  if (context === undefined) {
-    throw new Error('useVendorTypes must be used within a VendorTypesProvider');
-  }
-  return context;
-};
+}

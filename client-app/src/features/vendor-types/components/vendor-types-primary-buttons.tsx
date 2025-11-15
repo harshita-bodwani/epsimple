@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { downloadFile } from '@/lib/api-utils';
-import { useVendorTypes } from '../context/vendor-types-provider';
+import { useVendorTypes } from '../hooks/use-vendor-types';
 import {
   DropdownMenu,
   DropdownMenuContent,
