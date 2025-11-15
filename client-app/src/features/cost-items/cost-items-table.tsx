@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { useCostItems } from '@/features/cost-items/api/cost-items-api';
 import { CostItemRowActions } from './cost-item-row-actions';
 import {
-  ColumnDef,
-  SortingState,
-  VisibilityState,
+  type ColumnDef,
+  type SortingState,
+  type VisibilityState,
   flexRender,
   getCoreRowModel,
   getSortedRowModel,

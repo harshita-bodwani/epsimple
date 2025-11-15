@@ -1,6 +1,5 @@
 import { useContext } from 'react'
-import { WarehouseContext } from '../context/warehouse-context'
-import type { WarehouseContextType } from '../context/warehouse-context'
+import { WarehouseContext, type WarehouseContextType } from '../context/warehouse-context'
 
 export function useWarehouse(): WarehouseContextType {
   const context = useContext(WarehouseContext)

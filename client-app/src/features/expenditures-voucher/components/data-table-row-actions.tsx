@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
-import { Row } from '@tanstack/react-table';
-import { ExpendituresVoucher } from '../api/schema';
+import { type Row } from '@tanstack/react-table';
+import { type ExpendituresVoucher } from '../api/schema';
 import { expendituresVoucherApi } from '../api/expenditures-voucher-api';
 import { useExpendituresVoucherContext } from '../context/expenditures-voucher-provider';
 import { Button } from '@/components/ui/button';

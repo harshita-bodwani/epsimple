@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { VendorCategoriesContext } from './vendor-categories-context';
-import type { VendorCategoriesContextType } from './vendor-categories-context';
+import { VendorCategoriesContext, type VendorCategoriesContextType } from './vendor-categories-context';
 import type { VendorCategory } from '../api/schema';
 
 export function VendorCategoriesProvider({ children }: { children: React.ReactNode }) {

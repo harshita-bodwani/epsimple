@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { BackendPageResponse, FlatPageResponse, flattenPageResponse } from '@/lib/api-utils'
+import { type BackendPageResponse, type FlatPageResponse, flattenPageResponse } from '@/lib/api-utils'
 import api from '@/lib/api'
 
 export interface PersonType {

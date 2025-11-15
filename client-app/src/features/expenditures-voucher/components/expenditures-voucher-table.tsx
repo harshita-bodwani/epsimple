@@ -1,16 +1,16 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
-  ColumnDef,
+  type ColumnDef,
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
-  SortingState,
+  type SortingState,
   useReactTable,
-  VisibilityState,
+  type VisibilityState,
 } from '@tanstack/react-table';
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
-import { ExpendituresVoucher } from '../api/schema';
+import { type ExpendituresVoucher } from '../api/schema';
 import { expendituresVoucherApi } from '../api/expenditures-voucher-api';
 import { useExpendituresVoucherContext } from '../context/expenditures-voucher-provider';
 import { DataTableRowActions } from './data-table-row-actions';

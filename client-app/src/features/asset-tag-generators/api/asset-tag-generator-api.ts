@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import api from "@/lib/api";
-import { BackendPageResponse, FlatPageResponse, flattenPageResponse } from "@/lib/api-utils";
+import { type BackendPageResponse, type FlatPageResponse, flattenPageResponse } from "@/lib/api-utils";
 import type { AssetTagCodeGenerator, AssetTagCodeGeneratorFormData, GeneratedAssetTag } from "./schema";
 
 const ASSET_TAG_GENERATOR_ENDPOINTS = {
