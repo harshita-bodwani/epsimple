@@ -18,7 +18,7 @@ interface SiteRowActionsProps {
 
 export function SiteRowActions({ site }: SiteRowActionsProps) {
   const { setIsDrawerOpen, setEditingSite, setIsDeleteDialogOpen, setDeletingSiteId } =
-    useSiteContext();
+    useSite();
   const navigate = useNavigate();
 
   const handleEdit = () => {

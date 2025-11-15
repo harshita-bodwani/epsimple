@@ -1,6 +1,6 @@
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useSiteContext } from "../context/site-provider";
+import { useSite } from "../hooks/use-site";
 
 export function CreateSiteButton() {
   const { setIsDrawerOpen, setEditingSite } = useSite();

@@ -8,7 +8,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useSiteContext } from "../context/site-provider";
+import { useSite } from "../hooks/use-site";
 import { siteApi } from "../api/site-api";
 
 export function SiteDeleteDialog() {
