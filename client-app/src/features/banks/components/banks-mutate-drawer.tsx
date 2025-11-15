@@ -1,6 +1,9 @@
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { Loader2, Upload, X } from 'lucide-react'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -20,11 +23,8 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet'
-import { type Bank, bankFormSchema, type BankFormData } from '../data/schema'
 import { createBank, updateBank } from '@/features/banks/api/banks-api'
-import { toast } from 'sonner'
-import { Loader2, Upload, X } from 'lucide-react'
-import { useState } from 'react'
+import { type Bank, bankFormSchema, type BankFormData } from '../data/schema'
 
 type BanksMutateDrawerProps = {
   open: boolean
@@ -80,7 +80,8 @@ export function BanksMutateDrawer({
   })
 
   const updateMutation = useMutation({
-    mutationFn: (data: BankFormData) => updateBank(currentRow!.id, data, logoFile || undefined),
+    mutationFn: (data: BankFormData) =>
+      updateBank(currentRow!.id, data, logoFile || undefined),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['banks'] })
       toast.success('Bank updated successfully')
@@ -219,7 +220,9 @@ export function BanksMutateDrawer({
                     <Button
                       type='button'
                       variant='outline'
-                      onClick={() => document.getElementById('logo-upload')?.click()}
+                      onClick={() =>
+                        document.getElementById('logo-upload')?.click()
+                      }
                       className='w-full'
                     >
                       <Upload className='mr-2 size-4' />
@@ -227,11 +230,11 @@ export function BanksMutateDrawer({
                     </Button>
                   </div>
                   {logoPreview && (
-                    <div className='relative w-32 h-32 border rounded-md overflow-hidden'>
+                    <div className='relative h-32 w-32 overflow-hidden rounded-md border'>
                       <img
                         src={logoPreview}
                         alt='Bank logo preview'
-                        className='w-full h-full object-contain'
+                        className='h-full w-full object-contain'
                       />
                       <Button
                         type='button'

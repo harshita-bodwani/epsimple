@@ -1,41 +1,41 @@
-import { Header } from "@/components/layout/header";
-import { Main } from "@/components/layout/main";
-import { ProfileDropdown } from "@/components/profile-dropdown";
-import { Search } from "@/components/search";
-import { ThemeSwitch } from "@/components/theme-switch";
-import { ConfigDrawer } from "@/components/config-drawer";
-import { CityProvider } from "./context/city-provider";
-import { CityTable } from "./components/city-table";
-import { cityColumns } from "./components/city-columns";
-import { CityPrimaryButtons } from "./components/city-primary-buttons";
-import { CityDrawer } from "./components/city-drawer";
-import { CityDeleteDialog } from "./components/city-delete-dialog";
-import { CityDialogs } from "./components/city-dialogs";
+import { ConfigDrawer } from '@/components/config-drawer'
+import { Header } from '@/components/layout/header'
+import { Main } from '@/components/layout/main'
+import { ProfileDropdown } from '@/components/profile-dropdown'
+import { Search } from '@/components/search'
+import { ThemeSwitch } from '@/components/theme-switch'
+import { cityColumns } from './components/city-columns'
+import { CityDeleteDialog } from './components/city-delete-dialog'
+import { CityDialogs } from './components/city-dialogs'
+import { CityDrawer } from './components/city-drawer'
+import { CityPrimaryButtons } from './components/city-primary-buttons'
+import { CityTable } from './components/city-table'
+import { CityProvider } from './context/city-provider'
 
 function CitiesContent() {
   return (
     <>
       <Header fixed>
         <Search />
-        <div className="ml-auto flex items-center space-x-4">
+        <div className='ml-auto flex items-center space-x-4'>
           <ThemeSwitch />
           <ConfigDrawer />
           <ProfileDropdown />
         </div>
       </Header>
       <Main fixed>
-        <div className="mb-2 flex items-center justify-between space-y-2">
+        <div className='mb-2 flex items-center justify-between space-y-2'>
           <div>
-            <h2 className="text-2xl font-bold tracking-tight">Cities</h2>
-            <p className="text-muted-foreground">
+            <h2 className='text-2xl font-bold tracking-tight'>Cities</h2>
+            <p className='text-muted-foreground'>
               Manage cities and their state associations
             </p>
           </div>
-          <div className="flex items-center space-x-2">
+          <div className='flex items-center space-x-2'>
             <CityPrimaryButtons />
           </div>
         </div>
-        <div className="-mx-4 flex-1 overflow-auto px-4 py-1">
+        <div className='-mx-4 flex-1 overflow-auto px-4 py-1'>
           <CityTable columns={cityColumns} />
         </div>
       </Main>
@@ -43,7 +43,7 @@ function CitiesContent() {
       <CityDeleteDialog />
       <CityDialogs />
     </>
-  );
+  )
 }
 
 export default function Cities() {
@@ -51,5 +51,5 @@ export default function Cities() {
     <CityProvider>
       <CitiesContent />
     </CityProvider>
-  );
+  )
 }

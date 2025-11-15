@@ -1,8 +1,8 @@
+import { format } from 'date-fns'
 import { type ColumnDef } from '@tanstack/react-table'
 import { DataTableColumnHeader } from '@/components/data-table'
 import { type Bank } from '../data/schema'
 import { DataTableRowActions } from './data-table-row-actions'
-import { format } from 'date-fns'
 
 export const banksColumns: ColumnDef<Bank>[] = [
   {
@@ -14,19 +14,20 @@ export const banksColumns: ColumnDef<Bank>[] = [
     cell: ({ row }) => {
       const bankName = row.original.bankName
       const bankLogo = row.original.bankLogo
-      
+
       // Construct the full logo URL if it's a relative path
-      const logoUrl = bankLogo && !bankLogo.startsWith('http') 
-        ? `${import.meta.env.VITE_API_URL || 'http://localhost:8080'}${bankLogo.startsWith('/') ? '' : '/'}${bankLogo}`
-        : bankLogo
-      
+      const logoUrl =
+        bankLogo && !bankLogo.startsWith('http')
+          ? `${import.meta.env.VITE_API_URL || 'http://localhost:8080'}${bankLogo.startsWith('/') ? '' : '/'}${bankLogo}`
+          : bankLogo
+
       return (
         <div className='flex items-center space-x-3'>
           {logoUrl ? (
-            <img 
-              src={logoUrl} 
+            <img
+              src={logoUrl}
               alt={`${bankName} logo`}
-              className='h-10 w-10 rounded object-contain bg-white/5 p-1'
+              className='h-10 w-10 rounded bg-white/5 object-contain p-1'
               onError={(e) => {
                 // Show fallback on error
                 const target = e.currentTarget
@@ -36,8 +37,8 @@ export const banksColumns: ColumnDef<Bank>[] = [
               }}
             />
           ) : null}
-          <div 
-            className='h-10 w-10 rounded bg-muted flex items-center justify-center text-xs font-medium text-muted-foreground'
+          <div
+            className='bg-muted text-muted-foreground flex h-10 w-10 items-center justify-center rounded text-xs font-medium'
             style={{ display: logoUrl ? 'none' : 'flex' }}
           >
             {bankName.slice(0, 2).toUpperCase()}
@@ -60,7 +61,7 @@ export const banksColumns: ColumnDef<Bank>[] = [
       return (
         <div className='flex space-x-2'>
           {code ? (
-            <span className='inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10 dark:bg-blue-400/10 dark:text-blue-400 dark:ring-blue-400/30'>
+            <span className='inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-blue-700/10 ring-inset dark:bg-blue-400/10 dark:text-blue-400 dark:ring-blue-400/30'>
               {code}
             </span>
           ) : (
@@ -81,7 +82,7 @@ export const banksColumns: ColumnDef<Bank>[] = [
       return (
         <div className='flex space-x-2'>
           {code ? (
-            <span className='inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-700/10 dark:bg-green-400/10 dark:text-green-400 dark:ring-green-400/30'>
+            <span className='inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-green-700/10 ring-inset dark:bg-green-400/10 dark:text-green-400 dark:ring-green-400/30'>
               {code}
             </span>
           ) : (
@@ -102,7 +103,7 @@ export const banksColumns: ColumnDef<Bank>[] = [
       return (
         <div className='flex space-x-2'>
           {code ? (
-            <span className='inline-flex items-center rounded-md bg-purple-50 px-2 py-1 text-xs font-medium text-purple-700 ring-1 ring-inset ring-purple-700/10 dark:bg-purple-400/10 dark:text-purple-400 dark:ring-purple-400/30'>
+            <span className='inline-flex items-center rounded-md bg-purple-50 px-2 py-1 text-xs font-medium text-purple-700 ring-1 ring-purple-700/10 ring-inset dark:bg-purple-400/10 dark:text-purple-400 dark:ring-purple-400/30'>
               {code}
             </span>
           ) : (

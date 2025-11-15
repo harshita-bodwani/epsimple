@@ -1,11 +1,12 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { GenericBulkUploadDialog } from '@/components/bulk-upload/GenericBulkUploadDialog'
-import { PersonDetailsDeleteDialog } from './person-details-delete-dialog'
 import { usePersonDetailsContext } from '../context/person-details-provider'
+import { PersonDetailsDeleteDialog } from './person-details-delete-dialog'
 
 export function PersonDetailsDialogs() {
   const queryClient = useQueryClient()
-  const { isBulkUploadDialogOpen, closeBulkUploadDialog } = usePersonDetailsContext()
+  const { isBulkUploadDialogOpen, closeBulkUploadDialog } =
+    usePersonDetailsContext()
 
   const handleBulkUploadSuccess = () => {
     queryClient.invalidateQueries({ queryKey: ['person-details'] })

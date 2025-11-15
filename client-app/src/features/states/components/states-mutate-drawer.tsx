@@ -1,6 +1,8 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { Loader2 } from 'lucide-react'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -20,10 +22,8 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet'
-import { type State, stateFormSchema, type StateFormData } from '../data/schema'
 import { statesApi } from '@/features/states/api/states-api'
-import { toast } from 'sonner'
-import { Loader2 } from 'lucide-react'
+import { type State, stateFormSchema, type StateFormData } from '../data/schema'
 
 type StatesMutateDrawerProps = {
   open: boolean
@@ -155,7 +155,10 @@ export function StatesMutateDrawer({
                 <FormItem>
                   <FormLabel>Alternate State Code</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder='Enter alternate state code' />
+                    <Input
+                      {...field}
+                      placeholder='Enter alternate state code'
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react'
 import {
-  ColumnDef,
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
+  type ColumnDef,
+  type ColumnFiltersState,
+  type SortingState,
+  type VisibilityState,
   flexRender,
   getCoreRowModel,
   getFacetedRowModel,
@@ -11,7 +11,7 @@ import {
   getFilteredRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table";
+} from '@tanstack/react-table'
 import {
   Table,
   TableBody,
@@ -19,42 +19,45 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { DataTablePagination, DataTableToolbar } from "@/components/data-table";
-import { assetTagCodeGeneratorApi } from "../api/asset-tag-generator-api";
+} from '@/components/ui/table'
+import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
+import { assetTagCodeGeneratorApi } from '../api/asset-tag-generator-api'
 
 interface AssetTagCodeGeneratorTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
+  columns: ColumnDef<TData, TValue>[]
 }
 
 export function AssetTagCodeGeneratorTable<TData, TValue>({
   columns,
 }: AssetTagCodeGeneratorTableProps<TData, TValue>) {
-  const [globalFilter, setGlobalFilter] = useState("");
-  const [rowSelection, setRowSelection] = useState({});
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [columnFilters, setColumnFiltersState] = useState<ColumnFiltersState>([]);
+  const [globalFilter, setGlobalFilter] = useState('')
+  const [rowSelection, setRowSelection] = useState({})
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+  const [columnFilters, setColumnFiltersState] = useState<ColumnFiltersState>(
+    []
+  )
   const [sorting, setSorting] = useState<SortingState>([
-    { id: "id", desc: false },
-  ]);
+    { id: 'id', desc: false },
+  ])
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,
-  });
+  })
 
   const { data, isLoading } = assetTagCodeGeneratorApi.useGetAll({
     page: pagination.pageIndex,
     size: pagination.pageSize,
-    search: globalFilter && globalFilter.trim() !== "" ? globalFilter : undefined,
-  });
+    search:
+      globalFilter && globalFilter.trim() !== '' ? globalFilter : undefined,
+  })
 
-  const generators = (data?.content || []) as TData[];
-  const totalPages = data?.totalPages || 0;
+  const generators = (data?.content || []) as TData[]
+  const totalPages = data?.totalPages || 0
 
   // Reset to first page when search query changes
   useEffect(() => {
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
-  }, [globalFilter]);
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }))
+  }, [globalFilter])
 
   const table = useReactTable({
     data: generators,
@@ -81,12 +84,12 @@ export function AssetTagCodeGeneratorTable<TData, TValue>({
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
     manualPagination: true,
-  });
+  })
 
   return (
-    <div className="space-y-4">
+    <div className='space-y-4'>
       <DataTableToolbar table={table} />
-      <div className="rounded-md border">
+      <div className='rounded-md border'>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -107,7 +110,10 @@ export function AssetTagCodeGeneratorTable<TData, TValue>({
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
+                <TableCell
+                  colSpan={columns.length}
+                  className='h-24 text-center'
+                >
                   Loading...
                 </TableCell>
               </TableRow>
@@ -115,7 +121,7 @@ export function AssetTagCodeGeneratorTable<TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
+                  data-state={row.getIsSelected() && 'selected'}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -131,7 +137,7 @@ export function AssetTagCodeGeneratorTable<TData, TValue>({
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="h-24 text-center"
+                  className='h-24 text-center'
                 >
                   No results.
                 </TableCell>
@@ -142,5 +148,5 @@ export function AssetTagCodeGeneratorTable<TData, TValue>({
       </div>
       <DataTablePagination table={table} />
     </div>
-  );
+  )
 }

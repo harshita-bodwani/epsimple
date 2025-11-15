@@ -20,4 +20,6 @@ export interface WarehouseContextType {
   closeBulkUploadDialog: () => void
 }
 
-export const WarehouseContext = createContext<WarehouseContextType | undefined>(undefined)
+export const WarehouseContext = createContext<WarehouseContextType | undefined>(
+  undefined
+)

@@ -1,16 +1,20 @@
 import { useEffect, useState } from 'react'
+import { format } from 'date-fns'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Check, ChevronsUpDown, Sparkles, Loader2 } from 'lucide-react'
-import { format } from 'date-fns'
+import { toast } from 'sonner'
+import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-} from '@/components/ui/sheet'
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command'
 import {
   Form,
   FormControl,
@@ -20,42 +24,41 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
-import { DatePicker } from '@/components/date-picker'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from '@/components/ui/command'
-import { cn } from '@/lib/utils'
-import { useAsset } from '../hooks/use-asset'
-import { assetsApi } from '../api/assets-api'
-import { assetSchema, type AssetFormData } from '../api/schema'
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet'
+import { DatePicker } from '@/components/date-picker'
 import { assetCategoryApi } from '@/features/asset-categories/api/asset-categories-api'
+import { assetTagCodeGeneratorApi } from '@/features/asset-tag-generators/api/asset-tag-generator-api'
 import { assetTypesApi } from '@/features/asset-types/api/asset-types-api'
-import { useSearchVendors, type Vendor } from '@/features/vendors/api/vendors-api'
 import { useSearchBanks, type Bank } from '@/features/banks/api/banks-api'
 import { genericStatusTypeApi } from '@/features/generic-status-types/api/generic-status-type-api'
-import { assetTagCodeGeneratorApi } from '@/features/asset-tag-generators/api/asset-tag-generator-api'
-import { toast } from 'sonner'
+import {
+  useSearchVendors,
+  type Vendor,
+} from '@/features/vendors/api/vendors-api'
+import { assetsApi } from '../api/assets-api'
+import { assetSchema, type AssetFormData } from '../api/schema'
+import { useAsset } from '../hooks/use-asset'
 
 export function AssetDrawer() {
-  const { 
-    isDrawerOpen, 
-    setIsDrawerOpen, 
-    editingAsset, 
+  const {
+    isDrawerOpen,
+    setIsDrawerOpen,
+    editingAsset,
     setEditingAsset,
     setIsPlacementDialogOpen,
-    setAssetForPlacement 
+    setAssetForPlacement,
   } = useAsset()
 
   const [categorySearch, setCategorySearch] = useState('')
@@ -74,37 +77,42 @@ export function AssetDrawer() {
   const updateAsset = assetsApi.useUpdate()
   const generateTag = assetTagCodeGeneratorApi.useGenerateTag()
 
-  const { data: assetCategories = [], isLoading: isLoadingCategories } = 
+  const { data: assetCategories = [], isLoading: isLoadingCategories } =
     assetCategoryApi.useSearch(categorySearch)
-  const { data: assetTypes = [], isLoading: isLoadingTypes } = 
+  const { data: assetTypes = [], isLoading: isLoadingTypes } =
     assetTypesApi.useSearch(typeSearch)
-  const { data: vendors = [], isLoading: isLoadingVendors } = 
+  const { data: vendors = [], isLoading: isLoadingVendors } =
     useSearchVendors(vendorSearch)
-  const { data: banks = [], isLoading: isLoadingBanks } = 
+  const { data: banks = [], isLoading: isLoadingBanks } =
     useSearchBanks(bankSearch)
-  const { data: statusTypes = [], isLoading: isLoadingStatuses } = 
+  const { data: statusTypes = [], isLoading: isLoadingStatuses } =
     genericStatusTypeApi.useSearch(statusSearch)
 
   // Fetch initial items for display
-  const { data: allAssetCategories = [] } = assetCategoryApi.useSearch("")
-  const { data: allAssetTypes = [] } = assetTypesApi.useSearch("")
+  const { data: allAssetCategories = [] } = assetCategoryApi.useSearch('')
+  const { data: allAssetTypes = [] } = assetTypesApi.useSearch('')
 
   // Combine search results with selected items
   const displayAssetCategories = (() => {
-    if (!editingAsset?.assetCategoryId) return assetCategories;
-    const selected = allAssetCategories.find(c => c.id === editingAsset.assetCategoryId);
-    if (!selected) return assetCategories;
-    if (assetCategories.some(c => c.id === selected.id)) return assetCategories;
-    return [selected, ...assetCategories];
-  })();
+    if (!editingAsset?.assetCategoryId) return assetCategories
+    const selected = allAssetCategories.find(
+      (c) => c.id === editingAsset.assetCategoryId
+    )
+    if (!selected) return assetCategories
+    if (assetCategories.some((c) => c.id === selected.id))
+      return assetCategories
+    return [selected, ...assetCategories]
+  })()
 
   const displayAssetTypes = (() => {
-    if (!editingAsset?.assetTypeId) return assetTypes;
-    const selected = allAssetTypes.find(t => t.id === editingAsset.assetTypeId);
-    if (!selected) return assetTypes;
-    if (assetTypes.some(t => t.id === selected.id)) return assetTypes;
-    return [selected, ...assetTypes];
-  })();
+    if (!editingAsset?.assetTypeId) return assetTypes
+    const selected = allAssetTypes.find(
+      (t) => t.id === editingAsset.assetTypeId
+    )
+    if (!selected) return assetTypes
+    if (assetTypes.some((t) => t.id === selected.id)) return assetTypes
+    return [selected, ...assetTypes]
+  })()
 
   const form = useForm<AssetFormData>({
     resolver: zodResolver(assetSchema),
@@ -180,7 +188,7 @@ export function AssetDrawer() {
       createAsset.mutate(payload, {
         onSuccess: (createdAsset) => {
           handleClose()
-          
+
           // Open placement dialog if checkbox was checked
           if (placeAfterCreation && createdAsset) {
             setAssetForPlacement(createdAsset)
@@ -214,7 +222,7 @@ export function AssetDrawer() {
         vendorId: vendorId,
         bankId: bankId,
       })
-      
+
       form.setValue('assetTagId', result.assetTag)
       toast.success(`Generated tag: ${result.assetTag}`)
     } catch (_error) {
@@ -231,8 +239,8 @@ export function AssetDrawer() {
 
   return (
     <Sheet open={isDrawerOpen} onOpenChange={handleClose}>
-      <SheetContent className="flex flex-col sm:max-w-[650px]">
-        <SheetHeader className="text-start">
+      <SheetContent className='flex flex-col sm:max-w-[650px]'>
+        <SheetHeader className='text-start'>
           <SheetTitle>{editingAsset ? 'Update' : 'Create'} Asset</SheetTitle>
           <SheetDescription>
             {editingAsset
@@ -244,33 +252,35 @@ export function AssetDrawer() {
 
         <Form {...form}>
           <form
-            id="asset-form"
+            id='asset-form'
             onSubmit={form.handleSubmit(onSubmit)}
-            className="flex-1 space-y-6 overflow-y-auto px-4"
+            className='flex-1 space-y-6 overflow-y-auto px-4'
           >
             <FormField
               control={form.control}
-              name="assetTagId"
+              name='assetTagId'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Asset Tag ID *</FormLabel>
-                  <div className="flex gap-2">
+                  <div className='flex gap-2'>
                     <FormControl>
-                      <Input placeholder="Enter asset tag ID" {...field} />
+                      <Input placeholder='Enter asset tag ID' {...field} />
                     </FormControl>
                     <Button
-                      type="button"
-                      variant="outline"
-                      size="icon"
+                      type='button'
+                      variant='outline'
+                      size='icon'
                       onClick={handleGenerateTag}
-                      disabled={canGenerateTag() === false || generateTag.isPending}
+                      disabled={
+                        canGenerateTag() === false || generateTag.isPending
+                      }
                       title={
                         canGenerateTag() === false
                           ? 'Select Category, Vendor, and Bank first'
                           : 'Generate Asset Tag'
                       }
                     >
-                      <Sparkles className="h-4 w-4" />
+                      <Sparkles className='h-4 w-4' />
                     </Button>
                   </div>
                   <FormMessage />
@@ -280,12 +290,12 @@ export function AssetDrawer() {
 
             <FormField
               control={form.control}
-              name="assetName"
+              name='assetName'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Asset Name *</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter asset name" {...field} />
+                    <Input placeholder='Enter asset name' {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -294,22 +304,22 @@ export function AssetDrawer() {
 
             <FormField
               control={form.control}
-              name="serialNumber"
+              name='serialNumber'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Serial Number</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter serial number" {...field} />
+                    <Input placeholder='Enter serial number' {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className='grid grid-cols-2 gap-4'>
               <FormField
                 control={form.control}
-                name="assetCategoryId"
+                name='assetCategoryId'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Asset Category *</FormLabel>
@@ -317,24 +327,26 @@ export function AssetDrawer() {
                       <PopoverTrigger asChild>
                         <FormControl>
                           <Button
-                            variant="outline"
-                            role="combobox"
+                            variant='outline'
+                            role='combobox'
                             className={cn(
                               'w-full justify-between',
                               !field.value && 'text-muted-foreground'
                             )}
                           >
                             {field.value
-                              ? displayAssetCategories.find((c) => c.id === field.value)?.categoryName
+                              ? displayAssetCategories.find(
+                                  (c) => c.id === field.value
+                                )?.categoryName
                               : 'Select category'}
-                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
                           </Button>
                         </FormControl>
                       </PopoverTrigger>
-                      <PopoverContent className="w-full p-0" align="start">
+                      <PopoverContent className='w-full p-0' align='start'>
                         <Command shouldFilter={false}>
                           <CommandInput
-                            placeholder="Search categories..."
+                            placeholder='Search categories...'
                             value={categorySearch}
                             onValueChange={setCategorySearch}
                           />
@@ -342,13 +354,17 @@ export function AssetDrawer() {
                             {(() => {
                               if (isLoadingCategories) {
                                 return (
-                                  <div className="flex items-center justify-center py-6">
-                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                  <div className='flex items-center justify-center py-6'>
+                                    <Loader2 className='h-4 w-4 animate-spin' />
                                   </div>
-                                );
+                                )
                               }
                               if (displayAssetCategories.length === 0) {
-                                return <CommandEmpty>No categories found.</CommandEmpty>;
+                                return (
+                                  <CommandEmpty>
+                                    No categories found.
+                                  </CommandEmpty>
+                                )
                               }
                               return (
                                 <CommandGroup>
@@ -365,14 +381,16 @@ export function AssetDrawer() {
                                       <Check
                                         className={cn(
                                           'mr-2 h-4 w-4',
-                                          category.id === field.value ? 'opacity-100' : 'opacity-0'
+                                          category.id === field.value
+                                            ? 'opacity-100'
+                                            : 'opacity-0'
                                         )}
                                       />
                                       {category.categoryName}
                                     </CommandItem>
                                   ))}
                                 </CommandGroup>
-                              );
+                              )
                             })()}
                           </CommandList>
                         </Command>
@@ -385,7 +403,7 @@ export function AssetDrawer() {
 
               <FormField
                 control={form.control}
-                name="assetTypeId"
+                name='assetTypeId'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Asset Type *</FormLabel>
@@ -393,24 +411,26 @@ export function AssetDrawer() {
                       <PopoverTrigger asChild>
                         <FormControl>
                           <Button
-                            variant="outline"
-                            role="combobox"
+                            variant='outline'
+                            role='combobox'
                             className={cn(
                               'w-full justify-between',
                               !field.value && 'text-muted-foreground'
                             )}
                           >
                             {field.value
-                              ? displayAssetTypes.find((t) => t.id === field.value)?.typeName
+                              ? displayAssetTypes.find(
+                                  (t) => t.id === field.value
+                                )?.typeName
                               : 'Select type'}
-                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
                           </Button>
                         </FormControl>
                       </PopoverTrigger>
-                      <PopoverContent className="w-full p-0" align="start">
+                      <PopoverContent className='w-full p-0' align='start'>
                         <Command shouldFilter={false}>
                           <CommandInput
-                            placeholder="Search types..."
+                            placeholder='Search types...'
                             value={typeSearch}
                             onValueChange={setTypeSearch}
                           />
@@ -418,13 +438,15 @@ export function AssetDrawer() {
                             {(() => {
                               if (isLoadingTypes) {
                                 return (
-                                  <div className="flex items-center justify-center py-6">
-                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                  <div className='flex items-center justify-center py-6'>
+                                    <Loader2 className='h-4 w-4 animate-spin' />
                                   </div>
-                                );
+                                )
                               }
                               if (displayAssetTypes.length === 0) {
-                                return <CommandEmpty>No types found.</CommandEmpty>;
+                                return (
+                                  <CommandEmpty>No types found.</CommandEmpty>
+                                )
                               }
                               return (
                                 <CommandGroup>
@@ -441,14 +463,16 @@ export function AssetDrawer() {
                                       <Check
                                         className={cn(
                                           'mr-2 h-4 w-4',
-                                          type.id === field.value ? 'opacity-100' : 'opacity-0'
+                                          type.id === field.value
+                                            ? 'opacity-100'
+                                            : 'opacity-0'
                                         )}
                                       />
                                       {type.typeName}
                                     </CommandItem>
                                   ))}
                                 </CommandGroup>
-                              );
+                              )
                             })()}
                           </CommandList>
                         </Command>
@@ -460,10 +484,10 @@ export function AssetDrawer() {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className='grid grid-cols-2 gap-4'>
               <FormField
                 control={form.control}
-                name="vendorId"
+                name='vendorId'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Vendor *</FormLabel>
@@ -471,24 +495,26 @@ export function AssetDrawer() {
                       <PopoverTrigger asChild>
                         <FormControl>
                           <Button
-                            variant="outline"
-                            role="combobox"
+                            variant='outline'
+                            role='combobox'
                             className={cn(
                               'w-full justify-between',
                               !field.value && 'text-muted-foreground'
                             )}
                           >
                             {field.value
-                              ? vendors.find((v: Vendor) => v.id === field.value)?.vendorName
+                              ? vendors.find(
+                                  (v: Vendor) => v.id === field.value
+                                )?.vendorName
                               : 'Select vendor'}
-                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
                           </Button>
                         </FormControl>
                       </PopoverTrigger>
-                      <PopoverContent className="w-full p-0" align="start">
+                      <PopoverContent className='w-full p-0' align='start'>
                         <Command shouldFilter={false}>
                           <CommandInput
-                            placeholder="Search vendors..."
+                            placeholder='Search vendors...'
                             value={vendorSearch}
                             onValueChange={setVendorSearch}
                           />
@@ -496,13 +522,15 @@ export function AssetDrawer() {
                             {(() => {
                               if (isLoadingVendors) {
                                 return (
-                                  <div className="flex items-center justify-center py-6">
-                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                  <div className='flex items-center justify-center py-6'>
+                                    <Loader2 className='h-4 w-4 animate-spin' />
                                   </div>
-                                );
+                                )
                               }
                               if (vendors.length === 0) {
-                                return <CommandEmpty>No vendors found.</CommandEmpty>;
+                                return (
+                                  <CommandEmpty>No vendors found.</CommandEmpty>
+                                )
                               }
                               return (
                                 <CommandGroup>
@@ -519,14 +547,16 @@ export function AssetDrawer() {
                                       <Check
                                         className={cn(
                                           'mr-2 h-4 w-4',
-                                          vendor.id === field.value ? 'opacity-100' : 'opacity-0'
+                                          vendor.id === field.value
+                                            ? 'opacity-100'
+                                            : 'opacity-0'
                                         )}
                                       />
                                       {vendor.vendorName}
                                     </CommandItem>
                                   ))}
                                 </CommandGroup>
-                              );
+                              )
                             })()}
                           </CommandList>
                         </Command>
@@ -539,7 +569,7 @@ export function AssetDrawer() {
 
               <FormField
                 control={form.control}
-                name="lenderBankId"
+                name='lenderBankId'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Bank *</FormLabel>
@@ -547,24 +577,25 @@ export function AssetDrawer() {
                       <PopoverTrigger asChild>
                         <FormControl>
                           <Button
-                            variant="outline"
-                            role="combobox"
+                            variant='outline'
+                            role='combobox'
                             className={cn(
                               'w-full justify-between',
                               !field.value && 'text-muted-foreground'
                             )}
                           >
                             {field.value
-                              ? banks.find((b: Bank) => b.id === field.value)?.bankName
+                              ? banks.find((b: Bank) => b.id === field.value)
+                                  ?.bankName
                               : 'Select bank'}
-                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
                           </Button>
                         </FormControl>
                       </PopoverTrigger>
-                      <PopoverContent className="w-full p-0" align="start">
+                      <PopoverContent className='w-full p-0' align='start'>
                         <Command shouldFilter={false}>
                           <CommandInput
-                            placeholder="Search banks..."
+                            placeholder='Search banks...'
                             value={bankSearch}
                             onValueChange={setBankSearch}
                           />
@@ -572,13 +603,15 @@ export function AssetDrawer() {
                             {(() => {
                               if (isLoadingBanks) {
                                 return (
-                                  <div className="flex items-center justify-center py-6">
-                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                  <div className='flex items-center justify-center py-6'>
+                                    <Loader2 className='h-4 w-4 animate-spin' />
                                   </div>
-                                );
+                                )
                               }
                               if (banks.length === 0) {
-                                return <CommandEmpty>No banks found.</CommandEmpty>;
+                                return (
+                                  <CommandEmpty>No banks found.</CommandEmpty>
+                                )
                               }
                               return (
                                 <CommandGroup>
@@ -595,14 +628,16 @@ export function AssetDrawer() {
                                       <Check
                                         className={cn(
                                           'mr-2 h-4 w-4',
-                                          bank.id === field.value ? 'opacity-100' : 'opacity-0'
+                                          bank.id === field.value
+                                            ? 'opacity-100'
+                                            : 'opacity-0'
                                         )}
                                       />
                                       {bank.bankName}
                                     </CommandItem>
                                   ))}
                                 </CommandGroup>
-                              );
+                              )
                             })()}
                           </CommandList>
                         </Command>
@@ -614,10 +649,10 @@ export function AssetDrawer() {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className='grid grid-cols-2 gap-4'>
               <FormField
                 control={form.control}
-                name="statusTypeId"
+                name='statusTypeId'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Status *</FormLabel>
@@ -625,24 +660,25 @@ export function AssetDrawer() {
                       <PopoverTrigger asChild>
                         <FormControl>
                           <Button
-                            variant="outline"
-                            role="combobox"
+                            variant='outline'
+                            role='combobox'
                             className={cn(
                               'w-full justify-between',
                               !field.value && 'text-muted-foreground'
                             )}
                           >
                             {field.value
-                              ? statusTypes.find((s) => s.id === field.value)?.statusName
+                              ? statusTypes.find((s) => s.id === field.value)
+                                  ?.statusName
                               : 'Select status'}
-                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
                           </Button>
                         </FormControl>
                       </PopoverTrigger>
-                      <PopoverContent className="w-full p-0" align="start">
+                      <PopoverContent className='w-full p-0' align='start'>
                         <Command shouldFilter={false}>
                           <CommandInput
-                            placeholder="Search statuses..."
+                            placeholder='Search statuses...'
                             value={statusSearch}
                             onValueChange={setStatusSearch}
                           />
@@ -650,13 +686,17 @@ export function AssetDrawer() {
                             {(() => {
                               if (isLoadingStatuses) {
                                 return (
-                                  <div className="flex items-center justify-center py-6">
-                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                  <div className='flex items-center justify-center py-6'>
+                                    <Loader2 className='h-4 w-4 animate-spin' />
                                   </div>
-                                );
+                                )
                               }
                               if (statusTypes.length === 0) {
-                                return <CommandEmpty>No statuses found.</CommandEmpty>;
+                                return (
+                                  <CommandEmpty>
+                                    No statuses found.
+                                  </CommandEmpty>
+                                )
                               }
                               return (
                                 <CommandGroup>
@@ -673,14 +713,16 @@ export function AssetDrawer() {
                                       <Check
                                         className={cn(
                                           'mr-2 h-4 w-4',
-                                          status.id === field.value ? 'opacity-100' : 'opacity-0'
+                                          status.id === field.value
+                                            ? 'opacity-100'
+                                            : 'opacity-0'
                                         )}
                                       />
                                       {status.statusName}
                                     </CommandItem>
                                   ))}
                                 </CommandGroup>
-                              );
+                              )
                             })()}
                           </CommandList>
                         </Command>
@@ -694,12 +736,12 @@ export function AssetDrawer() {
 
             <FormField
               control={form.control}
-              name="serialNumber"
+              name='serialNumber'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Serial Number</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter serial number" {...field} />
+                    <Input placeholder='Enter serial number' {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -708,27 +750,27 @@ export function AssetDrawer() {
 
             <FormField
               control={form.control}
-              name="modelNumber"
+              name='modelNumber'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Model Number</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter model number" {...field} />
+                    <Input placeholder='Enter model number' {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className='grid grid-cols-2 gap-4'>
               <FormField
                 control={form.control}
-                name="purchaseOrderNumber"
+                name='purchaseOrderNumber'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Purchase Order Number</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter PO number" {...field} />
+                      <Input placeholder='Enter PO number' {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -737,16 +779,16 @@ export function AssetDrawer() {
 
               <FormField
                 control={form.control}
-                name="purchaseOrderDate"
+                name='purchaseOrderDate'
                 render={({ field }) => (
-                  <FormItem className="flex flex-col">
+                  <FormItem className='flex flex-col'>
                     <FormLabel>Purchase Order Date</FormLabel>
                     <DatePicker
                       selected={field.value ? new Date(field.value) : undefined}
                       onSelect={(date: Date | undefined) =>
-                        field.onChange(date ? format(date, "yyyy-MM-dd") : "")
+                        field.onChange(date ? format(date, 'yyyy-MM-dd') : '')
                       }
-                      placeholder="Select PO date"
+                      placeholder='Select PO date'
                     />
                     <FormMessage />
                   </FormItem>
@@ -754,22 +796,26 @@ export function AssetDrawer() {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className='grid grid-cols-2 gap-4'>
               <FormField
                 control={form.control}
-                name="purchaseOrderCost"
+                name='purchaseOrderCost'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Purchase Order Cost</FormLabel>
                     <FormControl>
                       <Input
-                        type="number"
-                        step="0.01"
-                        placeholder="0.00"
+                        type='number'
+                        step='0.01'
+                        placeholder='0.00'
                         {...field}
-                        value={field.value || ""}
+                        value={field.value || ''}
                         onChange={(e) =>
-                          field.onChange(e.target.value ? Number.parseFloat(e.target.value) : undefined)
+                          field.onChange(
+                            e.target.value
+                              ? Number.parseFloat(e.target.value)
+                              : undefined
+                          )
                         }
                       />
                     </FormControl>
@@ -780,12 +826,15 @@ export function AssetDrawer() {
 
               <FormField
                 control={form.control}
-                name="dispatchOrderNumber"
+                name='dispatchOrderNumber'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Dispatch Order Number</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter dispatch order number" {...field} />
+                      <Input
+                        placeholder='Enter dispatch order number'
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -793,19 +842,19 @@ export function AssetDrawer() {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className='grid grid-cols-2 gap-4'>
               <FormField
                 control={form.control}
-                name="dispatchOrderDate"
+                name='dispatchOrderDate'
                 render={({ field }) => (
-                  <FormItem className="flex flex-col">
+                  <FormItem className='flex flex-col'>
                     <FormLabel>Dispatch Order Date</FormLabel>
                     <DatePicker
                       selected={field.value ? new Date(field.value) : undefined}
                       onSelect={(date: Date | undefined) =>
-                        field.onChange(date ? format(date, "yyyy-MM-dd") : "")
+                        field.onChange(date ? format(date, 'yyyy-MM-dd') : '')
                       }
-                      placeholder="Select dispatch order date"
+                      placeholder='Select dispatch order date'
                     />
                     <FormMessage />
                   </FormItem>
@@ -814,18 +863,22 @@ export function AssetDrawer() {
 
               <FormField
                 control={form.control}
-                name="warrantyPeriod"
+                name='warrantyPeriod'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Warranty Period (months)</FormLabel>
                     <FormControl>
                       <Input
-                        type="number"
-                        placeholder="Enter warranty period"
+                        type='number'
+                        placeholder='Enter warranty period'
                         {...field}
-                        value={field.value || ""}
+                        value={field.value || ''}
                         onChange={(e) =>
-                          field.onChange(e.target.value ? Number.parseInt(e.target.value) : undefined)
+                          field.onChange(
+                            e.target.value
+                              ? Number.parseInt(e.target.value)
+                              : undefined
+                          )
                         }
                       />
                     </FormControl>
@@ -837,35 +890,35 @@ export function AssetDrawer() {
 
             <FormField
               control={form.control}
-              name="warrantyExpiryDate"
+              name='warrantyExpiryDate'
               render={({ field }) => (
-                <FormItem className="flex flex-col">
+                <FormItem className='flex flex-col'>
                   <FormLabel>Warranty Expiry Date</FormLabel>
                   <DatePicker
                     selected={field.value ? new Date(field.value) : undefined}
                     onSelect={(date: Date | undefined) =>
-                      field.onChange(date ? format(date, "yyyy-MM-dd") : "")
+                      field.onChange(date ? format(date, 'yyyy-MM-dd') : '')
                     }
-                    placeholder="Select warranty expiry date"
+                    placeholder='Select warranty expiry date'
                   />
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className='grid grid-cols-2 gap-4'>
               <FormField
                 control={form.control}
-                name="endOfLifeDate"
+                name='endOfLifeDate'
                 render={({ field }) => (
-                  <FormItem className="flex flex-col">
+                  <FormItem className='flex flex-col'>
                     <FormLabel>End Of Life Date</FormLabel>
                     <DatePicker
                       selected={field.value ? new Date(field.value) : undefined}
                       onSelect={(date: Date | undefined) =>
-                        field.onChange(date ? format(date, "yyyy-MM-dd") : "")
+                        field.onChange(date ? format(date, 'yyyy-MM-dd') : '')
                       }
-                      placeholder="Select end of life date"
+                      placeholder='Select end of life date'
                     />
                     <FormMessage />
                   </FormItem>
@@ -874,16 +927,16 @@ export function AssetDrawer() {
 
               <FormField
                 control={form.control}
-                name="endOfSupportDate"
+                name='endOfSupportDate'
                 render={({ field }) => (
-                  <FormItem className="flex flex-col">
+                  <FormItem className='flex flex-col'>
                     <FormLabel>End Of Support Date</FormLabel>
                     <DatePicker
                       selected={field.value ? new Date(field.value) : undefined}
                       onSelect={(date: Date | undefined) =>
-                        field.onChange(date ? format(date, "yyyy-MM-dd") : "")
+                        field.onChange(date ? format(date, 'yyyy-MM-dd') : '')
                       }
-                      placeholder="Select end of support date"
+                      placeholder='Select end of support date'
                     />
                     <FormMessage />
                   </FormItem>
@@ -892,15 +945,17 @@ export function AssetDrawer() {
             </div>
 
             {!editingAsset && (
-              <div className="flex items-center space-x-2 p-4 border rounded-lg bg-muted/50">
+              <div className='bg-muted/50 flex items-center space-x-2 rounded-lg border p-4'>
                 <Checkbox
-                  id="placeAfterCreation"
+                  id='placeAfterCreation'
                   checked={placeAfterCreation}
-                  onCheckedChange={(checked) => setPlaceAfterCreation(checked === true)}
+                  onCheckedChange={(checked) =>
+                    setPlaceAfterCreation(checked === true)
+                  }
                 />
                 <label
-                  htmlFor="placeAfterCreation"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                  htmlFor='placeAfterCreation'
+                  className='cursor-pointer text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
                 >
                   Place asset at a location after creation
                 </label>
@@ -909,23 +964,24 @@ export function AssetDrawer() {
           </form>
         </Form>
 
-        <SheetFooter className="flex-shrink-0 px-4">
+        <SheetFooter className='flex-shrink-0 px-4'>
           <Button
-            type="button"
-            variant="outline"
+            type='button'
+            variant='outline'
             onClick={handleClose}
             disabled={createAsset.isPending || updateAsset.isPending}
           >
             Cancel
           </Button>
           <Button
-            type="submit"
-            form="asset-form"
+            type='submit'
+            form='asset-form'
             disabled={createAsset.isPending || updateAsset.isPending}
           >
-            {createAsset.isPending || updateAsset.isPending && (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            )}
+            {createAsset.isPending ||
+              (updateAsset.isPending && (
+                <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+              ))}
             {editingAsset ? 'Update' : 'Create'}
           </Button>
         </SheetFooter>

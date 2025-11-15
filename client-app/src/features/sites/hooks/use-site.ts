@@ -1,6 +1,5 @@
 import { useContext } from 'react'
-import { SiteContext } from '../context/site-context'
-import type { SiteContextType } from '../context/site-context'
+import { SiteContext, type SiteContextType } from '../context/site-context'
 
 export function useSite(): SiteContextType {
   const context = useContext(SiteContext)

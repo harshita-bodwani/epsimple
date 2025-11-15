@@ -8,12 +8,16 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import { useAsset } from '../hooks/use-asset'
 import { assetsApi } from '../api/assets-api'
+import { useAsset } from '../hooks/use-asset'
 
 export function AssetDeleteDialog() {
-  const { isDeleteDialogOpen, setIsDeleteDialogOpen, assetToDelete, setAssetToDelete } =
-    useAsset()
+  const {
+    isDeleteDialogOpen,
+    setIsDeleteDialogOpen,
+    assetToDelete,
+    setAssetToDelete,
+  } = useAsset()
   const deleteAsset = assetsApi.useDelete()
 
   const handleDelete = () => {
@@ -34,7 +38,7 @@ export function AssetDeleteDialog() {
           <AlertDialogTitle>Are you sure?</AlertDialogTitle>
           <AlertDialogDescription>
             This will permanently delete the asset{' '}
-            <span className="font-semibold">{assetToDelete?.assetTagId}</span> (
+            <span className='font-semibold'>{assetToDelete?.assetTagId}</span> (
             {assetToDelete?.assetName}). This action cannot be undone.
           </AlertDialogDescription>
         </AlertDialogHeader>
@@ -48,7 +52,7 @@ export function AssetDeleteDialog() {
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDelete}
-            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
             disabled={deleteAsset.isPending}
           >
             {deleteAsset.isPending ? 'Deleting...' : 'Delete'}

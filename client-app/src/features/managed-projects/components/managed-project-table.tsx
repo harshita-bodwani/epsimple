@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react'
 import {
-  ColumnDef,
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
+  type ColumnDef,
+  type ColumnFiltersState,
+  type SortingState,
+  type VisibilityState,
   flexRender,
   getCoreRowModel,
   getFacetedRowModel,
@@ -11,7 +11,7 @@ import {
   getFilteredRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table";
+} from '@tanstack/react-table'
 import {
   Table,
   TableBody,
@@ -19,58 +19,59 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { DataTablePagination, DataTableToolbar } from "@/components/data-table";
-import { useManagedProjectContext } from "../context/managed-project-provider";
-import { managedProjectApi } from "../api/managed-project-api";
-import { ManagedProjectRowActions } from "./managed-project-row-actions";
+} from '@/components/ui/table'
+import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
+import { managedProjectApi } from '../api/managed-project-api'
+import { useManagedProjectContext } from '../context/managed-project-provider'
+import { ManagedProjectRowActions } from './managed-project-row-actions'
 
 interface ManagedProjectTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
+  columns: ColumnDef<TData, TValue>[]
 }
 
 export function ManagedProjectTable<TData, TValue>({
   columns,
 }: ManagedProjectTableProps<TData, TValue>) {
-  const { globalFilter, setGlobalFilter } = useManagedProjectContext();
-  const [rowSelection, setRowSelection] = useState({});
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const { globalFilter, setGlobalFilter } = useManagedProjectContext()
+  const [rowSelection, setRowSelection] = useState({})
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [sorting, setSorting] = useState<SortingState>([
-    { id: "id", desc: false },
-  ]);
+    { id: 'id', desc: false },
+  ])
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,
-  });
+  })
 
   const { data, isLoading } = managedProjectApi.useGetAll({
     page: pagination.pageIndex,
     size: pagination.pageSize,
-    sortBy: sorting[0]?.id || "id",
-    sortOrder: sorting[0]?.desc ? "DESC" : "ASC",
-    search: globalFilter && globalFilter.trim() !== "" ? globalFilter : undefined,
-  });
+    sortBy: sorting[0]?.id || 'id',
+    sortOrder: sorting[0]?.desc ? 'DESC' : 'ASC',
+    search:
+      globalFilter && globalFilter.trim() !== '' ? globalFilter : undefined,
+  })
 
-  const managedProjects = (data?.content || []) as TData[];
-  const totalPages = data?.totalPages || 0;
+  const managedProjects = (data?.content || []) as TData[]
+  const totalPages = data?.totalPages || 0
 
   // Reset to first page when search query changes
   useEffect(() => {
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
-  }, [globalFilter]);
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }))
+  }, [globalFilter])
 
   // Add actions column
   const columnsWithActions = React.useMemo(
     () => [
       ...columns,
       {
-        id: "actions",
+        id: 'actions',
         cell: ({ row }: { row: any }) => <ManagedProjectRowActions row={row} />,
       },
     ],
     [columns]
-  );
+  )
 
   const table = useReactTable({
     data: managedProjects,
@@ -99,12 +100,15 @@ export function ManagedProjectTable<TData, TValue>({
     manualPagination: true,
     manualFiltering: true,
     manualSorting: true,
-  });
+  })
 
   return (
-    <div className="space-y-4">
-      <DataTableToolbar table={table} searchPlaceholder="Search managed projects..." />
-      <div className="rounded-md border">
+    <div className='space-y-4'>
+      <DataTableToolbar
+        table={table}
+        searchPlaceholder='Search managed projects...'
+      />
+      <div className='rounded-md border'>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -127,7 +131,7 @@ export function ManagedProjectTable<TData, TValue>({
               <TableRow>
                 <TableCell
                   colSpan={columnsWithActions.length}
-                  className="h-24 text-center"
+                  className='h-24 text-center'
                 >
                   Loading...
                 </TableCell>
@@ -136,7 +140,7 @@ export function ManagedProjectTable<TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
+                  data-state={row.getIsSelected() && 'selected'}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -152,7 +156,7 @@ export function ManagedProjectTable<TData, TValue>({
               <TableRow>
                 <TableCell
                   colSpan={columnsWithActions.length}
-                  className="h-24 text-center"
+                  className='h-24 text-center'
                 >
                   No results.
                 </TableCell>
@@ -163,5 +167,5 @@ export function ManagedProjectTable<TData, TValue>({
       </div>
       <DataTablePagination table={table} />
     </div>
-  );
+  )
 }

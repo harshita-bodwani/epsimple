@@ -7,24 +7,24 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import { useLocation } from '../context/location-provider';
-import { locationApi } from '../api/location-api';
+} from '@/components/ui/alert-dialog'
+import { locationApi } from '../api/location-api'
+import { useLocation } from '../context/location-provider'
 
 export function LocationDeleteDialog() {
   const { isDeleteDialogOpen, closeDeleteDialog, selectedLocation } =
-    useLocation();
-  const deleteMutation = locationApi.useDelete();
+    useLocation()
+  const deleteMutation = locationApi.useDelete()
 
   const handleDelete = () => {
     if (selectedLocation) {
       deleteMutation.mutate(selectedLocation.id, {
         onSuccess: () => {
-          closeDeleteDialog();
+          closeDeleteDialog()
         },
-      });
+      })
     }
-  };
+  }
 
   return (
     <AlertDialog open={isDeleteDialogOpen} onOpenChange={closeDeleteDialog}>
@@ -32,17 +32,21 @@ export function LocationDeleteDialog() {
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete the location
+            This action cannot be undone. This will permanently delete the
+            location
             <strong> {selectedLocation?.locationName}</strong>.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleDelete} disabled={deleteMutation.isPending}>
+          <AlertDialogAction
+            onClick={handleDelete}
+            disabled={deleteMutation.isPending}
+          >
             {deleteMutation.isPending ? 'Deleting...' : 'Delete'}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  );
+  )
 }

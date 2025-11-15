@@ -1,52 +1,39 @@
-import React, { createContext, useContext, useState } from 'react';
-import type { VendorCategory } from '../api/schema';
+import { useState } from 'react'
+import type { VendorCategory } from '../api/schema'
+import {
+  VendorCategoriesContext,
+  type VendorCategoriesContextType,
+} from './vendor-categories-context'
 
-interface VendorCategoriesContextType {
-  selectedVendorCategory: VendorCategory | null;
-  setSelectedVendorCategory: (vendorCategory: VendorCategory | null) => void;
-  isDrawerOpen: boolean;
-  setIsDrawerOpen: (isOpen: boolean) => void;
-  isDeleteDialogOpen: boolean;
-  setIsDeleteDialogOpen: (isOpen: boolean) => void;
-  isBulkUploadDialogOpen: boolean;
-  openBulkUploadDialog: () => void;
-  closeBulkUploadDialog: () => void;
-}
+export function VendorCategoriesProvider({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  const [selectedVendorCategory, setSelectedVendorCategory] =
+    useState<VendorCategory | null>(null)
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [isBulkUploadDialogOpen, setIsBulkUploadDialogOpen] = useState(false)
 
-const VendorCategoriesContext = createContext<VendorCategoriesContextType | undefined>(undefined);
+  const openBulkUploadDialog = () => setIsBulkUploadDialogOpen(true)
+  const closeBulkUploadDialog = () => setIsBulkUploadDialogOpen(false)
 
-export const VendorCategoriesProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [selectedVendorCategory, setSelectedVendorCategory] = useState<VendorCategory | null>(null);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [isBulkUploadDialogOpen, setIsBulkUploadDialogOpen] = useState(false);
-
-  const openBulkUploadDialog = () => setIsBulkUploadDialogOpen(true);
-  const closeBulkUploadDialog = () => setIsBulkUploadDialogOpen(false);
+  const value: VendorCategoriesContextType = {
+    selectedVendorCategory,
+    setSelectedVendorCategory,
+    isDrawerOpen,
+    setIsDrawerOpen,
+    isDeleteDialogOpen,
+    setIsDeleteDialogOpen,
+    isBulkUploadDialogOpen,
+    openBulkUploadDialog,
+    closeBulkUploadDialog,
+  }
 
   return (
-    <VendorCategoriesContext.Provider
-      value={{
-        selectedVendorCategory,
-        setSelectedVendorCategory,
-        isDrawerOpen,
-        setIsDrawerOpen,
-        isDeleteDialogOpen,
-        setIsDeleteDialogOpen,
-        isBulkUploadDialogOpen,
-        openBulkUploadDialog,
-        closeBulkUploadDialog,
-      }}
-    >
+    <VendorCategoriesContext.Provider value={value}>
       {children}
     </VendorCategoriesContext.Provider>
-  );
-};
-
-export const useVendorCategories = () => {
-  const context = useContext(VendorCategoriesContext);
-  if (context === undefined) {
-    throw new Error('useVendorCategories must be used within a VendorCategoriesProvider');
-  }
-  return context;
-};
+  )
+}

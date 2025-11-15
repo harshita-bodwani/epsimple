@@ -1,6 +1,6 @@
-import api from '@/lib/api'
 import { useQuery } from '@tanstack/react-query'
-import { BackendPageResponse, flattenPageResponse } from '@/lib/api-utils'
+import api from '@/lib/api'
+import { type BackendPageResponse, flattenPageResponse } from '@/lib/api-utils'
 
 export interface Bank {
   id: number
@@ -48,13 +48,16 @@ export const getAllBanks = async (
   sortBy: string = 'id',
   sortDirection: 'ASC' | 'DESC' = 'ASC'
 ) => {
-  const response = await api.get<ApiResponse<BackendPageResponse<Bank>>>('/api/banks', {
-    params: { page, size, sortBy, sortDirection },
-  })
+  const response = await api.get<ApiResponse<BackendPageResponse<Bank>>>(
+    '/api/banks',
+    {
+      params: { page, size, sortBy, sortDirection },
+    }
+  )
   const apiData = response.data
   return {
     ...apiData,
-    data: flattenPageResponse(apiData.data)
+    data: flattenPageResponse(apiData.data),
   }
 }
 
@@ -66,13 +69,16 @@ export const searchBanks = async (
   sortBy: string = 'id',
   sortDirection: 'ASC' | 'DESC' = 'ASC'
 ) => {
-  const response = await api.get<ApiResponse<BackendPageResponse<Bank>>>('/api/banks/search', {
-    params: { search, page, size, sortBy, sortDirection },
-  })
+  const response = await api.get<ApiResponse<BackendPageResponse<Bank>>>(
+    '/api/banks/search',
+    {
+      params: { search, page, size, sortBy, sortDirection },
+    }
+  )
   const apiData = response.data
   return {
     ...apiData,
-    data: flattenPageResponse(apiData.data)
+    data: flattenPageResponse(apiData.data),
   }
 }
 
@@ -91,19 +97,19 @@ export const getBankById = async (id: number) => {
 // Create bank with logo
 export const createBank = async (bankData: BankRequest, logo?: File) => {
   const formData = new FormData()
-  
+
   // Append bank data
   formData.append('bankName', bankData.bankName)
   if (bankData.rbiBankCode) formData.append('rbiBankCode', bankData.rbiBankCode)
   if (bankData.epsBankCode) formData.append('epsBankCode', bankData.epsBankCode)
   if (bankData.bankCodeAlt) formData.append('bankCodeAlt', bankData.bankCodeAlt)
   if (bankData.bankLogo) formData.append('bankLogo', bankData.bankLogo)
-  
+
   // Append logo file if provided
   if (logo) {
     formData.append('logo', logo)
   }
-  
+
   const response = await api.post<ApiResponse<Bank>>('/api/banks', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -113,26 +119,34 @@ export const createBank = async (bankData: BankRequest, logo?: File) => {
 }
 
 // Update bank with logo
-export const updateBank = async (id: number, bankData: BankRequest, logo?: File) => {
+export const updateBank = async (
+  id: number,
+  bankData: BankRequest,
+  logo?: File
+) => {
   const formData = new FormData()
-  
+
   // Append bank data
   formData.append('bankName', bankData.bankName)
   if (bankData.rbiBankCode) formData.append('rbiBankCode', bankData.rbiBankCode)
   if (bankData.epsBankCode) formData.append('epsBankCode', bankData.epsBankCode)
   if (bankData.bankCodeAlt) formData.append('bankCodeAlt', bankData.bankCodeAlt)
   if (bankData.bankLogo) formData.append('bankLogo', bankData.bankLogo)
-  
+
   // Append logo file if provided
   if (logo) {
     formData.append('logo', logo)
   }
-  
-  const response = await api.put<ApiResponse<Bank>>(`/api/banks/${id}`, formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  })
+
+  const response = await api.put<ApiResponse<Bank>>(
+    `/api/banks/${id}`,
+    formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    }
+  )
   return response.data
 }
 
@@ -158,9 +172,9 @@ export const useSearchBanks = (searchTerm: string) => {
             sortDirection: 'ASC',
           },
         }
-      );
-      return flattenPageResponse(response.data.data).content;
+      )
+      return flattenPageResponse(response.data.data).content
     },
     staleTime: 30000,
-  });
+  })
 }

@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react'
 import {
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
+  type ColumnFiltersState,
+  type SortingState,
+  type VisibilityState,
   flexRender,
   getCoreRowModel,
   getFacetedRowModel,
@@ -10,7 +10,7 @@ import {
   getFilteredRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table";
+} from '@tanstack/react-table'
 import {
   Table,
   TableBody,
@@ -18,37 +18,38 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { DataTablePagination, DataTableToolbar } from "@/components/data-table";
-import { personDetailsColumns } from "./person-details-columns";
-import { usePersonDetailsContext } from "../context/person-details-provider";
-import { personDetailsApi } from "../api/person-details-api";
+} from '@/components/ui/table'
+import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
+import { personDetailsApi } from '../api/person-details-api'
+import { usePersonDetailsContext } from '../context/person-details-provider'
+import { personDetailsColumns } from './person-details-columns'
 
 export function PersonDetailsTable() {
-  const { globalFilter, setGlobalFilter } = usePersonDetailsContext();
-  const [rowSelection, setRowSelection] = useState({});
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const { globalFilter, setGlobalFilter } = usePersonDetailsContext()
+  const [rowSelection, setRowSelection] = useState({})
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [sorting, setSorting] = useState<SortingState>([
-    { id: "id", desc: false },
-  ]);
+    { id: 'id', desc: false },
+  ])
   const [{ pageIndex, pageSize }, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,
-  });
+  })
 
   const { data, isLoading } = personDetailsApi.useGetAll({
     page: pageIndex,
     size: pageSize,
-    sortBy: sorting[0]?.id || "id",
-    sortOrder: sorting[0]?.desc ? "DESC" : "ASC",
-    search: globalFilter && globalFilter.trim() !== "" ? globalFilter : undefined,
-  });
+    sortBy: sorting[0]?.id || 'id',
+    sortOrder: sorting[0]?.desc ? 'DESC' : 'ASC',
+    search:
+      globalFilter && globalFilter.trim() !== '' ? globalFilter : undefined,
+  })
 
   // Reset to first page when search query changes
   useEffect(() => {
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
-  }, [globalFilter]);
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }))
+  }, [globalFilter])
 
   const table = useReactTable({
     data: data?.content ?? [],
@@ -77,12 +78,15 @@ export function PersonDetailsTable() {
     manualPagination: true,
     manualFiltering: true,
     manualSorting: true,
-  });
+  })
 
   return (
-    <div className="space-y-4">
-      <DataTableToolbar table={table} searchPlaceholder="Search person details..." />
-      <div className="rounded-md border">
+    <div className='space-y-4'>
+      <DataTableToolbar
+        table={table}
+        searchPlaceholder='Search person details...'
+      />
+      <div className='rounded-md border'>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -105,7 +109,7 @@ export function PersonDetailsTable() {
               <TableRow>
                 <TableCell
                   colSpan={personDetailsColumns.length}
-                  className="h-24 text-center"
+                  className='h-24 text-center'
                 >
                   Loading...
                 </TableCell>
@@ -114,7 +118,7 @@ export function PersonDetailsTable() {
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
+                  data-state={row.getIsSelected() && 'selected'}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -130,7 +134,7 @@ export function PersonDetailsTable() {
               <TableRow>
                 <TableCell
                   colSpan={personDetailsColumns.length}
-                  className="h-24 text-center"
+                  className='h-24 text-center'
                 >
                   No results.
                 </TableCell>
@@ -141,5 +145,5 @@ export function PersonDetailsTable() {
       </div>
       <DataTablePagination table={table} />
     </div>
-  );
+  )
 }

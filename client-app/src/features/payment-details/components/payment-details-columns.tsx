@@ -1,107 +1,113 @@
-import type { ColumnDef } from "@tanstack/react-table";
-import { format } from "date-fns";
-import { DataTableColumnHeader } from "@/components/data-table";
-import { LongText } from "@/components/long-text";
-import type { PaymentDetails } from "../api/schema";
+import { format } from 'date-fns'
+import type { ColumnDef } from '@tanstack/react-table'
+import { DataTableColumnHeader } from '@/components/data-table'
+import { LongText } from '@/components/long-text'
+import type { PaymentDetails } from '../api/schema'
 
 export const paymentDetailsColumns: ColumnDef<PaymentDetails>[] = [
   {
-    accessorKey: "paymentDate",
+    accessorKey: 'paymentDate',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Payment Date" />
+      <DataTableColumnHeader column={column} title='Payment Date' />
     ),
     cell: ({ row }) => {
-      const date = row.getValue("paymentDate") as string;
-      return <div className="font-medium">{format(new Date(date), "PP")}</div>;
+      const date = row.getValue('paymentDate') as string
+      return <div className='font-medium'>{format(new Date(date), 'PP')}</div>
     },
   },
   {
-    accessorKey: "paymentMethodName",
+    accessorKey: 'paymentMethodName',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Payment Method" />
+      <DataTableColumnHeader column={column} title='Payment Method' />
     ),
-    cell: ({ row }) => (
-      <div>{row.getValue("paymentMethodName")}</div>
-    ),
+    cell: ({ row }) => <div>{row.getValue('paymentMethodName')}</div>,
   },
   {
-    accessorKey: "paymentAmount",
+    accessorKey: 'paymentAmount',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Amount" />
+      <DataTableColumnHeader column={column} title='Amount' />
     ),
     cell: ({ row }) => {
-      const amount = row.getValue("paymentAmount") as number;
-      return <div className="font-semibold">₹{amount.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>;
+      const amount = row.getValue('paymentAmount') as number
+      return (
+        <div className='font-semibold'>
+          ₹
+          {amount.toLocaleString('en-IN', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}
+        </div>
+      )
     },
   },
   {
-    accessorKey: "beneficiaryName",
+    accessorKey: 'beneficiaryName',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Beneficiary" />
+      <DataTableColumnHeader column={column} title='Beneficiary' />
     ),
     cell: ({ row }) => {
-      const name = row.getValue("beneficiaryName") as string | null;
+      const name = row.getValue('beneficiaryName') as string | null
       return name ? (
         <div>{name}</div>
       ) : (
-        <span className="text-muted-foreground">-</span>
-      );
+        <span className='text-muted-foreground'>-</span>
+      )
     },
   },
   {
-    accessorKey: "transactionNumber",
+    accessorKey: 'transactionNumber',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Transaction #" />
+      <DataTableColumnHeader column={column} title='Transaction #' />
     ),
     cell: ({ row }) => {
-      const txn = row.getValue("transactionNumber") as string | null;
+      const txn = row.getValue('transactionNumber') as string | null
       return txn ? (
         <div className='flex space-x-2'>
-          <span className='inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10 dark:bg-blue-400/10 dark:text-blue-400 dark:ring-blue-400/30'>
+          <span className='inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-blue-700/10 ring-inset dark:bg-blue-400/10 dark:text-blue-400 dark:ring-blue-400/30'>
             {txn}
           </span>
         </div>
       ) : (
-        <span className="text-muted-foreground">-</span>
-      );
+        <span className='text-muted-foreground'>-</span>
+      )
     },
   },
   {
-    accessorKey: "vpa",
+    accessorKey: 'vpa',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="VPA" />
+      <DataTableColumnHeader column={column} title='VPA' />
     ),
     cell: ({ row }) => {
-      const vpa = row.getValue("vpa") as string | null;
+      const vpa = row.getValue('vpa') as string | null
       return vpa ? (
-        <div className="font-mono text-sm">{vpa}</div>
+        <div className='font-mono text-sm'>{vpa}</div>
       ) : (
-        <span className="text-muted-foreground">-</span>
-      );
+        <span className='text-muted-foreground'>-</span>
+      )
     },
   },
   {
-    accessorKey: "paymentRemarks",
+    accessorKey: 'paymentRemarks',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Remarks" />
+      <DataTableColumnHeader column={column} title='Remarks' />
     ),
     cell: ({ row }) => {
-      const remarks = row.getValue("paymentRemarks") as string | null;
+      const remarks = row.getValue('paymentRemarks') as string | null
       return remarks ? (
         <LongText>{remarks}</LongText>
       ) : (
-        <span className="text-muted-foreground">-</span>
-      );
+        <span className='text-muted-foreground'>-</span>
+      )
     },
   },
   {
-    accessorKey: "createdAt",
+    accessorKey: 'createdAt',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Created At" />
+      <DataTableColumnHeader column={column} title='Created At' />
     ),
     cell: ({ row }) => {
-      const date = row.getValue("createdAt") as string;
-      return <div className="text-sm">{format(new Date(date), "PPp")}</div>;
+      const date = row.getValue('createdAt') as string
+      return <div className='text-sm'>{format(new Date(date), 'PPp')}</div>
     },
   },
-];
+]

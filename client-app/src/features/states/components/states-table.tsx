@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import {
   type SortingState,
   type VisibilityState,
@@ -10,7 +11,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { useQuery } from '@tanstack/react-query'
+import { Loader2 } from 'lucide-react'
 import {
   Table,
   TableBody,
@@ -20,10 +21,9 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
+import { statesApi } from '@/features/states/api/states-api'
 import { type State } from '../data/schema'
 import { columns } from './states-columns'
-import { statesApi } from '@/features/states/api/states-api'
-import { Loader2 } from 'lucide-react'
 
 type StatesTableProps = {
   page: number
@@ -45,7 +45,11 @@ export function StatesTable({
   const [globalFilter, setGlobalFilter] = useState('')
 
   // Fetch data using TanStack Query with real-time search
-  const { data: response, isLoading, isError } = useQuery({
+  const {
+    data: response,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ['states', page - 1, pageSize, globalFilter],
     queryFn: async () => {
       return await statesApi.getAll({
@@ -93,12 +97,12 @@ export function StatesTable({
 
   if (isError) {
     return (
-      <div className="flex h-[450px] items-center justify-center">
-        <div className="text-center">
-          <p className="text-lg font-semibold text-destructive">
+      <div className='flex h-[450px] items-center justify-center'>
+        <div className='text-center'>
+          <p className='text-destructive text-lg font-semibold'>
             Error loading states
           </p>
-          <p className="text-sm text-muted-foreground">
+          <p className='text-muted-foreground text-sm'>
             Please try again later
           </p>
         </div>
@@ -107,12 +111,9 @@ export function StatesTable({
   }
 
   return (
-    <div className="space-y-4">
-      <DataTableToolbar
-        table={table}
-        searchPlaceholder='Search states...'
-      />
-      <div className="rounded-md border">
+    <div className='space-y-4'>
+      <DataTableToolbar table={table} searchPlaceholder='Search states...' />
+      <div className='rounded-md border'>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -135,9 +136,12 @@ export function StatesTable({
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
-                  <div className="flex items-center justify-center">
-                    <Loader2 className="mr-2 h-6 w-6 animate-spin" />
+                <TableCell
+                  colSpan={columns.length}
+                  className='h-24 text-center'
+                >
+                  <div className='flex items-center justify-center'>
+                    <Loader2 className='mr-2 h-6 w-6 animate-spin' />
                     <span>Loading states...</span>
                   </div>
                 </TableCell>
@@ -150,14 +154,20 @@ export function StatesTable({
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
+                <TableCell
+                  colSpan={columns.length}
+                  className='h-24 text-center'
+                >
                   No states found.
                 </TableCell>
               </TableRow>

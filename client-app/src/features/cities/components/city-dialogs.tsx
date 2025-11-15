@@ -3,10 +3,7 @@ import { GenericBulkUploadDialog } from '@/components/bulk-upload/GenericBulkUpl
 import { useCityContext } from '../context/city-provider'
 
 export function CityDialogs() {
-  const { 
-    isBulkUploadDialogOpen,
-    closeBulkUploadDialog,
-  } = useCityContext()
+  const { isBulkUploadDialogOpen, closeBulkUploadDialog } = useCityContext()
   const queryClient = useQueryClient()
 
   const handleBulkUploadSuccess = () => {

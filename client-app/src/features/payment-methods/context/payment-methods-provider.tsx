@@ -1,36 +1,37 @@
-import React, { createContext, useContext, useState } from "react";
-import type { PaymentMethod } from "../api/schema";
+import React, { createContext, useContext, useState } from 'react'
+/* eslint-disable react-refresh/only-export-components */
+import type { PaymentMethod } from '../api/schema'
 
 interface PaymentMethodsContextType {
-  selectedPaymentMethod: PaymentMethod | null;
-  setSelectedPaymentMethod: (paymentMethod: PaymentMethod | null) => void;
-  isDrawerOpen: boolean;
-  setIsDrawerOpen: (open: boolean) => void;
-  isDeleteDialogOpen: boolean;
-  setIsDeleteDialogOpen: (open: boolean) => void;
-  isEditMode: boolean;
-  setIsEditMode: (mode: boolean) => void;
-  isBulkUploadDialogOpen: boolean;
-  openBulkUploadDialog: () => void;
-  closeBulkUploadDialog: () => void;
+  selectedPaymentMethod: PaymentMethod | null
+  setSelectedPaymentMethod: (paymentMethod: PaymentMethod | null) => void
+  isDrawerOpen: boolean
+  setIsDrawerOpen: (open: boolean) => void
+  isDeleteDialogOpen: boolean
+  setIsDeleteDialogOpen: (open: boolean) => void
+  isEditMode: boolean
+  setIsEditMode: (mode: boolean) => void
+  isBulkUploadDialogOpen: boolean
+  openBulkUploadDialog: () => void
+  closeBulkUploadDialog: () => void
 }
 
 const PaymentMethodsContext = createContext<
   PaymentMethodsContextType | undefined
->(undefined);
+>(undefined)
 
 export const PaymentMethodsProvider: React.FC<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }> = ({ children }) => {
   const [selectedPaymentMethod, setSelectedPaymentMethod] =
-    useState<PaymentMethod | null>(null);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [isEditMode, setIsEditMode] = useState(false);
-  const [isBulkUploadDialogOpen, setIsBulkUploadDialogOpen] = useState(false);
+    useState<PaymentMethod | null>(null)
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [isEditMode, setIsEditMode] = useState(false)
+  const [isBulkUploadDialogOpen, setIsBulkUploadDialogOpen] = useState(false)
 
-  const openBulkUploadDialog = () => setIsBulkUploadDialogOpen(true);
-  const closeBulkUploadDialog = () => setIsBulkUploadDialogOpen(false);
+  const openBulkUploadDialog = () => setIsBulkUploadDialogOpen(true)
+  const closeBulkUploadDialog = () => setIsBulkUploadDialogOpen(false)
 
   return (
     <PaymentMethodsContext.Provider
@@ -50,15 +51,15 @@ export const PaymentMethodsProvider: React.FC<{
     >
       {children}
     </PaymentMethodsContext.Provider>
-  );
-};
+  )
+}
 
 export const usePaymentMethods = () => {
-  const context = useContext(PaymentMethodsContext);
+  const context = useContext(PaymentMethodsContext)
   if (!context) {
     throw new Error(
-      "usePaymentMethods must be used within PaymentMethodsProvider"
-    );
+      'usePaymentMethods must be used within PaymentMethodsProvider'
+    )
   }
-  return context;
-};
+  return context
+}

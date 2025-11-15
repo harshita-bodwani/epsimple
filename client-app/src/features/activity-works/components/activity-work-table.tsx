@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react'
 import {
   type ColumnFiltersState,
   type SortingState,
@@ -10,8 +10,7 @@ import {
   getFilteredRowModel,
   getSortedRowModel,
   useReactTable,
-} from '@tanstack/react-table';
-
+} from '@tanstack/react-table'
 import {
   Table,
   TableBody,
@@ -19,52 +18,52 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-
-import { DataTablePagination, DataTableToolbar } from '@/components/data-table';
-import { activityWorkApi } from '../api/activity-work-api';
-import { useActivityWork } from '../context/activity-work-provider';
-import { activityWorkColumns } from './activity-work-columns';
+} from '@/components/ui/table'
+import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
+import { activityWorkApi } from '../api/activity-work-api'
+import { useActivityWork } from '../context/activity-work-provider'
+import { activityWorkColumns } from './activity-work-columns'
 
 export function ActivityWorkTable() {
-  const { globalFilter, setGlobalFilter } = useActivityWork();
-  const [rowSelection, setRowSelection] = useState({});
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const { globalFilter, setGlobalFilter } = useActivityWork()
+  const [rowSelection, setRowSelection] = useState({})
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [sorting, setSorting] = useState<SortingState>([])
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,
-  });
+  })
 
   // Use search API when globalFilter is present, otherwise use getAll
-  const hasSearch = globalFilter && globalFilter.trim() !== '';
-  
-  const { data: searchData, isLoading: isSearchLoading } = activityWorkApi.useSearch({
-    searchTerm: globalFilter,
-    page: pagination.pageIndex,
-    size: pagination.pageSize,
-    sortBy: sorting.length > 0 ? sorting[0].id : 'id',
-    sortDirection: sorting.length > 0 && sorting[0].desc ? 'DESC' : 'ASC',
-  });
+  const hasSearch = globalFilter && globalFilter.trim() !== ''
+
+  const { data: searchData, isLoading: isSearchLoading } =
+    activityWorkApi.useSearch({
+      searchTerm: globalFilter,
+      page: pagination.pageIndex,
+      size: pagination.pageSize,
+      sortBy: sorting.length > 0 ? sorting[0].id : 'id',
+      sortDirection: sorting.length > 0 && sorting[0].desc ? 'DESC' : 'ASC',
+    })
 
   const { data: allData, isLoading: isAllLoading } = activityWorkApi.useGetAll({
     page: pagination.pageIndex,
     size: pagination.pageSize,
     sortBy: sorting.length > 0 ? sorting[0].id : 'id',
     sortDirection: sorting.length > 0 && sorting[0].desc ? 'DESC' : 'ASC',
-  });
+  })
 
-  const data = hasSearch ? searchData : allData;
-  const isLoading = hasSearch ? isSearchLoading : isAllLoading;
-  
-  const activityWorks = data?.content || [];
-  const totalPages = data?.totalPages || 0;
+  const data = hasSearch ? searchData : allData
+  const isLoading = hasSearch ? isSearchLoading : isAllLoading
+
+  const activityWorks = data?.content || []
+  const totalPages = data?.totalPages || 0
 
   // Reset to first page when search query changes
   useEffect(() => {
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
-  }, [globalFilter]);
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }))
+  }, [globalFilter])
 
   const table = useReactTable({
     data: activityWorks,
@@ -92,12 +91,12 @@ export function ActivityWorkTable() {
     getFacetedUniqueValues: getFacetedUniqueValues(),
     manualPagination: true,
     manualSorting: true,
-  });
+  })
 
   return (
-    <div className="space-y-4">
+    <div className='space-y-4'>
       <DataTableToolbar table={table} />
-      <div className="rounded-md border">
+      <div className='rounded-md border'>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -112,7 +111,7 @@ export function ActivityWorkTable() {
                             header.getContext()
                           )}
                     </TableHead>
-                  );
+                  )
                 })}
               </TableRow>
             ))}
@@ -122,7 +121,7 @@ export function ActivityWorkTable() {
               <TableRow>
                 <TableCell
                   colSpan={activityWorkColumns.length + 1}
-                  className="h-24 text-center"
+                  className='h-24 text-center'
                 >
                   Loading...
                 </TableCell>
@@ -147,7 +146,7 @@ export function ActivityWorkTable() {
               <TableRow>
                 <TableCell
                   colSpan={activityWorkColumns.length + 1}
-                  className="h-24 text-center"
+                  className='h-24 text-center'
                 >
                   No results.
                 </TableCell>
@@ -158,5 +157,5 @@ export function ActivityWorkTable() {
       </div>
       <DataTablePagination table={table} />
     </div>
-  );
+  )
 }

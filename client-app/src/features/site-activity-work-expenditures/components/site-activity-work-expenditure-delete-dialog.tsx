@@ -7,24 +7,24 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import { useSiteActivityWorkExpenditure } from '../context/site-activity-work-expenditure-provider';
-import { siteActivityWorkExpenditureApi } from '../api/site-activity-work-expenditure-api';
+} from '@/components/ui/alert-dialog'
+import { siteActivityWorkExpenditureApi } from '../api/site-activity-work-expenditure-api'
+import { useSiteActivityWorkExpenditure } from '../context/site-activity-work-expenditure-provider'
 
 export function SiteActivityWorkExpenditureDeleteDialog() {
   const { isDeleteDialogOpen, closeDeleteDialog, selectedExpenditure } =
-    useSiteActivityWorkExpenditure();
-  const deleteMutation = siteActivityWorkExpenditureApi.useDelete();
+    useSiteActivityWorkExpenditure()
+  const deleteMutation = siteActivityWorkExpenditureApi.useDelete()
 
   const handleDelete = async () => {
-    if (!selectedExpenditure) return;
+    if (!selectedExpenditure) return
 
     deleteMutation.mutate(selectedExpenditure.id, {
       onSuccess: () => {
-        closeDeleteDialog();
+        closeDeleteDialog()
       },
-    });
-  };
+    })
+  }
 
   return (
     <AlertDialog open={isDeleteDialogOpen} onOpenChange={closeDeleteDialog}>
@@ -42,12 +42,12 @@ export function SiteActivityWorkExpenditureDeleteDialog() {
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDelete}
-            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
           >
             {deleteMutation.isPending ? 'Deleting...' : 'Delete'}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  );
+  )
 }

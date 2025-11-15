@@ -1,40 +1,45 @@
-import React, { createContext, useContext, useState } from 'react';
-import type { CostItem } from '@/features/cost-items/api/cost-items-api';
+import React, { createContext, useContext, useState } from 'react'
+/* eslint-disable react-refresh/only-export-components */
+import type { CostItem } from '@/features/cost-items/api/cost-items-api'
 
 interface CostItemContextType {
-  isDrawerOpen: boolean;
-  openDrawer: () => void;
-  closeDrawer: () => void;
-  editingCostItem: CostItem | null;
-  setEditingCostItem: (costItem: CostItem | null) => void;
-  isBulkUploadDialogOpen: boolean;
-  openBulkUploadDialog: () => void;
-  closeBulkUploadDialog: () => void;
+  isDrawerOpen: boolean
+  openDrawer: () => void
+  closeDrawer: () => void
+  editingCostItem: CostItem | null
+  setEditingCostItem: (costItem: CostItem | null) => void
+  isBulkUploadDialogOpen: boolean
+  openBulkUploadDialog: () => void
+  closeBulkUploadDialog: () => void
 }
 
-const CostItemContext = createContext<CostItemContextType | undefined>(undefined);
+const CostItemContext = createContext<CostItemContextType | undefined>(
+  undefined
+)
 
 export const useCostItemContext = () => {
-  const context = useContext(CostItemContext);
+  const context = useContext(CostItemContext)
   if (!context) {
-    throw new Error('useCostItemContext must be used within CostItemProvider');
+    throw new Error('useCostItemContext must be used within CostItemProvider')
   }
-  return context;
-};
+  return context
+}
 
-export const CostItemProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [editingCostItem, setEditingCostItem] = useState<CostItem | null>(null);
-  const [isBulkUploadDialogOpen, setIsBulkUploadDialogOpen] = useState(false);
+export const CostItemProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const [editingCostItem, setEditingCostItem] = useState<CostItem | null>(null)
+  const [isBulkUploadDialogOpen, setIsBulkUploadDialogOpen] = useState(false)
 
-  const openDrawer = () => setIsDrawerOpen(true);
+  const openDrawer = () => setIsDrawerOpen(true)
   const closeDrawer = () => {
-    setIsDrawerOpen(false);
-    setEditingCostItem(null);
-  };
+    setIsDrawerOpen(false)
+    setEditingCostItem(null)
+  }
 
-  const openBulkUploadDialog = () => setIsBulkUploadDialogOpen(true);
-  const closeBulkUploadDialog = () => setIsBulkUploadDialogOpen(false);
+  const openBulkUploadDialog = () => setIsBulkUploadDialogOpen(true)
+  const closeBulkUploadDialog = () => setIsBulkUploadDialogOpen(false)
 
   return (
     <CostItemContext.Provider
@@ -51,5 +56,5 @@ export const CostItemProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     >
       {children}
     </CostItemContext.Provider>
-  );
-};
+  )
+}

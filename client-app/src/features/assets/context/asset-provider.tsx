@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from 'react'
-import { AssetContext } from './asset-context'
 import type { Asset } from '../api/schema'
+import { AssetContext } from './asset-context'
 
 export function AssetProvider({ children }: { children: ReactNode }) {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
@@ -12,7 +12,8 @@ export function AssetProvider({ children }: { children: ReactNode }) {
   const [isPlacementDialogOpen, setIsPlacementDialogOpen] = useState(false)
   const [assetForPlacement, setAssetForPlacement] = useState<Asset | null>(null)
   const [isBulkUploadDialogOpen, setIsBulkUploadDialogOpen] = useState(false)
-  const [isPlacementBulkUploadDialogOpen, setIsPlacementBulkUploadDialogOpen] = useState(false)
+  const [isPlacementBulkUploadDialogOpen, setIsPlacementBulkUploadDialogOpen] =
+    useState(false)
 
   return (
     <AssetContext.Provider

@@ -7,9 +7,9 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { useAssetCategoryContext } from "../context/asset-category-provider";
-import { assetCategoryApi } from "../api/asset-categories-api";
+} from '@/components/ui/alert-dialog'
+import { assetCategoryApi } from '../api/asset-categories-api'
+import { useAssetCategoryContext } from '../context/asset-category-provider'
 
 export function AssetCategoryDeleteDialog() {
   const {
@@ -17,20 +17,20 @@ export function AssetCategoryDeleteDialog() {
     setIsDeleteDialogOpen,
     editingAssetCategory,
     setEditingAssetCategory,
-  } = useAssetCategoryContext();
+  } = useAssetCategoryContext()
 
-  const deleteMutation = assetCategoryApi.useDelete();
+  const deleteMutation = assetCategoryApi.useDelete()
 
   const handleDelete = () => {
     if (editingAssetCategory) {
       deleteMutation.mutate(editingAssetCategory.id, {
         onSuccess: () => {
-          setIsDeleteDialogOpen(false);
-          setEditingAssetCategory(null);
+          setIsDeleteDialogOpen(false)
+          setEditingAssetCategory(null)
         },
-      });
+      })
     }
-  };
+  }
 
   return (
     <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
@@ -50,12 +50,12 @@ export function AssetCategoryDeleteDialog() {
           <AlertDialogAction
             onClick={handleDelete}
             disabled={deleteMutation.isPending}
-            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
           >
-            {deleteMutation.isPending ? "Deleting..." : "Delete"}
+            {deleteMutation.isPending ? 'Deleting...' : 'Delete'}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  );
+  )
 }

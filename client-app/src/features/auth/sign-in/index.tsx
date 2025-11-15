@@ -14,12 +14,11 @@ export function SignIn() {
 
   return (
     <AuthLayout>
-      <Card className='gap-4 mb-20'>
+      <Card className='mb-20 gap-4'>
         <CardHeader>
           <CardTitle className='text-lg tracking-tight'>Sign in</CardTitle>
           <CardDescription>
-            Enter your email and password below to 
-            log into your account
+            Enter your email and password below to log into your account
           </CardDescription>
         </CardHeader>
         <CardContent>

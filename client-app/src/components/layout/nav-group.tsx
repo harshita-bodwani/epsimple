@@ -178,7 +178,9 @@ function SidebarMenuSubCollapsible({
                   >
                     {subSubItem.icon && <subSubItem.icon />}
                     <span>{subSubItem.title}</span>
-                    {subSubItem.badge && <NavBadge>{subSubItem.badge}</NavBadge>}
+                    {subSubItem.badge && (
+                      <NavBadge>{subSubItem.badge}</NavBadge>
+                    )}
                   </Link>
                 </SidebarMenuSubButton>
               </SidebarMenuSubItem>
@@ -225,15 +227,22 @@ function SidebarMenuCollapsedDropdown({
                     {sub.title}
                   </DropdownMenuLabel>
                   {sub.items.map((subSub) => (
-                    <DropdownMenuItem key={`${subSub.title}-${subSub.url}`} asChild>
+                    <DropdownMenuItem
+                      key={`${subSub.title}-${subSub.url}`}
+                      asChild
+                    >
                       <Link
                         to={subSub.url}
                         className={`${checkIsActive(href, subSub) ? 'bg-secondary' : ''} ml-2`}
                       >
                         {subSub.icon && <subSub.icon />}
-                        <span className='max-w-52 text-wrap'>{subSub.title}</span>
+                        <span className='max-w-52 text-wrap'>
+                          {subSub.title}
+                        </span>
                         {subSub.badge && (
-                          <span className='ms-auto text-xs'>{subSub.badge}</span>
+                          <span className='ms-auto text-xs'>
+                            {subSub.badge}
+                          </span>
                         )}
                       </Link>
                     </DropdownMenuItem>

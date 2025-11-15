@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -11,9 +12,7 @@ import {
   getFilteredRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table";
-import { useQuery } from "@tanstack/react-query";
-
+} from '@tanstack/react-table'
 import {
   Table,
   TableBody,
@@ -21,38 +20,37 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-
-import { DataTablePagination, DataTableToolbar } from "@/components/data-table";
-import { paymentDetailsApi } from "../api/payment-details-api";
-import { DataTableRowActions } from "./data-table-row-actions";
+} from '@/components/ui/table'
+import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
+import { paymentDetailsApi } from '../api/payment-details-api'
+import { DataTableRowActions } from './data-table-row-actions'
 
 interface PaymentDetailsTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
+  columns: ColumnDef<TData, TValue>[]
 }
 
 export function PaymentDetailsTable<TData, TValue>({
   columns,
 }: PaymentDetailsTableProps<TData, TValue>) {
-  const [globalFilter, setGlobalFilter] = useState("");
-  const [rowSelection, setRowSelection] = useState({});
+  const [globalFilter, setGlobalFilter] = useState('')
+  const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
     createdAt: false,
     vpa: false,
     paymentRemarks: false,
-  });
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  })
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [sorting, setSorting] = useState<SortingState>([
-    { id: "paymentDate", desc: true },
-  ]);
+    { id: 'paymentDate', desc: true },
+  ])
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,
-  });
+  })
 
   const { data, isLoading } = useQuery({
     queryKey: [
-      "payment-details",
+      'payment-details',
       pagination.pageIndex,
       pagination.pageSize,
       globalFilter,
@@ -61,18 +59,18 @@ export function PaymentDetailsTable<TData, TValue>({
       sorting[0]?.desc,
     ],
     queryFn: async () => {
-      const sortBy = sorting.length > 0 ? sorting[0].id : "paymentDate";
+      const sortBy = sorting.length > 0 ? sorting[0].id : 'paymentDate'
       const sortDirection =
-        sorting.length > 0 && sorting[0].desc ? "DESC" : "ASC";
+        sorting.length > 0 && sorting[0].desc ? 'DESC' : 'ASC'
 
-      if (globalFilter && globalFilter.trim() !== "") {
+      if (globalFilter && globalFilter.trim() !== '') {
         return await paymentDetailsApi.search(
           globalFilter,
           pagination.pageIndex,
           pagination.pageSize,
           sortBy,
           sortDirection
-        );
+        )
       }
 
       return await paymentDetailsApi.getAll(
@@ -80,30 +78,30 @@ export function PaymentDetailsTable<TData, TValue>({
         pagination.pageSize,
         sortBy,
         sortDirection
-      );
+      )
     },
-  });
+  })
 
-  const paymentDetails = (data?.data?.content || []) as TData[];
-  const totalPages = data?.data?.page?.totalPages || 0;
+  const paymentDetails = (data?.data?.content || []) as TData[]
+  const totalPages = data?.data?.page?.totalPages || 0
 
   // Reset to first page when search query changes
   useEffect(() => {
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
-  }, [globalFilter]);
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }))
+  }, [globalFilter])
 
   // Add actions column
   const columnsWithActions = React.useMemo(
     () => [
       ...columns,
       {
-        id: "actions",
+        id: 'actions',
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         cell: ({ row }) => <DataTableRowActions row={row as any} />,
       },
     ],
     [columns]
-  );
+  )
 
   const table = useReactTable({
     data: paymentDetails,
@@ -131,15 +129,15 @@ export function PaymentDetailsTable<TData, TValue>({
     getFacetedUniqueValues: getFacetedUniqueValues(),
     manualPagination: true,
     manualSorting: true,
-  });
+  })
 
   return (
-    <div className="space-y-4">
+    <div className='space-y-4'>
       <DataTableToolbar
         table={table}
-        searchPlaceholder="Search payment details..."
+        searchPlaceholder='Search payment details...'
       />
-      <div className="rounded-md border">
+      <div className='rounded-md border'>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -154,7 +152,7 @@ export function PaymentDetailsTable<TData, TValue>({
                             header.getContext()
                           )}
                     </TableHead>
-                  );
+                  )
                 })}
               </TableRow>
             ))}
@@ -164,7 +162,7 @@ export function PaymentDetailsTable<TData, TValue>({
               <TableRow>
                 <TableCell
                   colSpan={columns.length + 1}
-                  className="h-24 text-center"
+                  className='h-24 text-center'
                 >
                   Loading...
                 </TableCell>
@@ -173,7 +171,7 @@ export function PaymentDetailsTable<TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
+                  data-state={row.getIsSelected() && 'selected'}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -189,7 +187,7 @@ export function PaymentDetailsTable<TData, TValue>({
               <TableRow>
                 <TableCell
                   colSpan={columns.length + 1}
-                  className="h-24 text-center"
+                  className='h-24 text-center'
                 >
                   No results.
                 </TableCell>
@@ -200,5 +198,5 @@ export function PaymentDetailsTable<TData, TValue>({
       </div>
       <DataTablePagination table={table} />
     </div>
-  );
+  )
 }

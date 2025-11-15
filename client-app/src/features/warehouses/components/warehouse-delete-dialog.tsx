@@ -7,24 +7,24 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import { useWarehouse } from '../hooks/use-warehouse';
-import { warehouseApi } from '../api/warehouse-api';
+} from '@/components/ui/alert-dialog'
+import { warehouseApi } from '../api/warehouse-api'
+import { useWarehouse } from '../hooks/use-warehouse'
 
 export function WarehouseDeleteDialog() {
   const { isDeleteDialogOpen, closeDeleteDialog, selectedWarehouse } =
-    useWarehouse();
-  const deleteMutation = warehouseApi.useDelete();
+    useWarehouse()
+  const deleteMutation = warehouseApi.useDelete()
 
   const handleDelete = () => {
     if (selectedWarehouse) {
       deleteMutation.mutate(selectedWarehouse.id, {
         onSuccess: () => {
-          closeDeleteDialog();
+          closeDeleteDialog()
         },
-      });
+      })
     }
-  };
+  }
 
   return (
     <AlertDialog open={isDeleteDialogOpen} onOpenChange={closeDeleteDialog}>
@@ -32,17 +32,21 @@ export function WarehouseDeleteDialog() {
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete the warehouse
+            This action cannot be undone. This will permanently delete the
+            warehouse
             <strong> {selectedWarehouse?.warehouseName}</strong>.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleDelete} disabled={deleteMutation.isPending}>
+          <AlertDialogAction
+            onClick={handleDelete}
+            disabled={deleteMutation.isPending}
+          >
             {deleteMutation.isPending ? 'Deleting...' : 'Delete'}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  );
+  )
 }

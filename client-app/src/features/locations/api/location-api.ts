@@ -1,14 +1,18 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'sonner';
-import api from '@/lib/api';
-import { BackendPageResponse, FlatPageResponse, flattenPageResponse } from '@/lib/api-utils';
-import type { Location, LocationFormData } from './schema';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { toast } from 'sonner'
+import api from '@/lib/api'
+import {
+  type BackendPageResponse,
+  type FlatPageResponse,
+  flattenPageResponse,
+} from '@/lib/api-utils'
+import type { Location, LocationFormData } from './schema'
 
 interface ApiResponse<T> {
-  data: T;
-  message: string;
-  status: number;
-  timestamp: string;
+  data: T
+  message: string
+  status: number
+  timestamp: string
 }
 
 const LOCATION_ENDPOINTS = {
@@ -16,126 +20,143 @@ const LOCATION_ENDPOINTS = {
   SEARCH: '/api/locations/search',
   LIST: '/api/locations/list',
   BY_ID: (id: number) => `/api/locations/${id}`,
-};
+}
 
 export const locationApi = {
   useGetAll: (params: {
-    page: number;
-    size: number;
-    sortBy?: string;
-    sortDirection?: string;
+    page: number
+    size: number
+    sortBy?: string
+    sortDirection?: string
   }) => {
     return useQuery({
       queryKey: ['locations', params],
       queryFn: async () => {
-        const response = await api.get<ApiResponse<BackendPageResponse<Location>>>(
-          LOCATION_ENDPOINTS.BASE,
-          {
-            params: {
-              page: params.page,
-              size: params.size,
-              sortBy: params.sortBy || 'id',
-              sortDirection: params.sortDirection || 'ASC',
-            },
-          }
-        );
-        return flattenPageResponse(response.data.data);
+        const response = await api.get<
+          ApiResponse<BackendPageResponse<Location>>
+        >(LOCATION_ENDPOINTS.BASE, {
+          params: {
+            page: params.page,
+            size: params.size,
+            sortBy: params.sortBy || 'id',
+            sortDirection: params.sortDirection || 'ASC',
+          },
+        })
+        return flattenPageResponse(response.data.data)
       },
-    });
+    })
   },
 
   useSearch: (params: {
-    searchTerm: string;
-    page: number;
-    size: number;
-    sortBy?: string;
-    sortDirection?: string;
+    searchTerm: string
+    page: number
+    size: number
+    sortBy?: string
+    sortDirection?: string
   }) => {
     return useQuery({
       queryKey: ['locations', 'search', params],
       queryFn: async () => {
-        const response = await api.get<ApiResponse<BackendPageResponse<Location>>>(
-          params.searchTerm?.trim() ? LOCATION_ENDPOINTS.SEARCH : LOCATION_ENDPOINTS.BASE,
+        const response = await api.get<
+          ApiResponse<BackendPageResponse<Location>>
+        >(
+          params.searchTerm?.trim()
+            ? LOCATION_ENDPOINTS.SEARCH
+            : LOCATION_ENDPOINTS.BASE,
           {
             params: {
-              ...(params.searchTerm?.trim() && { searchTerm: params.searchTerm }),
+              ...(params.searchTerm?.trim() && {
+                searchTerm: params.searchTerm,
+              }),
               page: params.page,
               size: params.size,
               sortBy: params.sortBy || 'locationName',
               sortDirection: params.sortDirection || 'ASC',
             },
           }
-        );
-        return flattenPageResponse(response.data.data).content;
+        )
+        return flattenPageResponse(response.data.data).content
       },
       staleTime: 30000,
-    });
+    })
   },
 
   useCreate: () => {
-    const queryClient = useQueryClient();
+    const queryClient = useQueryClient()
 
     return useMutation({
       mutationFn: async (data: LocationFormData) => {
         const response = await api.post<ApiResponse<Location>>(
           LOCATION_ENDPOINTS.BASE,
           data
-        );
-        return response.data.data;
+        )
+        return response.data.data
       },
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['locations'] });
-        toast.success('Location created successfully');
+        queryClient.invalidateQueries({ queryKey: ['locations'] })
+        toast.success('Location created successfully')
       },
       onError: (error: any) => {
-        toast.error(error.response?.data?.message || 'Failed to create location');
+        toast.error(
+          error.response?.data?.message || 'Failed to create location'
+        )
       },
-    });
+    })
   },
 
   useUpdate: () => {
-    const queryClient = useQueryClient();
+    const queryClient = useQueryClient()
 
     return useMutation({
-      mutationFn: async ({ id, data }: { id: number; data: LocationFormData }) => {
+      mutationFn: async ({
+        id,
+        data,
+      }: {
+        id: number
+        data: LocationFormData
+      }) => {
         const response = await api.put<ApiResponse<Location>>(
           LOCATION_ENDPOINTS.BY_ID(id),
           data
-        );
-        return response.data.data;
+        )
+        return response.data.data
       },
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['locations'] });
-        toast.success('Location updated successfully');
+        queryClient.invalidateQueries({ queryKey: ['locations'] })
+        toast.success('Location updated successfully')
       },
       onError: (error: any) => {
-        toast.error(error.response?.data?.message || 'Failed to update location');
+        toast.error(
+          error.response?.data?.message || 'Failed to update location'
+        )
       },
-    });
+    })
   },
 
   useDelete: () => {
-    const queryClient = useQueryClient();
+    const queryClient = useQueryClient()
 
     return useMutation({
       mutationFn: async (id: number) => {
-        await api.delete(LOCATION_ENDPOINTS.BY_ID(id));
+        await api.delete(LOCATION_ENDPOINTS.BY_ID(id))
       },
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['locations'] });
-        toast.success('Location deleted successfully');
+        queryClient.invalidateQueries({ queryKey: ['locations'] })
+        toast.success('Location deleted successfully')
       },
       onError: (error: any) => {
-        toast.error(error.response?.data?.message || 'Failed to delete location');
+        toast.error(
+          error.response?.data?.message || 'Failed to delete location'
+        )
       },
-    });
+    })
   },
 
   getAll: async (params: {
-    page: number;
-    size: number;
-    sortBy?: string;
-    sortDirection?: string;
+    page: number
+    size: number
+    sortBy?: string
+    sortDirection?: string
   }): Promise<FlatPageResponse<Location>> => {
     const response = await api.get<ApiResponse<BackendPageResponse<Location>>>(
       LOCATION_ENDPOINTS.BASE,
@@ -147,14 +168,14 @@ export const locationApi = {
           sortDirection: params.sortDirection || 'ASC',
         },
       }
-    );
-    return flattenPageResponse(response.data.data);
+    )
+    return flattenPageResponse(response.data.data)
   },
 
   getList: async (): Promise<Location[]> => {
     const response = await api.get<ApiResponse<Location[]>>(
       LOCATION_ENDPOINTS.LIST
-    );
-    return response.data.data;
+    )
+    return response.data.data
   },
-};
+}

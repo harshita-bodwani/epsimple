@@ -1,13 +1,13 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'sonner';
-import { ConfirmDialog } from '@/components/confirm-dialog';
-import { GenericBulkUploadDialog } from '@/components/bulk-upload/GenericBulkUploadDialog';
-import { VendorTypesMutateDrawer } from './vendor-types-mutate-drawer';
-import { useVendorTypes } from '../context/vendor-types-provider';
-import { vendorTypesApi } from '../api/vendor-types-api';
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { toast } from 'sonner'
+import { GenericBulkUploadDialog } from '@/components/bulk-upload/GenericBulkUploadDialog'
+import { ConfirmDialog } from '@/components/confirm-dialog'
+import { vendorTypesApi } from '../api/vendor-types-api'
+import { useVendorTypes } from '../hooks/use-vendor-types'
+import { VendorTypesMutateDrawer } from './vendor-types-mutate-drawer'
 
 export function VendorTypesDialogs() {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
   const {
     selectedVendorType,
     setSelectedVendorType,
@@ -17,27 +17,27 @@ export function VendorTypesDialogs() {
     setIsDeleteDialogOpen,
     isBulkUploadDialogOpen,
     closeBulkUploadDialog,
-  } = useVendorTypes();
+  } = useVendorTypes()
 
   const deleteMutation = useMutation({
     mutationFn: vendorTypesApi.delete,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['vendor-types'] });
-      toast.success('Vendor type deleted successfully');
-      setIsDeleteDialogOpen(false);
-      setSelectedVendorType(null);
+      queryClient.invalidateQueries({ queryKey: ['vendor-types'] })
+      toast.success('Vendor type deleted successfully')
+      setIsDeleteDialogOpen(false)
+      setSelectedVendorType(null)
     },
-  });
+  })
 
   const handleDelete = () => {
     if (selectedVendorType) {
-      deleteMutation.mutate(selectedVendorType.id);
+      deleteMutation.mutate(selectedVendorType.id)
     }
-  };
+  }
 
   const handleBulkUploadSuccess = () => {
-    queryClient.invalidateQueries({ queryKey: ['vendor-types'] });
-  };
+    queryClient.invalidateQueries({ queryKey: ['vendor-types'] })
+  }
 
   const bulkUploadConfig = {
     entityName: 'VendorType',
@@ -46,7 +46,7 @@ export function VendorTypesDialogs() {
     exportEndpoint: '/api/vendor-types/export',
     errorReportEndpoint: '/api/vendor-types/export-errors',
     onSuccess: handleBulkUploadSuccess,
-  };
+  }
 
   return (
     <>
@@ -58,7 +58,7 @@ export function VendorTypesDialogs() {
       <ConfirmDialog
         open={isDeleteDialogOpen}
         onOpenChange={setIsDeleteDialogOpen}
-        title="Delete Vendor Type"
+        title='Delete Vendor Type'
         desc={`Are you sure you want to delete the vendor type "${selectedVendorType?.typeName}"? This action cannot be undone.`}
         handleConfirm={handleDelete}
         isLoading={deleteMutation.isPending}
@@ -70,5 +70,5 @@ export function VendorTypesDialogs() {
         config={bulkUploadConfig}
       />
     </>
-  );
+  )
 }

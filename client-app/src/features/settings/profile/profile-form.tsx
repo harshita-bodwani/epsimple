@@ -60,7 +60,8 @@ export function ProfileForm() {
                 <Input placeholder='Your full name' {...field} />
               </FormControl>
               <FormDescription>
-                This is your display name. It will be shown in your profile and to other users.
+                This is your display name. It will be shown in your profile and
+                to other users.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -73,7 +74,7 @@ export function ProfileForm() {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input 
+                <Input
                   type='email'
                   placeholder='your.email@example.com'
                   {...field}

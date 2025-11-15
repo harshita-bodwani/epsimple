@@ -23,6 +23,7 @@ export function SignOutDialog({ open, onOpenChange }: SignOutDialogProps) {
         replace: true,
       })
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Logout failed:', error)
       // Even if logout fails, redirect to sign-in
       navigate({

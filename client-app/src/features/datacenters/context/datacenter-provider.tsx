@@ -1,28 +1,33 @@
-import React, { useState } from 'react';
-import { DatacenterContext } from './datacenter-context';
-import type { Datacenter } from '../api/schema';
+import React, { useState } from 'react'
+import type { Datacenter } from '../api/schema'
+import { DatacenterContext } from './datacenter-context'
 
-export function DatacenterProvider({ children }: { children: React.ReactNode }) {
-  const [selectedDatacenter, setSelectedDatacenter] = useState<Datacenter | null>(null);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [isBulkUploadDialogOpen, setIsBulkUploadDialogOpen] = useState(false);
-  const [globalFilter, setGlobalFilter] = useState('');
+export function DatacenterProvider({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  const [selectedDatacenter, setSelectedDatacenter] =
+    useState<Datacenter | null>(null)
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [isBulkUploadDialogOpen, setIsBulkUploadDialogOpen] = useState(false)
+  const [globalFilter, setGlobalFilter] = useState('')
 
-  const openDrawer = () => setIsDrawerOpen(true);
+  const openDrawer = () => setIsDrawerOpen(true)
   const closeDrawer = () => {
-    setIsDrawerOpen(false);
-    setSelectedDatacenter(null);
-  };
+    setIsDrawerOpen(false)
+    setSelectedDatacenter(null)
+  }
 
-  const openDeleteDialog = () => setIsDeleteDialogOpen(true);
+  const openDeleteDialog = () => setIsDeleteDialogOpen(true)
   const closeDeleteDialog = () => {
-    setIsDeleteDialogOpen(false);
-    setSelectedDatacenter(null);
-  };
+    setIsDeleteDialogOpen(false)
+    setSelectedDatacenter(null)
+  }
 
-  const openBulkUploadDialog = () => setIsBulkUploadDialogOpen(true);
-  const closeBulkUploadDialog = () => setIsBulkUploadDialogOpen(false);
+  const openBulkUploadDialog = () => setIsBulkUploadDialogOpen(true)
+  const closeBulkUploadDialog = () => setIsBulkUploadDialogOpen(false)
 
   return (
     <DatacenterContext.Provider
@@ -46,5 +51,5 @@ export function DatacenterProvider({ children }: { children: React.ReactNode }) 
     >
       {children}
     </DatacenterContext.Provider>
-  );
+  )
 }

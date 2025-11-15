@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -11,9 +12,7 @@ import {
   getFilteredRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table";
-import { useQuery } from "@tanstack/react-query";
-
+} from '@tanstack/react-table'
 import {
   Table,
   TableBody,
@@ -21,34 +20,33 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-
-import { DataTablePagination, DataTableToolbar } from "@/components/data-table";
-import { invoicesApi } from "../api/invoices-api";
-import { DataTableRowActions } from "./data-table-row-actions";
+} from '@/components/ui/table'
+import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
+import { invoicesApi } from '../api/invoices-api'
+import { DataTableRowActions } from './data-table-row-actions'
 
 interface InvoiceTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
+  columns: ColumnDef<TData, TValue>[]
 }
 
 export function InvoiceTable<TData, TValue>({
   columns,
 }: InvoiceTableProps<TData, TValue>) {
-  const [globalFilter, setGlobalFilter] = useState("");
-  const [rowSelection, setRowSelection] = useState({});
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [globalFilter, setGlobalFilter] = useState('')
+  const [rowSelection, setRowSelection] = useState({})
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [sorting, setSorting] = useState<SortingState>([
-    { id: "invoiceDate", desc: true },
-  ]);
+    { id: 'invoiceDate', desc: true },
+  ])
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,
-  });
+  })
 
   const { data, isLoading } = useQuery({
     queryKey: [
-      "invoices",
+      'invoices',
       pagination.pageIndex,
       pagination.pageSize,
       globalFilter,
@@ -57,18 +55,18 @@ export function InvoiceTable<TData, TValue>({
       sorting[0]?.desc,
     ],
     queryFn: async () => {
-      const sortBy = sorting.length > 0 ? sorting[0].id : "invoiceDate";
+      const sortBy = sorting.length > 0 ? sorting[0].id : 'invoiceDate'
       const sortDirection =
-        sorting.length > 0 && sorting[0].desc ? "DESC" : "ASC";
+        sorting.length > 0 && sorting[0].desc ? 'DESC' : 'ASC'
 
-      if (globalFilter && globalFilter.trim() !== "") {
+      if (globalFilter && globalFilter.trim() !== '') {
         return await invoicesApi.search(
           globalFilter,
           pagination.pageIndex,
           pagination.pageSize,
           sortBy,
           sortDirection
-        );
+        )
       }
 
       return await invoicesApi.getAll(
@@ -76,30 +74,30 @@ export function InvoiceTable<TData, TValue>({
         pagination.pageSize,
         sortBy,
         sortDirection
-      );
+      )
     },
-  });
+  })
 
-  const invoices = (data?.data?.content || []) as TData[];
-  const totalPages = data?.data?.page?.totalPages || 0;
+  const invoices = (data?.data?.content || []) as TData[]
+  const totalPages = data?.data?.page?.totalPages || 0
 
   // Reset to first page when search query changes
   useEffect(() => {
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
-  }, [globalFilter]);
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }))
+  }, [globalFilter])
 
   // Add actions column
   const columnsWithActions = React.useMemo(
     () => [
       ...columns,
       {
-        id: "actions",
+        id: 'actions',
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         cell: ({ row }) => <DataTableRowActions row={row as any} />,
       },
     ],
     [columns]
-  );
+  )
 
   const table = useReactTable({
     data: invoices,
@@ -127,15 +125,12 @@ export function InvoiceTable<TData, TValue>({
     getFacetedUniqueValues: getFacetedUniqueValues(),
     manualPagination: true,
     manualSorting: true,
-  });
+  })
 
   return (
-    <div className="space-y-4">
-      <DataTableToolbar
-        table={table}
-        searchPlaceholder="Search invoices..."
-      />
-      <div className="rounded-md border">
+    <div className='space-y-4'>
+      <DataTableToolbar table={table} searchPlaceholder='Search invoices...' />
+      <div className='rounded-md border'>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -150,7 +145,7 @@ export function InvoiceTable<TData, TValue>({
                             header.getContext()
                           )}
                     </TableHead>
-                  );
+                  )
                 })}
               </TableRow>
             ))}
@@ -160,7 +155,7 @@ export function InvoiceTable<TData, TValue>({
               <TableRow>
                 <TableCell
                   colSpan={columns.length + 1}
-                  className="h-24 text-center"
+                  className='h-24 text-center'
                 >
                   Loading...
                 </TableCell>
@@ -169,7 +164,7 @@ export function InvoiceTable<TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
+                  data-state={row.getIsSelected() && 'selected'}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -185,7 +180,7 @@ export function InvoiceTable<TData, TValue>({
               <TableRow>
                 <TableCell
                   colSpan={columns.length + 1}
-                  className="h-24 text-center"
+                  className='h-24 text-center'
                 >
                   No results.
                 </TableCell>
@@ -196,5 +191,5 @@ export function InvoiceTable<TData, TValue>({
       </div>
       <DataTablePagination table={table} />
     </div>
-  );
+  )
 }

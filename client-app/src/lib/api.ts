@@ -29,35 +29,33 @@ api.interceptors.response.use(
     // Handle common errors
     if (error.response?.status === 401) {
       // Unauthorized - redirect to login
-      console.warn('Unauthorized request - redirecting to login')
-      
       // Only redirect if we're not already on login/auth pages
       const currentPath = window.location.pathname
-      const isAuthPage = currentPath.includes('/sign-in') || 
-                        currentPath.includes('/sign-up') || 
-                        currentPath.includes('/forgot-password') ||
-                        currentPath.includes('/reset-password')
-      
+      const isAuthPage =
+        currentPath.includes('/sign-in') ||
+        currentPath.includes('/sign-up') ||
+        currentPath.includes('/forgot-password') ||
+        currentPath.includes('/reset-password')
+
       if (!isAuthPage) {
         // Clear any stored auth data
-        document.cookie = 'jwt-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
-        
+        document.cookie =
+          'jwt-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+
         // Redirect to login with current path for redirect after login
         const redirectTo = encodeURIComponent(currentPath)
         window.location.href = `/sign-in?redirectTo=${redirectTo}`
       }
     }
-    
+
     if (error.response?.status === 403) {
       // Forbidden
-      console.warn('Forbidden request')
     }
-    
+
     if (error.response?.status >= 500) {
       // Server errors
-      console.error('Server error:', error.response.status)
     }
-    
+
     return Promise.reject(error)
   }
 )

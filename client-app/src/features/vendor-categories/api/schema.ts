@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod'
 
 export const vendorCategorySchema = z.object({
   id: z.number(),
@@ -6,7 +6,7 @@ export const vendorCategorySchema = z.object({
   description: z.string(),
   createdAt: z.string(),
   updatedAt: z.string(),
-});
+})
 
 export const vendorCategoryFormSchema = z.object({
   categoryName: z
@@ -17,7 +17,7 @@ export const vendorCategoryFormSchema = z.object({
     .string()
     .max(5000, 'Description must not exceed 5000 characters')
     .optional(),
-});
+})
 
-export type VendorCategory = z.infer<typeof vendorCategorySchema>;
-export type VendorCategoryFormData = z.infer<typeof vendorCategoryFormSchema>;
+export type VendorCategory = z.infer<typeof vendorCategorySchema>
+export type VendorCategoryFormData = z.infer<typeof vendorCategoryFormSchema>

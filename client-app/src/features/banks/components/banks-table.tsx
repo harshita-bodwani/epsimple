@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import {
   type SortingState,
   type VisibilityState,
@@ -10,7 +11,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { useQuery } from '@tanstack/react-query'
+import { Loader2 } from 'lucide-react'
 import {
   Table,
   TableBody,
@@ -20,10 +21,9 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
+import { getAllBanks, searchBanks } from '@/features/banks/api/banks-api'
 import { type Bank } from '../data/schema'
 import { banksColumns as columns } from './banks-columns'
-import { getAllBanks, searchBanks } from '@/features/banks/api/banks-api'
-import { Loader2 } from 'lucide-react'
 
 type BanksTableProps = {
   page: number
@@ -45,7 +45,11 @@ export function BanksTable({
   const [globalFilter, setGlobalFilter] = useState('')
 
   // Fetch data using TanStack Query with real-time search
-  const { data: response, isLoading, isError } = useQuery({
+  const {
+    data: response,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ['banks', page - 1, pageSize, globalFilter],
     queryFn: async () => {
       if (globalFilter && globalFilter.trim()) {
@@ -101,7 +105,7 @@ export function BanksTable({
   if (isLoading) {
     return (
       <div className='flex h-96 items-center justify-center'>
-        <Loader2 className='size-8 animate-spin text-muted-foreground' />
+        <Loader2 className='text-muted-foreground size-8 animate-spin' />
       </div>
     )
   }
@@ -109,7 +113,9 @@ export function BanksTable({
   if (isError) {
     return (
       <div className='flex h-96 items-center justify-center'>
-        <p className='text-destructive'>Error loading banks. Please try again.</p>
+        <p className='text-destructive'>
+          Error loading banks. Please try again.
+        </p>
       </div>
     )
   }

@@ -1,13 +1,11 @@
-import { useQueryClient } from '@tanstack/react-query';
-import { GenericBulkUploadDialog } from '@/components/bulk-upload/GenericBulkUploadDialog';
-import { useExpendituresInvoice } from '../hooks/use-expenditures-invoice';
+import { useQueryClient } from '@tanstack/react-query'
+import { GenericBulkUploadDialog } from '@/components/bulk-upload/GenericBulkUploadDialog'
+import { useExpendituresInvoice } from '../hooks/use-expenditures-invoice'
 
 export function ExpendituresInvoiceDialogs() {
-  const queryClient = useQueryClient();
-  const {
-    isBulkUploadDialogOpen,
-    setIsBulkUploadDialogOpen,
-  } = useExpendituresInvoice();
+  const queryClient = useQueryClient()
+  const { isBulkUploadDialogOpen, setIsBulkUploadDialogOpen } =
+    useExpendituresInvoice()
 
   return (
     <>
@@ -19,10 +17,12 @@ export function ExpendituresInvoiceDialogs() {
           uploadEndpoint: '/api/expenditures/invoices/bulk-upload',
           errorReportEndpoint: '/api/expenditures/invoices/bulk-upload/errors',
           onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['expenditures-invoices'] });
+            queryClient.invalidateQueries({
+              queryKey: ['expenditures-invoices'],
+            })
           },
         }}
       />
     </>
-  );
+  )
 }

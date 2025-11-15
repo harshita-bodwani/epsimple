@@ -7,24 +7,24 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import { useDatacenter } from '../hooks/use-datacenter';
-import { datacenterApi } from '../api/datacenter-api';
+} from '@/components/ui/alert-dialog'
+import { datacenterApi } from '../api/datacenter-api'
+import { useDatacenter } from '../hooks/use-datacenter'
 
 export function DatacenterDeleteDialog() {
   const { isDeleteDialogOpen, closeDeleteDialog, selectedDatacenter } =
-    useDatacenter();
-  const deleteMutation = datacenterApi.useDelete();
+    useDatacenter()
+  const deleteMutation = datacenterApi.useDelete()
 
   const handleDelete = () => {
     if (selectedDatacenter) {
       deleteMutation.mutate(selectedDatacenter.id, {
         onSuccess: () => {
-          closeDeleteDialog();
+          closeDeleteDialog()
         },
-      });
+      })
     }
-  };
+  }
 
   return (
     <AlertDialog open={isDeleteDialogOpen} onOpenChange={closeDeleteDialog}>
@@ -32,17 +32,21 @@ export function DatacenterDeleteDialog() {
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete the datacenter
+            This action cannot be undone. This will permanently delete the
+            datacenter
             <strong> {selectedDatacenter?.datacenterName}</strong>.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleDelete} disabled={deleteMutation.isPending}>
+          <AlertDialogAction
+            onClick={handleDelete}
+            disabled={deleteMutation.isPending}
+          >
             {deleteMutation.isPending ? 'Deleting...' : 'Delete'}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  );
+  )
 }

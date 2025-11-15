@@ -7,24 +7,24 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import { usePayeeDetails } from '../context/payee-details-provider';
-import { useDeletePayeeDetails } from '../api/payee-details-api';
+} from '@/components/ui/alert-dialog'
+import { useDeletePayeeDetails } from '../api/payee-details-api'
+import { usePayeeDetails } from '../context/payee-details-provider'
 
 export function PayeeDetailsDeleteDialog() {
   const { isDeleteDialogOpen, payeeDetailsToDelete, closeDeleteDialog } =
-    usePayeeDetails();
-  const deleteMutation = useDeletePayeeDetails();
+    usePayeeDetails()
+  const deleteMutation = useDeletePayeeDetails()
 
   const handleConfirmDelete = () => {
     if (payeeDetailsToDelete) {
       deleteMutation.mutate(payeeDetailsToDelete.id, {
         onSuccess: () => {
-          closeDeleteDialog();
+          closeDeleteDialog()
         },
-      });
+      })
     }
-  };
+  }
 
   return (
     <AlertDialog open={isDeleteDialogOpen} onOpenChange={closeDeleteDialog}>
@@ -33,7 +33,7 @@ export function PayeeDetailsDeleteDialog() {
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
             This will permanently delete the payee details for{' '}
-            <span className="font-semibold">
+            <span className='font-semibold'>
               {payeeDetailsToDelete?.payeeName}
             </span>
             . This action cannot be undone.
@@ -43,7 +43,7 @@ export function PayeeDetailsDeleteDialog() {
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleConfirmDelete}
-            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
             disabled={deleteMutation.isPending}
           >
             {deleteMutation.isPending ? 'Deleting...' : 'Delete'}
@@ -51,5 +51,5 @@ export function PayeeDetailsDeleteDialog() {
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  );
+  )
 }

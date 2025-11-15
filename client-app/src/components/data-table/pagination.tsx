@@ -24,13 +24,13 @@ export function DataTablePagination<TData>({
 }: DataTablePaginationProps<TData>) {
   const currentPage = table.getState().pagination.pageIndex + 1
   const totalPages = table.getPageCount()
-  
+
   // Handle empty state - TanStack Table might return 1 as minimum
   // So we need to check if there's actually data
   const hasData = table.getRowModel().rows.length > 0 || totalPages > 1
   const displayCurrentPage = hasData ? currentPage : 0
   const displayTotalPages = hasData ? totalPages : 0
-  
+
   const pageNumbers = getPageNumbers(displayCurrentPage, displayTotalPages)
 
   return (
@@ -98,7 +98,9 @@ export function DataTablePagination<TData>({
                 <span className='text-muted-foreground px-1 text-sm'>...</span>
               ) : (
                 <Button
-                  variant={displayCurrentPage === pageNumber ? 'default' : 'outline'}
+                  variant={
+                    displayCurrentPage === pageNumber ? 'default' : 'outline'
+                  }
                   className='h-8 min-w-8 px-2'
                   onClick={() => table.setPageIndex((pageNumber as number) - 1)}
                 >

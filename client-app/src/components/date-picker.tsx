@@ -35,23 +35,23 @@ export function DatePicker({
   const getDisabledDates = (date: Date) => {
     const today = new Date()
     today.setHours(0, 0, 0, 0)
-    
+
     if (disableFutureDates && date > today) {
       return true
     }
-    
+
     if (disablePastDates && date < today) {
       return true
     }
-    
+
     if (fromDate && date < fromDate) {
       return true
     }
-    
+
     if (toDate && date > toDate) {
       return true
     }
-    
+
     return false
   }
 

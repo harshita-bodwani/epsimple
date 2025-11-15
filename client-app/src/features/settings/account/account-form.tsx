@@ -20,7 +20,7 @@ export function AccountForm() {
     return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()
   }
 
-  // Helper function to format permission names - capitalize first letter, rest lowercase  
+  // Helper function to format permission names - capitalize first letter, rest lowercase
   const formatPermissionName = (name: string) => {
     return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()
   }
@@ -37,13 +37,13 @@ export function AccountForm() {
         <CardContent className='space-y-4'>
           <div className='grid grid-cols-2 gap-4'>
             <div>
-              <label className='text-sm font-medium text-muted-foreground'>
+              <label className='text-muted-foreground text-sm font-medium'>
                 User ID
               </label>
               <p className='text-sm'>{user.id}</p>
             </div>
             <div>
-              <label className='text-sm font-medium text-muted-foreground'>
+              <label className='text-muted-foreground text-sm font-medium'>
                 Status
               </label>
               <div>
@@ -66,16 +66,16 @@ export function AccountForm() {
         <CardContent>
           <div className='space-y-4'>
             {user.roles.map((role) => (
-              <div key={role.id} className='border rounded-lg p-4'>
-                <div className='flex items-center justify-between mb-2'>
+              <div key={role.id} className='rounded-lg border p-4'>
+                <div className='mb-2 flex items-center justify-between'>
                   <h3 className='font-semibold'>{formatRoleName(role.name)}</h3>
                   <Badge variant='outline'>Role</Badge>
                 </div>
-                <p className='text-sm text-muted-foreground mb-3'>
+                <p className='text-muted-foreground mb-3 text-sm'>
                   {role.description}
                 </p>
                 <div>
-                  <label className='text-sm font-medium mb-2 block'>
+                  <label className='mb-2 block text-sm font-medium'>
                     Permissions:
                   </label>
                   <div className='flex flex-wrap gap-2'>

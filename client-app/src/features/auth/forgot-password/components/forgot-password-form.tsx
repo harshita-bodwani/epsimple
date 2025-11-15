@@ -38,9 +38,9 @@ export function ForgotPasswordForm({
   async function onSubmit(data: z.infer<typeof formSchema>) {
     try {
       clearError()
-      
+
       await forgotPassword(data.email)
-      
+
       toast.success(`Reset instructions sent to ${data.email}`)
       form.reset()
       navigate({ to: '/reset-password' })
@@ -72,7 +72,7 @@ export function ForgotPasswordForm({
         <Button className='mt-2' disabled={isLoading}>
           {isLoading ? (
             <>
-              <Loader2 className='animate-spin mr-2' />
+              <Loader2 className='mr-2 animate-spin' />
               Sending...
             </>
           ) : (

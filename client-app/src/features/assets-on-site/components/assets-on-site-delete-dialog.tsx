@@ -7,24 +7,24 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import { useAssetsOnSite } from '../context/assets-on-site-provider';
-import { assetsOnSiteApi } from '../api/assets-on-site-api';
+} from '@/components/ui/alert-dialog'
+import { assetsOnSiteApi } from '../api/assets-on-site-api'
+import { useAssetsOnSite } from '../context/assets-on-site-provider'
 
 export function AssetsOnSiteDeleteDialog() {
   const { isDeleteDialogOpen, closeDeleteDialog, selectedPlacement } =
-    useAssetsOnSite();
-  const deleteMutation = assetsOnSiteApi.useDelete();
+    useAssetsOnSite()
+  const deleteMutation = assetsOnSiteApi.useDelete()
 
   const handleDelete = () => {
     if (selectedPlacement) {
       deleteMutation.mutate(selectedPlacement.id, {
         onSuccess: () => {
-          closeDeleteDialog();
+          closeDeleteDialog()
         },
-      });
+      })
     }
-  };
+  }
 
   return (
     <AlertDialog open={isDeleteDialogOpen} onOpenChange={closeDeleteDialog}>
@@ -39,11 +39,14 @@ export function AssetsOnSiteDeleteDialog() {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleDelete} disabled={deleteMutation.isPending}>
+          <AlertDialogAction
+            onClick={handleDelete}
+            disabled={deleteMutation.isPending}
+          >
             {deleteMutation.isPending ? 'Removing...' : 'Remove'}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  );
+  )
 }

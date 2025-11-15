@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react'
 import { toast } from 'sonner'
-import { downloadFileWithPost, downloadFile, createAuthHeaders } from '@/lib/api-utils'
+import {
+  downloadFileWithPost,
+  downloadFile,
+  createAuthHeaders,
+} from '@/lib/api-utils'
 
 export interface BulkUploadProgress {
   status: 'PROCESSING' | 'COMPLETED' | 'COMPLETED_WITH_ERRORS' | 'FAILED'
@@ -39,7 +43,8 @@ export function useBulkUpload(config: BulkUploadConfig) {
   const [isUploading, setIsUploading] = useState(false)
   const [progress, setProgress] = useState<BulkUploadProgress | null>(null)
   const [errorReportDownloaded, setErrorReportDownloaded] = useState(false)
-  const [abortController, setAbortController] = useState<AbortController | null>(null)
+  const [abortController, setAbortController] =
+    useState<AbortController | null>(null)
   const [isDownloadingTemplate, setIsDownloadingTemplate] = useState(false)
   const [isExporting, setIsExporting] = useState(false)
 
@@ -50,7 +55,8 @@ export function useBulkUpload(config: BulkUploadConfig) {
       progress.errors &&
       progress.errors.length > 0 &&
       !errorReportDownloaded &&
-      (progress.status === 'COMPLETED_WITH_ERRORS' || progress.status === 'FAILED')
+      (progress.status === 'COMPLETED_WITH_ERRORS' ||
+        progress.status === 'FAILED')
     ) {
       handleDownloadErrorReport()
       setErrorReportDownloaded(true)
@@ -81,7 +87,7 @@ export function useBulkUpload(config: BulkUploadConfig) {
 
     // Abort any existing upload
     if (abortController) {
-      console.log('Aborting previous upload')
+      // console.log('Aborting previous upload')
       abortController.abort()
     }
 
@@ -94,34 +100,40 @@ export function useBulkUpload(config: BulkUploadConfig) {
     setErrorReportDownloaded(false)
 
     try {
-      await bulkUploadWithSSE(config.uploadEndpoint, selectedFile, controller.signal, (progressData) => {
-        setProgress(progressData)
+      await bulkUploadWithSSE(
+        config.uploadEndpoint,
+        selectedFile,
+        controller.signal,
+        (progressData) => {
+          setProgress(progressData)
 
-        if (progressData.status === 'COMPLETED') {
-          setIsUploading(false)
-          toast.success(`${config.entityName} upload completed!`, {
-            description: `Successfully uploaded ${progressData.successCount} records`,
-          })
-          config.onSuccess?.()
-        } else if (progressData.status === 'COMPLETED_WITH_ERRORS') {
-          setIsUploading(false)
-          toast.warning(`${config.entityName} upload completed with errors`, {
-            description: `Success: ${progressData.successCount}, Failed: ${progressData.failureCount}, Duplicates: ${progressData.duplicateCount}`,
-          })
-          config.onSuccess?.()
-        } else if (progressData.status === 'FAILED') {
-          setIsUploading(false)
-          toast.error(`${config.entityName} upload failed`, {
-            description: progressData.message,
-          })
+          if (progressData.status === 'COMPLETED') {
+            setIsUploading(false)
+            toast.success(`${config.entityName} upload completed!`, {
+              description: `Successfully uploaded ${progressData.successCount} records`,
+            })
+            config.onSuccess?.()
+          } else if (progressData.status === 'COMPLETED_WITH_ERRORS') {
+            setIsUploading(false)
+            toast.warning(`${config.entityName} upload completed with errors`, {
+              description: `Success: ${progressData.successCount}, Failed: ${progressData.failureCount}, Duplicates: ${progressData.duplicateCount}`,
+            })
+            config.onSuccess?.()
+          } else if (progressData.status === 'FAILED') {
+            setIsUploading(false)
+            toast.error(`${config.entityName} upload failed`, {
+              description: progressData.message,
+            })
+          }
         }
-      })
+      )
     } catch (error) {
       if (error instanceof Error && error.name === 'AbortError') {
         return
       }
       toast.error('Upload failed', {
-        description: error instanceof Error ? error.message : 'An error occurred',
+        description:
+          error instanceof Error ? error.message : 'An error occurred',
       })
       setProgress(null)
     } finally {
@@ -134,7 +146,10 @@ export function useBulkUpload(config: BulkUploadConfig) {
     if (!progress?.errors?.length) return
 
     try {
-      const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5)
+      const timestamp = new Date()
+        .toISOString()
+        .replace(/[:.]/g, '-')
+        .slice(0, -5)
       await downloadFileWithPost(
         config.errorReportEndpoint,
         progress,
@@ -143,7 +158,8 @@ export function useBulkUpload(config: BulkUploadConfig) {
       toast.success('Error report downloaded')
     } catch (error) {
       toast.error('Failed to download error report', {
-        description: error instanceof Error ? error.message : 'An error occurred',
+        description:
+          error instanceof Error ? error.message : 'An error occurred',
       })
     }
   }
@@ -156,7 +172,10 @@ export function useBulkUpload(config: BulkUploadConfig) {
 
     setIsDownloadingTemplate(true)
     try {
-      const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5)
+      const timestamp = new Date()
+        .toISOString()
+        .replace(/[:.]/g, '-')
+        .slice(0, -5)
       await downloadFile(
         config.templateEndpoint,
         `${config.entityName}_Upload_Template_${timestamp}.xlsx`
@@ -164,7 +183,8 @@ export function useBulkUpload(config: BulkUploadConfig) {
       toast.success('Template downloaded successfully')
     } catch (error) {
       toast.error('Failed to download template', {
-        description: error instanceof Error ? error.message : 'An error occurred',
+        description:
+          error instanceof Error ? error.message : 'An error occurred',
       })
     } finally {
       setIsDownloadingTemplate(false)
@@ -179,7 +199,10 @@ export function useBulkUpload(config: BulkUploadConfig) {
 
     setIsExporting(true)
     try {
-      const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5)
+      const timestamp = new Date()
+        .toISOString()
+        .replace(/[:.]/g, '-')
+        .slice(0, -5)
       await downloadFile(
         config.exportEndpoint,
         `${config.entityName}s_Export_${timestamp}.xlsx`
@@ -187,7 +210,8 @@ export function useBulkUpload(config: BulkUploadConfig) {
       toast.success(`${config.entityName}s exported successfully`)
     } catch (error) {
       toast.error(`Failed to export ${config.entityName}s`, {
-        description: error instanceof Error ? error.message : 'An error occurred',
+        description:
+          error instanceof Error ? error.message : 'An error occurred',
       })
     } finally {
       setIsExporting(false)
@@ -238,7 +262,7 @@ async function bulkUploadWithSSE(
         const errorText = await response.text()
         const errorData = JSON.parse(errorText)
         throw new Error(errorData.message || 'Invalid file format or content')
-      } catch (jsonError) {
+      } catch (_jsonError) {
         throw new Error('Invalid file format or content')
       }
     }
@@ -258,7 +282,7 @@ async function bulkUploadWithSSE(
   try {
     while (true) {
       const { done, value } = await reader.read()
-      
+
       if (done) {
         break
       }
@@ -278,7 +302,7 @@ async function bulkUploadWithSSE(
         // Parse SSE message format: event:progress\ndata:{json}
         const lines = message.split('\n')
         let data = ''
-        
+
         for (const line of lines) {
           if (line.startsWith('data:')) {
             data = line.substring(5).trim()
@@ -289,9 +313,13 @@ async function bulkUploadWithSSE(
           try {
             const progress: BulkUploadProgress = JSON.parse(data)
             onProgress(progress)
-            
+
             // Close the reader if we've reached a terminal status
-            if (progress.status === 'COMPLETED' || progress.status === 'COMPLETED_WITH_ERRORS' || progress.status === 'FAILED') {
+            if (
+              progress.status === 'COMPLETED' ||
+              progress.status === 'COMPLETED_WITH_ERRORS' ||
+              progress.status === 'FAILED'
+            ) {
               return
             }
           } catch (_error) {

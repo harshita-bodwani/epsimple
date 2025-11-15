@@ -34,12 +34,17 @@ export default defineConfig({
       output: {
         manualChunks: {
           'react-vendor': ['react', 'react-dom', 'react/jsx-runtime'],
-          'router': ['@tanstack/react-router'],
-          'query': ['@tanstack/react-table', '@tanstack/react-query'],
-          'form': ['react-hook-form', '@hookform/resolvers', 'zod'],
-          'ui-components': ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-popover', '@radix-ui/react-select'],
-          'date': ['date-fns'],
-          'icons': ['lucide-react'],
+          router: ['@tanstack/react-router'],
+          query: ['@tanstack/react-table', '@tanstack/react-query'],
+          form: ['react-hook-form', '@hookform/resolvers', 'zod'],
+          'ui-components': [
+            '@radix-ui/react-dialog',
+            '@radix-ui/react-dropdown-menu',
+            '@radix-ui/react-popover',
+            '@radix-ui/react-select',
+          ],
+          date: ['date-fns'],
+          icons: ['lucide-react'],
         },
       },
     },

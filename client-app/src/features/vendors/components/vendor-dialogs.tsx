@@ -1,10 +1,10 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { GenericBulkUploadDialog } from '@/components/bulk-upload/GenericBulkUploadDialog'
-import { useVendorContext } from '../vendor-provider'
+import { useVendor } from '../hooks/use-vendor'
 
 export function VendorDialogs() {
   const queryClient = useQueryClient()
-  const { isBulkUploadDialogOpen, closeBulkUploadDialog } = useVendorContext()
+  const { isBulkUploadDialogOpen, closeBulkUploadDialog } = useVendor()
 
   const handleBulkUploadSuccess = () => {
     queryClient.invalidateQueries({ queryKey: ['vendors'] })

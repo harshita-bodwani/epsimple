@@ -6,9 +6,12 @@ interface ErrorHandlerOptions {
   redirectOnError?: boolean
 }
 
-export function handleServerError(error: unknown, options: ErrorHandlerOptions = {}) {
+export function handleServerError(
+  error: unknown,
+  options: ErrorHandlerOptions = {}
+) {
   const { showToast = true, redirectOnError = false } = options
-  
+
   // Log error for debugging in development only
   if (import.meta.env.DEV) {
     // eslint-disable-next-line no-console
@@ -30,8 +33,11 @@ export function handleServerError(error: unknown, options: ErrorHandlerOptions =
 
   if (error instanceof AxiosError) {
     statusCode = error.response?.status
-    errMsg = error.response?.data?.message || error.response?.data?.title || error.message
-    
+    errMsg =
+      error.response?.data?.message ||
+      error.response?.data?.title ||
+      error.message
+
     // Handle specific error cases
     switch (statusCode) {
       case 401:

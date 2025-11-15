@@ -7,26 +7,30 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { useSiteContext } from "../context/site-provider";
-import { siteApi } from "../api/site-api";
+} from '@/components/ui/alert-dialog'
+import { siteApi } from '../api/site-api'
+import { useSite } from '../hooks/use-site'
 
 export function SiteDeleteDialog() {
-  const { isDeleteDialogOpen, setIsDeleteDialogOpen, deletingSiteId, setDeletingSiteId } =
-    useSite();
+  const {
+    isDeleteDialogOpen,
+    setIsDeleteDialogOpen,
+    deletingSiteId,
+    setDeletingSiteId,
+  } = useSite()
 
-  const deleteMutation = siteApi.useDelete();
+  const deleteMutation = siteApi.useDelete()
 
   const handleDelete = () => {
     if (deletingSiteId) {
       deleteMutation.mutate(deletingSiteId, {
         onSuccess: () => {
-          setIsDeleteDialogOpen(false);
-          setDeletingSiteId(null);
+          setIsDeleteDialogOpen(false)
+          setDeletingSiteId(null)
         },
-      });
+      })
     }
-  };
+  }
 
   return (
     <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
@@ -44,12 +48,12 @@ export function SiteDeleteDialog() {
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDelete}
-            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
           >
             Delete
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  );
+  )
 }

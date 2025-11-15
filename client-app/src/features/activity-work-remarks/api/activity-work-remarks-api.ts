@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import api from '@/lib/api'
-import { BackendPageResponse, flattenPageResponse } from '@/lib/api-utils'
+import { type BackendPageResponse, flattenPageResponse } from '@/lib/api-utils'
 import type { ActivityWorkRemark, ActivityWorkRemarkRequest } from './schema'
 
 const REMARK_ENDPOINTS = {
@@ -35,17 +35,16 @@ export const activityWorkRemarksApi = {
     return useQuery({
       queryKey: ['activity-work-remarks', activityWorkId, params],
       queryFn: async () => {
-        const response = await api.get<ApiResponse<BackendPageResponse<ActivityWorkRemark>>>(
-          REMARK_ENDPOINTS.BY_ACTIVITY_WORK(activityWorkId),
-          {
-            params: {
-              page: params.page,
-              size: params.size,
-              ...(params.sortBy && { sortBy: params.sortBy }),
-              ...(params.sortOrder && { sortDirection: params.sortOrder }),
-            },
-          }
-        )
+        const response = await api.get<
+          ApiResponse<BackendPageResponse<ActivityWorkRemark>>
+        >(REMARK_ENDPOINTS.BY_ACTIVITY_WORK(activityWorkId), {
+          params: {
+            page: params.page,
+            size: params.size,
+            ...(params.sortBy && { sortBy: params.sortBy }),
+            ...(params.sortOrder && { sortDirection: params.sortOrder }),
+          },
+        })
         return flattenPageResponse(response.data.data)
       },
       enabled: !!activityWorkId,
@@ -125,7 +124,13 @@ export const activityWorkRemarksApi = {
     const queryClient = useQueryClient()
 
     return useMutation({
-      mutationFn: async ({ id, data }: { id: number; data: ActivityWorkRemarkRequest }) => {
+      mutationFn: async ({
+        id,
+        data,
+      }: {
+        id: number
+        data: ActivityWorkRemarkRequest
+      }) => {
         const response = await api.put<ApiResponse<ActivityWorkRemark>>(
           REMARK_ENDPOINTS.BY_ID(id),
           data
@@ -151,7 +156,13 @@ export const activityWorkRemarksApi = {
     const queryClient = useQueryClient()
 
     return useMutation({
-      mutationFn: async ({ id, activityWorkId }: { id: number; activityWorkId: number }) => {
+      mutationFn: async ({
+        id,
+        activityWorkId,
+      }: {
+        id: number
+        activityWorkId: number
+      }) => {
         await api.delete(REMARK_ENDPOINTS.BY_ID(id))
         return activityWorkId
       },

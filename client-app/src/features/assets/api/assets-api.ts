@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import api from '@/lib/api'
-import { BackendPageResponse, flattenPageResponse } from '@/lib/api-utils'
+import { type BackendPageResponse, flattenPageResponse } from '@/lib/api-utils'
 import type { Asset, AssetRequest } from './schema'
 
 const ASSET_ENDPOINTS = {
@@ -29,7 +29,9 @@ export const assetsApi = {
     return useQuery({
       queryKey: ['assets', params],
       queryFn: async () => {
-        const endpoint = params.search ? ASSET_ENDPOINTS.SEARCH : ASSET_ENDPOINTS.BASE
+        const endpoint = params.search
+          ? ASSET_ENDPOINTS.SEARCH
+          : ASSET_ENDPOINTS.BASE
         const response = await api.get<ApiResponse<BackendPageResponse<Asset>>>(
           endpoint,
           {
@@ -52,7 +54,9 @@ export const assetsApi = {
       queryKey: ['assets', id],
       queryFn: async () => {
         if (!id) throw new Error('ID is required')
-        const response = await api.get<ApiResponse<Asset>>(ASSET_ENDPOINTS.BY_ID(id))
+        const response = await api.get<ApiResponse<Asset>>(
+          ASSET_ENDPOINTS.BY_ID(id)
+        )
         return response.data.data
       },
       enabled: !!id,
@@ -64,7 +68,10 @@ export const assetsApi = {
 
     return useMutation({
       mutationFn: async (data: AssetRequest) => {
-        const response = await api.post<ApiResponse<Asset>>(ASSET_ENDPOINTS.BASE, data)
+        const response = await api.post<ApiResponse<Asset>>(
+          ASSET_ENDPOINTS.BASE,
+          data
+        )
         return response.data.data
       },
       onSuccess: () => {

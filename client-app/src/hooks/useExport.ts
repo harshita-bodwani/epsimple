@@ -13,12 +13,19 @@ export function useExport(config: ExportConfig) {
   const handleExport = async () => {
     setIsExporting(true)
     try {
-      const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5)
-      await downloadFile(config.exportEndpoint, `${config.entityName}s_Export_${timestamp}.xlsx`)
+      const timestamp = new Date()
+        .toISOString()
+        .replace(/[:.]/g, '-')
+        .slice(0, -5)
+      await downloadFile(
+        config.exportEndpoint,
+        `${config.entityName}s_Export_${timestamp}.xlsx`
+      )
       toast.success(`${config.entityName}s exported successfully`)
     } catch (error) {
       toast.error(`Failed to export ${config.entityName}s`, {
-        description: error instanceof Error ? error.message : 'An error occurred',
+        description:
+          error instanceof Error ? error.message : 'An error occurred',
       })
     } finally {
       setIsExporting(false)

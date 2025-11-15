@@ -1,40 +1,45 @@
-import { Header } from '@/components/layout/header';
-import { Main } from '@/components/layout/main';
-import { ProfileDropdown } from '@/components/profile-dropdown';
-import { Search } from '@/components/search';
-import { ThemeSwitch } from '@/components/theme-switch';
-import { AssetTypesProvider, useAssetTypes } from './context/asset-types-provider';
-import { AssetTypesTable } from './components/asset-types-table';
-import { assetTypesColumns } from './components/asset-types-columns';
-import { AssetTypesDialogs } from './components/asset-types-dialogs';
-import { AssetTypesPrimaryButtons } from './components/asset-types-primary-buttons';
-import { ConfigDrawer } from '@/components/config-drawer';
-import { GenericBulkUploadDialog } from '@/components/bulk-upload/GenericBulkUploadDialog';
-import { useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query'
+import { GenericBulkUploadDialog } from '@/components/bulk-upload/GenericBulkUploadDialog'
+import { ConfigDrawer } from '@/components/config-drawer'
+import { Header } from '@/components/layout/header'
+import { Main } from '@/components/layout/main'
+import { ProfileDropdown } from '@/components/profile-dropdown'
+import { Search } from '@/components/search'
+import { ThemeSwitch } from '@/components/theme-switch'
+import { assetTypesColumns } from './components/asset-types-columns'
+import { AssetTypesDialogs } from './components/asset-types-dialogs'
+import { AssetTypesPrimaryButtons } from './components/asset-types-primary-buttons'
+import { AssetTypesTable } from './components/asset-types-table'
+import {
+  AssetTypesProvider,
+  useAssetTypes,
+} from './context/asset-types-provider'
 
 function AssetTypesContent() {
-  const { isBulkUploadDialogOpen, setIsBulkUploadDialogOpen } = useAssetTypes();
-  const queryClient = useQueryClient();
+  const { isBulkUploadDialogOpen, setIsBulkUploadDialogOpen } = useAssetTypes()
+  const queryClient = useQueryClient()
 
   return (
     <>
       <Header fixed>
         <Search />
-        <div className="ml-auto flex items-center space-x-4">
+        <div className='ml-auto flex items-center space-x-4'>
           <ThemeSwitch />
           <ConfigDrawer />
           <ProfileDropdown />
         </div>
       </Header>
       <Main fixed>
-        <div className="mb-2 flex items-center justify-between space-y-2">
+        <div className='mb-2 flex items-center justify-between space-y-2'>
           <div>
-            <h2 className="text-2xl font-bold tracking-tight">Asset Types</h2>
-            <p className="text-muted-foreground">Manage asset type classifications</p>
+            <h2 className='text-2xl font-bold tracking-tight'>Asset Types</h2>
+            <p className='text-muted-foreground'>
+              Manage asset type classifications
+            </p>
           </div>
           <AssetTypesPrimaryButtons />
         </div>
-        <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
+        <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
           <AssetTypesTable columns={assetTypesColumns} />
         </div>
       </Main>
@@ -47,12 +52,12 @@ function AssetTypesContent() {
           errorReportEndpoint: '/api/asset-types/bulk-upload/errors',
           entityName: 'Asset Type',
           onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['asset-types'] });
+            queryClient.invalidateQueries({ queryKey: ['asset-types'] })
           },
         }}
       />
     </>
-  );
+  )
 }
 
 export default function AssetTypes() {
@@ -60,5 +65,5 @@ export default function AssetTypes() {
     <AssetTypesProvider>
       <AssetTypesContent />
     </AssetTypesProvider>
-  );
+  )
 }

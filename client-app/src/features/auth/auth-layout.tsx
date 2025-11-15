@@ -11,9 +11,7 @@ export function AuthLayout({ children }: AuthLayoutProps) {
         <div className='flex h-32 w-full items-center justify-center sm:h-40'>
           <Logo className='mt-30' />
         </div>
-        <div className='w-full'>
-          {children}
-        </div>
+        <div className='w-full'>{children}</div>
       </div>
     </div>
   )

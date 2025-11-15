@@ -18,9 +18,7 @@ export function UnauthorisedError() {
           <Button variant='outline' onClick={() => history.go(-1)}>
             Go Back
           </Button>
-          <Button onClick={() => navigate({ to: '/sign-in' })}>
-            Sign In
-          </Button>
+          <Button onClick={() => navigate({ to: '/sign-in' })}>Sign In</Button>
         </div>
       </div>
     </div>

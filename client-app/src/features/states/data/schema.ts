@@ -19,11 +19,17 @@ export const stateFormSchema = z.object({
     .string()
     .min(2, 'State code must be at least 2 characters')
     .max(10, 'State code cannot exceed 10 characters')
-    .regex(/^[A-Za-z0-9_-]+$/, 'State code can only contain letters, numbers, hyphens and underscores'),
+    .regex(
+      /^[A-Za-z0-9_-]+$/,
+      'State code can only contain letters, numbers, hyphens and underscores'
+    ),
   stateCodeAlt: z
     .string()
     .max(10, 'Alternate state code cannot exceed 10 characters')
-    .regex(/^[A-Za-z0-9_-]*$/, 'Alternate state code can only contain letters, numbers, hyphens and underscores')
+    .regex(
+      /^[A-Za-z0-9_-]*$/,
+      'Alternate state code can only contain letters, numbers, hyphens and underscores'
+    )
     .optional()
     .or(z.literal('')),
 })

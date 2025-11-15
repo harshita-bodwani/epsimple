@@ -1,14 +1,14 @@
-import React, { useState } from "react";
-import { SiteContext } from './site-context';
-import type { Site } from '../api/schema';
+import React, { useState } from 'react'
+import type { Site } from '../api/schema'
+import { SiteContext } from './site-context'
 
 export function SiteProvider({ children }: { children: React.ReactNode }) {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [editingSite, setEditingSite] = useState<Site | null>(null);
-  const [deletingSiteId, setDeletingSiteId] = useState<number | null>(null);
-  const [globalFilter, setGlobalFilter] = useState("");
-  const [isBulkUploadDialogOpen, setIsBulkUploadDialogOpen] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [editingSite, setEditingSite] = useState<Site | null>(null)
+  const [deletingSiteId, setDeletingSiteId] = useState<number | null>(null)
+  const [globalFilter, setGlobalFilter] = useState('')
+  const [isBulkUploadDialogOpen, setIsBulkUploadDialogOpen] = useState(false)
 
   return (
     <SiteContext.Provider
@@ -29,5 +29,5 @@ export function SiteProvider({ children }: { children: React.ReactNode }) {
     >
       {children}
     </SiteContext.Provider>
-  );
+  )
 }

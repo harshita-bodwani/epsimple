@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from 'react'
-import { StatesContext } from './states-context'
 import type { State } from '../data/schema'
+import { StatesContext } from './states-context'
 
 export function StatesProvider({ children }: { children: ReactNode }) {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
@@ -21,7 +21,7 @@ export function StatesProvider({ children }: { children: ReactNode }) {
     setIsDeleteDialogOpen(false)
     setSelectedState(null)
   }
-  
+
   const openBulkUploadDialog = () => setIsBulkUploadDialogOpen(true)
   const closeBulkUploadDialog = () => setIsBulkUploadDialogOpen(false)
 

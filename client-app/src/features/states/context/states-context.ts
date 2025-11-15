@@ -11,7 +11,7 @@ export interface StatesContextType {
   isDeleteDialogOpen: boolean
   openDeleteDialog: () => void
   closeDeleteDialog: () => void
-  
+
   // Bulk upload dialog state
   isBulkUploadDialogOpen: boolean
   openBulkUploadDialog: () => void
@@ -26,4 +26,6 @@ export interface StatesContextType {
   setIsEditMode: (isEdit: boolean) => void
 }
 
-export const StatesContext = createContext<StatesContextType | undefined>(undefined)
+export const StatesContext = createContext<StatesContextType | undefined>(
+  undefined
+)

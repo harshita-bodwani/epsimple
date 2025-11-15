@@ -1,40 +1,40 @@
-import axios from 'axios';
-import { useQuery } from '@tanstack/react-query';
-import api from '@/lib/api';
-import { BackendPageResponse, flattenPageResponse } from '@/lib/api-utils';
+import axios from 'axios'
+import { useQuery } from '@tanstack/react-query'
+import api from '@/lib/api'
+import { type BackendPageResponse, flattenPageResponse } from '@/lib/api-utils'
 
-const BASE_URL = '/api/vendor-types';
+const BASE_URL = '/api/vendor-types'
 
 export interface VendorType {
-  id: number;
-  typeName: string;
+  id: number
+  typeName: string
   vendorCategory: {
-    id: number;
-    categoryName: string;
-  } | null;
-  description: string;
-  createdAt: string;
-  updatedAt: string;
+    id: number
+    categoryName: string
+  } | null
+  description: string
+  createdAt: string
+  updatedAt: string
 }
 
 export interface VendorTypeFormData {
-  typeName: string;
-  vendorCategoryId?: number;
-  description?: string;
+  typeName: string
+  vendorCategoryId?: number
+  description?: string
 }
 
 export interface VendorTypesResponse {
-  content: VendorType[];
-  totalElements: number;
-  totalPages: number;
-  size: number;
-  number: number;
+  content: VendorType[]
+  totalElements: number
+  totalPages: number
+  size: number
+  number: number
 }
 
 export interface ApiResponse<T> {
-  data: T;
-  message: string;
-  status: number;
+  data: T
+  message: string
+  status: number
 }
 
 export const vendorTypesApi = {
@@ -42,25 +42,27 @@ export const vendorTypesApi = {
     return useQuery({
       queryKey: ['vendor-types', 'search', searchTerm],
       queryFn: async () => {
-        const endpoint = searchTerm?.trim() ? `${BASE_URL}/search` : BASE_URL;
+        const endpoint = searchTerm?.trim() ? `${BASE_URL}/search` : BASE_URL
         const params: Record<string, unknown> = {
           page: 0,
           size: 20,
           sortBy: 'typeName',
           sortDirection: 'ASC',
-        };
-        
-        if (searchTerm?.trim()) {
-          params.query = searchTerm.trim();
         }
-        
-        const response = await api.get<ApiResponse<BackendPageResponse<VendorType>>>(endpoint, {
+
+        if (searchTerm?.trim()) {
+          params.query = searchTerm.trim()
+        }
+
+        const response = await api.get<
+          ApiResponse<BackendPageResponse<VendorType>>
+        >(endpoint, {
           params,
-        });
-        return flattenPageResponse(response.data.data).content;
+        })
+        return flattenPageResponse(response.data.data).content
       },
       staleTime: 30000,
-    });
+    })
   },
 
   getAll: async (
@@ -71,8 +73,8 @@ export const vendorTypesApi = {
   ): Promise<ApiResponse<VendorTypesResponse>> => {
     const response = await axios.get(BASE_URL, {
       params: { page, size, sortBy, sortDirection },
-    });
-    return response.data;
+    })
+    return response.data
   },
 
   search: async (
@@ -84,32 +86,37 @@ export const vendorTypesApi = {
   ): Promise<ApiResponse<VendorTypesResponse>> => {
     const response = await axios.get(`${BASE_URL}/search`, {
       params: { query, page, size, sortBy, sortDirection },
-    });
-    return response.data;
+    })
+    return response.data
   },
 
   getList: async (): Promise<ApiResponse<VendorType[]>> => {
-    const response = await axios.get(`${BASE_URL}/list`);
-    return response.data;
+    const response = await axios.get(`${BASE_URL}/list`)
+    return response.data
   },
 
   getById: async (id: number): Promise<ApiResponse<VendorType>> => {
-    const response = await axios.get(`${BASE_URL}/${id}`);
-    return response.data;
+    const response = await axios.get(`${BASE_URL}/${id}`)
+    return response.data
   },
 
-  create: async (data: VendorTypeFormData): Promise<ApiResponse<VendorType>> => {
-    const response = await axios.post(BASE_URL, data);
-    return response.data;
+  create: async (
+    data: VendorTypeFormData
+  ): Promise<ApiResponse<VendorType>> => {
+    const response = await axios.post(BASE_URL, data)
+    return response.data
   },
 
-  update: async (id: number, data: VendorTypeFormData): Promise<ApiResponse<VendorType>> => {
-    const response = await axios.put(`${BASE_URL}/${id}`, data);
-    return response.data;
+  update: async (
+    id: number,
+    data: VendorTypeFormData
+  ): Promise<ApiResponse<VendorType>> => {
+    const response = await axios.put(`${BASE_URL}/${id}`, data)
+    return response.data
   },
 
   delete: async (id: number): Promise<ApiResponse<void>> => {
-    const response = await axios.delete(`${BASE_URL}/${id}`);
-    return response.data;
+    const response = await axios.delete(`${BASE_URL}/${id}`)
+    return response.data
   },
-};
+}

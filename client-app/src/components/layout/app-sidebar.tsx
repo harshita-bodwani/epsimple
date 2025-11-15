@@ -1,5 +1,5 @@
-import { useLayout } from '@/context/layout-provider'
 import { useAuthStore } from '@/stores/auth-store'
+import { useLayout } from '@/context/layout-provider'
 import {
   Sidebar,
   SidebarContent,
@@ -19,24 +19,26 @@ export function AppSidebar() {
   const getInitials = (name: string) => {
     return name
       .split(' ')
-      .map(word => word[0])
+      .map((word) => word[0])
       .join('')
       .toUpperCase()
       .slice(0, 2)
   }
 
   // Prepare user data for NavUser component
-  const userData = user ? {
-    name: user.name,
-    email: user.email,
-    avatar: '/avatars/01.png', // Default avatar path
-    initials: getInitials(user.name)
-  } : {
-    name: 'User',
-    email: '',
-    avatar: '/avatars/01.png',
-    initials: 'U'
-  }
+  const userData = user
+    ? {
+        name: user.name,
+        email: user.email,
+        avatar: '/avatars/01.png', // Default avatar path
+        initials: getInitials(user.name),
+      }
+    : {
+        name: 'User',
+        email: '',
+        avatar: '/avatars/01.png',
+        initials: 'U',
+      }
 
   return (
     <Sidebar collapsible={collapsible} variant={variant}>

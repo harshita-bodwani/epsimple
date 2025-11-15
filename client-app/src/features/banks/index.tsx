@@ -8,8 +8,8 @@ import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { BanksDialogs } from './components/banks-dialogs'
 import { BanksPrimaryButtons } from './components/banks-primary-buttons'
-import { BanksProvider } from './context/banks-provider'
 import { BanksTable } from './components/banks-table'
+import { BanksProvider } from './context/banks-provider'
 
 export function Banks() {
   const [page, setPage] = useState(1)

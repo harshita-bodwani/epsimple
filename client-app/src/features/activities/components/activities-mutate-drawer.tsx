@@ -1,10 +1,19 @@
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
-
-import { Button } from "@/components/ui/button";
+import { useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { Loader2 } from 'lucide-react'
+import { toast } from 'sonner'
+import { Button } from '@/components/ui/button'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 import {
   Sheet,
   SheetClose,
@@ -13,30 +22,19 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle,
-} from "@/components/ui/sheet";
-import { Loader2 } from "lucide-react";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-
-import { activitiesApi } from "../api/activities-api";
+} from '@/components/ui/sheet'
+import { Textarea } from '@/components/ui/textarea'
+import { activitiesApi } from '../api/activities-api'
 import {
   activityFormSchema,
   type ActivityFormData,
   type Activity,
-} from "../api/schema";
+} from '../api/schema'
 
 interface ActivitiesMutateDrawerProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  currentRow: Activity | null;
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  currentRow: Activity | null
 }
 
 export function ActivitiesMutateDrawer({
@@ -44,87 +42,87 @@ export function ActivitiesMutateDrawer({
   onOpenChange,
   currentRow,
 }: ActivitiesMutateDrawerProps) {
-  const queryClient = useQueryClient();
-  const isUpdate = !!currentRow;
+  const queryClient = useQueryClient()
+  const isUpdate = !!currentRow
 
   const form = useForm<ActivityFormData>({
     resolver: zodResolver(activityFormSchema),
     defaultValues: {
-      activityName: "",
-      activityDescription: "",
+      activityName: '',
+      activityDescription: '',
     },
-  });
+  })
 
   // Reset form when currentRow changes
   useEffect(() => {
     if (currentRow) {
       form.reset({
         activityName: currentRow.activityName,
-        activityDescription: currentRow.activityDescription || "",
-      });
+        activityDescription: currentRow.activityDescription || '',
+      })
     } else {
       form.reset({
-        activityName: "",
-        activityDescription: "",
-      });
+        activityName: '',
+        activityDescription: '',
+      })
     }
-  }, [currentRow, form]);
+  }, [currentRow, form])
 
   const createMutation = useMutation({
     mutationFn: activitiesApi.create,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["activity"] });
-      toast.success("Activity created successfully");
-      form.reset();
-      onOpenChange(false);
+      queryClient.invalidateQueries({ queryKey: ['activity'] })
+      toast.success('Activity created successfully')
+      form.reset()
+      onOpenChange(false)
     },
-  });
+  })
 
   const updateMutation = useMutation({
     mutationFn: ({ id, data }: { id: number; data: ActivityFormData }) =>
       activitiesApi.update(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["activity"] });
-      toast.success("Activity updated successfully");
-      form.reset();
-      onOpenChange(false);
+      queryClient.invalidateQueries({ queryKey: ['activity'] })
+      toast.success('Activity updated successfully')
+      form.reset()
+      onOpenChange(false)
     },
-  });
+  })
 
   const onSubmit = (data: ActivityFormData) => {
     if (isUpdate && currentRow) {
-      updateMutation.mutate({ id: currentRow.id, data });
+      updateMutation.mutate({ id: currentRow.id, data })
     } else {
-      createMutation.mutate(data);
+      createMutation.mutate(data)
     }
-  };
+  }
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="flex flex-col">
-        <SheetHeader className="text-start">
-          <SheetTitle>{isUpdate ? "Update" : "Create"} Activity</SheetTitle>
+      <SheetContent className='flex flex-col'>
+        <SheetHeader className='text-start'>
+          <SheetTitle>{isUpdate ? 'Update' : 'Create'} Activity</SheetTitle>
           <SheetDescription>
             {isUpdate
-              ? "Update the activity by providing necessary info."
-              : "Add a new activity by providing necessary info."}
+              ? 'Update the activity by providing necessary info.'
+              : 'Add a new activity by providing necessary info.'}
             Click save when you&apos;re done.
           </SheetDescription>
         </SheetHeader>
         <Form {...form}>
           <form
-            id="activities-form"
+            id='activities-form'
             onSubmit={form.handleSubmit(onSubmit)}
-            className="flex-1 space-y-6 overflow-y-auto px-4"
+            className='flex-1 space-y-6 overflow-y-auto px-4'
           >
             <FormField
               control={form.control}
-              name="activityName"
+              name='activityName'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Activity Name *</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter activity name" {...field} />
+                    <Input placeholder='Enter activity name' {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -132,14 +130,14 @@ export function ActivitiesMutateDrawer({
             />
             <FormField
               control={form.control}
-              name="activityDescription"
+              name='activityDescription'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Description</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Enter description"
-                      className="resize-none"
+                      placeholder='Enter description'
+                      className='resize-none'
                       rows={4}
                       {...field}
                     />
@@ -150,34 +148,34 @@ export function ActivitiesMutateDrawer({
             />
           </form>
         </Form>
-        <SheetFooter className="mt-4 gap-2 px-4 sm:space-x-0">
+        <SheetFooter className='mt-4 gap-2 px-4 sm:space-x-0'>
           <SheetClose asChild>
             <Button
-              type="button"
-              variant="outline"
+              type='button'
+              variant='outline'
               disabled={createMutation.isPending || updateMutation.isPending}
             >
               Cancel
             </Button>
           </SheetClose>
           <Button
-            type="submit"
-            form="activities-form"
+            type='submit'
+            form='activities-form'
             disabled={createMutation.isPending || updateMutation.isPending}
           >
             {createMutation.isPending || updateMutation.isPending ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Loader2 className='mr-2 h-4 w-4 animate-spin' />
                 Saving...
               </>
             ) : isUpdate ? (
-              "Update"
+              'Update'
             ) : (
-              "Create"
+              'Create'
             )}
           </Button>
         </SheetFooter>
       </SheetContent>
     </Sheet>
-  );
+  )
 }

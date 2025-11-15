@@ -20,8 +20,7 @@ import { PasswordInput } from '@/components/password-input'
 const formSchema = z.object({
   name: z.string().min(1, 'Please enter your name'),
   email: z.email({
-    error: (iss) =>
-      iss.input === '' ? 'Please enter your email' : undefined,
+    error: (iss) => (iss.input === '' ? 'Please enter your email' : undefined),
   }),
   password: z
     .string()
@@ -48,7 +47,7 @@ export function SignUpForm({
   async function onSubmit(data: z.infer<typeof formSchema>) {
     try {
       clearError()
-      
+
       await register(data.email, data.password, data.name)
 
       toast.success('Account created successfully! Welcome!')

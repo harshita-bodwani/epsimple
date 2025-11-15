@@ -1,5 +1,5 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { toast } from 'sonner'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -9,38 +9,39 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { useSiteTypeContext } from "../context/site-type-provider";
-import { siteTypeApi } from "../api/site-type-api";
+} from '@/components/ui/alert-dialog'
+import { siteTypeApi } from '../api/site-type-api'
+import { useSiteTypeContext } from '../context/site-type-provider'
 
 export function SiteTypeDialogs() {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
   const {
     editingSiteType,
     setEditingSiteType,
     showDeleteDialog,
     setShowDeleteDialog,
-  } = useSiteTypeContext();
+  } = useSiteTypeContext()
 
   const deleteMutation = useMutation({
     mutationFn: (id: number) => siteTypeApi.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["site-types"] });
-      toast.success("Site type deleted successfully");
-      setShowDeleteDialog(false);
-      setEditingSiteType(null);
+      queryClient.invalidateQueries({ queryKey: ['site-types'] })
+      toast.success('Site type deleted successfully')
+      setShowDeleteDialog(false)
+      setEditingSiteType(null)
     },
     onError: (error: any) => {
-      const errorMessage = error?.response?.data?.message || "Failed to delete site type";
-      toast.error(errorMessage);
+      const errorMessage =
+        error?.response?.data?.message || 'Failed to delete site type'
+      toast.error(errorMessage)
     },
-  });
+  })
 
   const handleDelete = () => {
     if (editingSiteType) {
-      deleteMutation.mutate(editingSiteType.id);
+      deleteMutation.mutate(editingSiteType.id)
     }
-  };
+  }
 
   return (
     <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
@@ -51,8 +52,8 @@ export function SiteTypeDialogs() {
             This action cannot be undone. This will permanently delete the site
             type
             {editingSiteType && (
-              <span className="font-semibold">
-                {" "}
+              <span className='font-semibold'>
+                {' '}
                 &quot;{editingSiteType.typeName}&quot;
               </span>
             )}
@@ -66,12 +67,12 @@ export function SiteTypeDialogs() {
           <AlertDialogAction
             onClick={handleDelete}
             disabled={deleteMutation.isPending}
-            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
           >
-            {deleteMutation.isPending ? "Deleting..." : "Delete"}
+            {deleteMutation.isPending ? 'Deleting...' : 'Delete'}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  );
+  )
 }

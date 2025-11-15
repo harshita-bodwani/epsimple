@@ -1,12 +1,12 @@
-import { GenericBulkUploadDialog } from "@/components/bulk-upload/GenericBulkUploadDialog";
-import { usePayee } from "../context/payee-provider";
-import { PayeeDeleteDialog } from "./payee-delete-dialog";
-import { PayeeDrawer } from "./payee-drawer";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from '@tanstack/react-query'
+import { GenericBulkUploadDialog } from '@/components/bulk-upload/GenericBulkUploadDialog'
+import { usePayee } from '../hooks/use-payee'
+import { PayeeDeleteDialog } from './payee-delete-dialog'
+import { PayeeDrawer } from './payee-drawer'
 
 export function PayeeDialogs() {
-  const queryClient = useQueryClient();
-  const { isBulkUploadDialogOpen, setIsBulkUploadDialogOpen } = usePayee();
+  const queryClient = useQueryClient()
+  const { isBulkUploadDialogOpen, setIsBulkUploadDialogOpen } = usePayee()
 
   return (
     <>
@@ -16,14 +16,14 @@ export function PayeeDialogs() {
         open={isBulkUploadDialogOpen}
         onOpenChange={setIsBulkUploadDialogOpen}
         config={{
-          entityName: "Payee",
-          uploadEndpoint: "/api/payees/bulk-upload",
-          errorReportEndpoint: "/api/payees/export-errors",
+          entityName: 'Payee',
+          uploadEndpoint: '/api/payees/bulk-upload',
+          errorReportEndpoint: '/api/payees/export-errors',
           onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["payees"] });
+            queryClient.invalidateQueries({ queryKey: ['payees'] })
           },
         }}
       />
     </>
-  );
+  )
 }

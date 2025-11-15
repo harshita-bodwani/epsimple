@@ -11,7 +11,10 @@ interface ErrorBoundaryProps {
   fallback?: React.ComponentType<{ error?: Error }>
 }
 
-export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+export class ErrorBoundary extends React.Component<
+  ErrorBoundaryProps,
+  ErrorBoundaryState
+> {
   constructor(props: ErrorBoundaryProps) {
     super(props)
     this.state = { hasError: false }
@@ -24,6 +27,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     // Log error to console or error reporting service
+    // eslint-disable-next-line no-console
     console.error('Error boundary caught an error:', error, errorInfo)
   }
 

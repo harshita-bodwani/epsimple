@@ -1,14 +1,14 @@
-import { Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useCityContext } from "../context/city-provider";
+import { Plus } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { useCityContext } from '../context/city-provider'
 
 export function CreateCityButton() {
-  const { setIsDrawerOpen } = useCityContext();
+  const { setIsDrawerOpen } = useCityContext()
 
   return (
-    <Button onClick={() => setIsDrawerOpen(true)} size="sm" className="h-8">
-      <Plus className="mr-2 h-4 w-4" />
+    <Button onClick={() => setIsDrawerOpen(true)} size='sm' className='h-8'>
+      <Plus className='mr-2 h-4 w-4' />
       Create City
     </Button>
-  );
+  )
 }

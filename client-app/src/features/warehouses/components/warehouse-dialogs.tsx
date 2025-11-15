@@ -1,23 +1,23 @@
-import { useQueryClient } from '@tanstack/react-query';
-import { GenericBulkUploadDialog } from '@/components/bulk-upload/GenericBulkUploadDialog';
-import { useWarehouse } from '../hooks/use-warehouse';
-import { WarehouseDrawer } from './warehouse-drawer';
-import { WarehouseDeleteDialog } from './warehouse-delete-dialog';
+import { useQueryClient } from '@tanstack/react-query'
+import { GenericBulkUploadDialog } from '@/components/bulk-upload/GenericBulkUploadDialog'
+import { useWarehouse } from '../hooks/use-warehouse'
+import { WarehouseDeleteDialog } from './warehouse-delete-dialog'
+import { WarehouseDrawer } from './warehouse-drawer'
 
 export function WarehouseDialogs() {
-  const { isBulkUploadDialogOpen, closeBulkUploadDialog } = useWarehouse();
-  const queryClient = useQueryClient();
+  const { isBulkUploadDialogOpen, closeBulkUploadDialog } = useWarehouse()
+  const queryClient = useQueryClient()
 
   const handleBulkUploadSuccess = () => {
-    queryClient.invalidateQueries({ queryKey: ['warehouses'] });
-  };
+    queryClient.invalidateQueries({ queryKey: ['warehouses'] })
+  }
 
   const bulkUploadConfig = {
     entityName: 'Warehouse',
     uploadEndpoint: '/api/warehouses/bulk/upload',
     errorReportEndpoint: '/api/warehouses/bulk/export-error-report',
     onSuccess: handleBulkUploadSuccess,
-  };
+  }
 
   return (
     <>
@@ -30,5 +30,5 @@ export function WarehouseDialogs() {
         config={bulkUploadConfig}
       />
     </>
-  );
+  )
 }

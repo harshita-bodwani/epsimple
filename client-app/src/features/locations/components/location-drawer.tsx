@@ -1,10 +1,16 @@
-import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Check, ChevronsUpDown, Loader2 } from 'lucide-react';
-
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
+import { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Check, ChevronsUpDown, Loader2 } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
+import {
+  Command,
+  CommandEmpty,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command'
 import {
   Form,
   FormControl,
@@ -12,21 +18,13 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover';
-import {
-  Command,
-  CommandEmpty,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from '@/components/ui/command';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+} from '@/components/ui/popover'
 import {
   Sheet,
   SheetContent,
@@ -34,40 +32,46 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle,
-} from '@/components/ui/sheet';
-import { useLocation } from '../context/location-provider';
-import { locationApi } from '../api/location-api';
-import { locationFormSchema, type LocationFormData } from '../api/schema';
-import { cityApi } from '@/features/cities/api/city-api';
+} from '@/components/ui/sheet'
+import { Textarea } from '@/components/ui/textarea'
+import { cityApi } from '@/features/cities/api/city-api'
+import { locationApi } from '../api/location-api'
+import { locationFormSchema, type LocationFormData } from '../api/schema'
+import { useLocation } from '../context/location-provider'
 
 export function LocationDrawer() {
-  const { isDrawerOpen, closeDrawer, selectedLocation } = useLocation();
+  const { isDrawerOpen, closeDrawer, selectedLocation } = useLocation()
 
-  const [citySearch, setCitySearch] = useState('');
-  const [cityOpen, setCityOpen] = useState(false);
+  const [citySearch, setCitySearch] = useState('')
+  const [cityOpen, setCityOpen] = useState(false)
 
-  const createMutation = locationApi.useCreate();
-  const updateMutation = locationApi.useUpdate();
+  const createMutation = locationApi.useCreate()
+  const updateMutation = locationApi.useUpdate()
 
-  const { data: cities = [], isLoading: isCitiesLoading } = cityApi.useSearch(citySearch);
-  
+  const { data: cities = [], isLoading: isCitiesLoading } =
+    cityApi.useSearch(citySearch)
+
   // Fetch the selected city when editing
   const { data: selectedCityData } = cityApi.useGetAll({
     page: 0,
     size: 1,
-    search: selectedLocation?.cityId ? String(selectedLocation.cityId) : undefined,
-  });
-  
+    search: selectedLocation?.cityId
+      ? String(selectedLocation.cityId)
+      : undefined,
+  })
+
   // Combine search results with selected city
   const allCities = (() => {
-    if (!selectedLocation?.cityId) return cities;
-    const selectedCity = selectedCityData?.content.find(c => c.id === selectedLocation.cityId);
-    if (!selectedCity) return cities;
+    if (!selectedLocation?.cityId) return cities
+    const selectedCity = selectedCityData?.content.find(
+      (c) => c.id === selectedLocation.cityId
+    )
+    if (!selectedCity) return cities
     // Check if selected city is already in the cities list
-    if (cities.some(c => c.id === selectedCity.id)) return cities;
+    if (cities.some((c) => c.id === selectedCity.id)) return cities
     // Add selected city to the list
-    return [selectedCity, ...cities];
-  })();
+    return [selectedCity, ...cities]
+  })()
 
   const form = useForm<LocationFormData>({
     resolver: zodResolver(locationFormSchema),
@@ -82,7 +86,7 @@ export function LocationDrawer() {
       longitude: null,
       latitude: null,
     },
-  });
+  })
 
   useEffect(() => {
     if (selectedLocation) {
@@ -96,7 +100,7 @@ export function LocationDrawer() {
         zone: selectedLocation.zone || '',
         longitude: selectedLocation.longitude || null,
         latitude: selectedLocation.latitude || null,
-      });
+      })
     } else {
       form.reset({
         locationName: '',
@@ -108,9 +112,9 @@ export function LocationDrawer() {
         zone: '',
         longitude: null,
         latitude: null,
-      });
+      })
     }
-  }, [selectedLocation, form]);
+  }, [selectedLocation, form])
 
   const onSubmit = async (data: LocationFormData) => {
     // Convert empty strings to undefined for optional fields
@@ -123,7 +127,7 @@ export function LocationDrawer() {
       zone: data.zone || undefined,
       longitude: data.longitude || undefined,
       latitude: data.latitude || undefined,
-    };
+    }
 
     if (selectedLocation) {
       updateMutation.mutate(
@@ -133,27 +137,27 @@ export function LocationDrawer() {
         },
         {
           onSuccess: () => {
-            closeDrawer();
-            form.reset();
+            closeDrawer()
+            form.reset()
           },
         }
-      );
+      )
     } else {
       createMutation.mutate(payload, {
         onSuccess: () => {
-          closeDrawer();
-          form.reset();
+          closeDrawer()
+          form.reset()
         },
-      });
+      })
     }
-  };
+  }
 
-  const isLoading = createMutation.isPending || updateMutation.isPending;
+  const isLoading = createMutation.isPending || updateMutation.isPending
 
   return (
     <Sheet open={isDrawerOpen} onOpenChange={closeDrawer}>
-      <SheetContent className="flex flex-col sm:max-w-[600px]">
-        <SheetHeader className="text-start">
+      <SheetContent className='flex flex-col sm:max-w-[600px]'>
+        <SheetHeader className='text-start'>
           <SheetTitle>
             {selectedLocation ? 'Update' : 'Create'} Location
           </SheetTitle>
@@ -167,43 +171,45 @@ export function LocationDrawer() {
 
         <Form {...form}>
           <form
-            id="location-form"
+            id='location-form'
             onSubmit={form.handleSubmit(onSubmit)}
-            className="flex-1 space-y-6 overflow-y-auto px-4"
+            className='flex-1 space-y-6 overflow-y-auto px-4'
           >
             <FormField
               control={form.control}
-              name="cityId"
+              name='cityId'
               render={({ field }) => (
-                <FormItem className="flex flex-col">
+                <FormItem className='flex flex-col'>
                   <FormLabel>City *</FormLabel>
                   <Popover open={cityOpen} onOpenChange={setCityOpen}>
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
-                          variant="outline"
-                          role="combobox"
+                          variant='outline'
+                          role='combobox'
                           aria-expanded={cityOpen}
                           className={cn(
-                            "justify-between font-normal",
-                            !field.value && "text-muted-foreground"
+                            'justify-between font-normal',
+                            !field.value && 'text-muted-foreground'
                           )}
                         >
                           {(() => {
-                            if (!field.value) return "Select city";
-                            const selectedCity = allCities.find((c) => c.id === field.value);
-                            return selectedCity 
+                            if (!field.value) return 'Select city'
+                            const selectedCity = allCities.find(
+                              (c) => c.id === field.value
+                            )
+                            return selectedCity
                               ? `${selectedCity.cityName} (${selectedCity.stateName})`
-                              : "Select city";
+                              : 'Select city'
                           })()}
-                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
-                    <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
+                    <PopoverContent className='w-[var(--radix-popover-trigger-width)] p-0'>
                       <Command shouldFilter={false}>
                         <CommandInput
-                          placeholder="Search cities..."
+                          placeholder='Search cities...'
                           value={citySearch}
                           onValueChange={setCitySearch}
                         />
@@ -211,32 +217,34 @@ export function LocationDrawer() {
                           {(() => {
                             if (isCitiesLoading) {
                               return (
-                                <div className="flex items-center justify-center py-6">
-                                  <Loader2 className="h-4 w-4 animate-spin" />
+                                <div className='flex items-center justify-center py-6'>
+                                  <Loader2 className='h-4 w-4 animate-spin' />
                                 </div>
-                              );
+                              )
                             }
                             if (allCities.length === 0) {
-                              return <CommandEmpty>No city found.</CommandEmpty>;
+                              return <CommandEmpty>No city found.</CommandEmpty>
                             }
                             return allCities.map((city) => (
                               <CommandItem
                                 key={city.id}
                                 value={String(city.id)}
                                 onSelect={() => {
-                                  field.onChange(city.id);
-                                  setCityOpen(false);
+                                  field.onChange(city.id)
+                                  setCityOpen(false)
                                 }}
                               >
                                 <Check
                                   className={cn(
-                                    "mr-2 h-4 w-4",
-                                    city.id === field.value ? "opacity-100" : "opacity-0"
+                                    'mr-2 h-4 w-4',
+                                    city.id === field.value
+                                      ? 'opacity-100'
+                                      : 'opacity-0'
                                   )}
                                 />
                                 {city.cityName} ({city.stateName})
                               </CommandItem>
-                            ));
+                            ))
                           })()}
                         </CommandList>
                       </Command>
@@ -249,12 +257,12 @@ export function LocationDrawer() {
 
             <FormField
               control={form.control}
-              name="locationName"
+              name='locationName'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Location Name *</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter location name" {...field} />
+                    <Input placeholder='Enter location name' {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -263,14 +271,14 @@ export function LocationDrawer() {
 
             <FormField
               control={form.control}
-              name="address"
+              name='address'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Address</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Enter address"
-                      className="min-h-[80px] resize-none"
+                      placeholder='Enter address'
+                      className='min-h-[80px] resize-none'
                       rows={3}
                       {...field}
                     />
@@ -280,15 +288,15 @@ export function LocationDrawer() {
               )}
             />
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
               <FormField
                 control={form.control}
-                name="district"
+                name='district'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>District</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter district" {...field} />
+                      <Input placeholder='Enter district' {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -297,15 +305,15 @@ export function LocationDrawer() {
 
               <FormField
                 control={form.control}
-                name="pincode"
+                name='pincode'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Pincode</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Enter 6-digit pincode"
+                        placeholder='Enter 6-digit pincode'
                         maxLength={6}
-                        className="font-mono"
+                        className='font-mono'
                         {...field}
                       />
                     </FormControl>
@@ -315,15 +323,15 @@ export function LocationDrawer() {
               />
             </div>
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
               <FormField
                 control={form.control}
-                name="region"
+                name='region'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Region</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter region" {...field} />
+                      <Input placeholder='Enter region' {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -332,12 +340,12 @@ export function LocationDrawer() {
 
               <FormField
                 control={form.control}
-                name="zone"
+                name='zone'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Zone</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter zone" {...field} />
+                      <Input placeholder='Enter zone' {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -345,23 +353,25 @@ export function LocationDrawer() {
               />
             </div>
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
               <FormField
                 control={form.control}
-                name="latitude"
+                name='latitude'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Latitude</FormLabel>
                     <FormControl>
                       <Input
-                        type="number"
-                        step="0.00000001"
-                        placeholder="e.g., 12.9349"
+                        type='number'
+                        step='0.00000001'
+                        placeholder='e.g., 12.9349'
                         {...field}
                         value={field.value ?? ''}
                         onChange={(e) =>
                           field.onChange(
-                            e.target.value ? Number.parseFloat(e.target.value) : null
+                            e.target.value
+                              ? Number.parseFloat(e.target.value)
+                              : null
                           )
                         }
                       />
@@ -373,20 +383,22 @@ export function LocationDrawer() {
 
               <FormField
                 control={form.control}
-                name="longitude"
+                name='longitude'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Longitude</FormLabel>
                     <FormControl>
                       <Input
-                        type="number"
-                        step="0.00000001"
-                        placeholder="e.g., 77.6212"
+                        type='number'
+                        step='0.00000001'
+                        placeholder='e.g., 77.6212'
                         {...field}
                         value={field.value ?? ''}
                         onChange={(e) =>
                           field.onChange(
-                            e.target.value ? Number.parseFloat(e.target.value) : null
+                            e.target.value
+                              ? Number.parseFloat(e.target.value)
+                              : null
                           )
                         }
                       />
@@ -399,16 +411,16 @@ export function LocationDrawer() {
           </form>
         </Form>
 
-        <SheetFooter className="flex-shrink-0 gap-2 px-4 sm:space-x-0">
-          <Button variant="outline" onClick={closeDrawer} disabled={isLoading}>
+        <SheetFooter className='flex-shrink-0 gap-2 px-4 sm:space-x-0'>
+          <Button variant='outline' onClick={closeDrawer} disabled={isLoading}>
             Cancel
           </Button>
-          <Button type="submit" form="location-form" disabled={isLoading}>
-            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          <Button type='submit' form='location-form' disabled={isLoading}>
+            {isLoading && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}
             {selectedLocation ? 'Update' : 'Save'}
           </Button>
         </SheetFooter>
       </SheetContent>
     </Sheet>
-  );
+  )
 }

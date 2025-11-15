@@ -1,10 +1,17 @@
-import { Button } from '@/components/ui/button'
-import { Download, Upload, FileDown, Plus, Loader2, ChevronDown, FileUp } from 'lucide-react'
+import { useState } from 'react'
+import {
+  Download,
+  Upload,
+  FileDown,
+  Plus,
+  Loader2,
+  ChevronDown,
+  FileUp,
+} from 'lucide-react'
+import { toast } from 'sonner'
 import { downloadFile } from '@/lib/api-utils'
 import { useExport } from '@/hooks/useExport'
-import { useState } from 'react'
-import { toast } from 'sonner'
-import { useBanks } from '../hooks/use-banks'
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,6 +19,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { useBanks } from '../hooks/use-banks'
 
 export function BanksPrimaryButtons() {
   const { setOpen, openBulkUploadDialog } = useBanks()
@@ -32,7 +40,8 @@ export function BanksPrimaryButtons() {
       toast.success('Template downloaded successfully')
     } catch (error) {
       toast.error('Failed to download template', {
-        description: error instanceof Error ? error.message : 'An error occurred',
+        description:
+          error instanceof Error ? error.message : 'An error occurred',
       })
     } finally {
       setIsDownloadingTemplate(false)
@@ -50,44 +59,44 @@ export function BanksPrimaryButtons() {
             className='h-9 px-3 text-sm font-medium'
             disabled={isDownloadingTemplate || isExporting}
           >
-            <FileUp className='h-4 w-4 mr-2' />
+            <FileUp className='mr-2 h-4 w-4' />
             Bulk Actions
-            <ChevronDown className='h-4 w-4 ml-2' />
+            <ChevronDown className='ml-2 h-4 w-4' />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align='start' className='w-64'>
-          <DropdownMenuItem 
-            onClick={handleDownloadTemplate} 
+          <DropdownMenuItem
+            onClick={handleDownloadTemplate}
             className='cursor-pointer'
             disabled={isDownloadingTemplate}
           >
             {isDownloadingTemplate ? (
-              <Loader2 className='h-4 w-4 mr-2 animate-spin text-blue-600' />
+              <Loader2 className='mr-2 h-4 w-4 animate-spin text-blue-600' />
             ) : (
-              <FileDown className='h-4 w-4 mr-2 text-blue-600' />
+              <FileDown className='mr-2 h-4 w-4 text-blue-600' />
             )}
             <span>Download Template</span>
           </DropdownMenuItem>
-          
-          <DropdownMenuItem 
-            onClick={openBulkUploadDialog} 
+
+          <DropdownMenuItem
+            onClick={openBulkUploadDialog}
             className='cursor-pointer'
           >
-            <Upload className='h-4 w-4 mr-2 text-orange-600' />
+            <Upload className='mr-2 h-4 w-4 text-orange-600' />
             <span>Bulk Upload</span>
           </DropdownMenuItem>
-          
+
           <DropdownMenuSeparator />
-          
-          <DropdownMenuItem 
-            onClick={handleExport} 
+
+          <DropdownMenuItem
+            onClick={handleExport}
             className='cursor-pointer'
             disabled={isExporting}
           >
             {isExporting ? (
-              <Loader2 className='h-4 w-4 mr-2 animate-spin text-green-600' />
+              <Loader2 className='mr-2 h-4 w-4 animate-spin text-green-600' />
             ) : (
-              <Download className='h-4 w-4 mr-2 text-green-600' />
+              <Download className='mr-2 h-4 w-4 text-green-600' />
             )}
             <span>Export All Data</span>
           </DropdownMenuItem>
@@ -95,12 +104,12 @@ export function BanksPrimaryButtons() {
       </DropdownMenu>
 
       {/* Primary Action */}
-      <Button 
+      <Button
         onClick={() => setOpen('create')}
         size='sm'
         className='h-9 px-4 text-sm font-medium'
       >
-        <Plus className='h-4 w-4 mr-2' />
+        <Plus className='mr-2 h-4 w-4' />
         Add Bank
       </Button>
     </div>

@@ -1,10 +1,16 @@
-import { Button } from '@/components/ui/button'
-import { Plus, Upload, FileSpreadsheet, Loader2, Download, ChevronDown } from 'lucide-react'
-import { useStates } from '../hooks/use-states'
-import { useExport } from '@/hooks/useExport'
 import { useState } from 'react'
+import {
+  Plus,
+  Upload,
+  FileSpreadsheet,
+  Loader2,
+  Download,
+  ChevronDown,
+} from 'lucide-react'
 import { toast } from 'sonner'
 import { downloadFile } from '@/lib/api-utils'
+import { useExport } from '@/hooks/useExport'
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,6 +18,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { useStates } from '../hooks/use-states'
 
 export function StatesPrimaryButtons() {
   const { openDrawer, setIsEditMode, openBulkUploadDialog } = useStates()
@@ -29,11 +36,15 @@ export function StatesPrimaryButtons() {
   const handleDownloadTemplate = async () => {
     setIsDownloadingTemplate(true)
     try {
-      await downloadFile('/api/states/download-template', 'State_Upload_Template.xlsx')
+      await downloadFile(
+        '/api/states/download-template',
+        'State_Upload_Template.xlsx'
+      )
       toast.success('Template downloaded successfully')
     } catch (error) {
       toast.error('Failed to download template', {
-        description: error instanceof Error ? error.message : 'An error occurred',
+        description:
+          error instanceof Error ? error.message : 'An error occurred',
       })
     } finally {
       setIsDownloadingTemplate(false)
@@ -41,54 +52,54 @@ export function StatesPrimaryButtons() {
   }
 
   return (
-    <div className="flex items-center gap-2">
+    <div className='flex items-center gap-2'>
       {/* Bulk Actions Dropdown */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
-            variant="outline"
-            size="sm"
-            className="h-9 px-3 text-sm font-medium"
+            variant='outline'
+            size='sm'
+            className='h-9 px-3 text-sm font-medium'
             disabled={isDownloadingTemplate || isExporting}
           >
-            <Upload className="h-4 w-4 mr-2" />
+            <Upload className='mr-2 h-4 w-4' />
             Bulk Actions
-            <ChevronDown className="h-4 w-4 ml-2" />
+            <ChevronDown className='ml-2 h-4 w-4' />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="start" className="w-64">
-          <DropdownMenuItem 
-            onClick={handleDownloadTemplate} 
-            className="cursor-pointer"
+        <DropdownMenuContent align='start' className='w-64'>
+          <DropdownMenuItem
+            onClick={handleDownloadTemplate}
+            className='cursor-pointer'
             disabled={isDownloadingTemplate}
           >
             {isDownloadingTemplate ? (
-              <Loader2 className="h-4 w-4 mr-2 animate-spin text-blue-600" />
+              <Loader2 className='mr-2 h-4 w-4 animate-spin text-blue-600' />
             ) : (
-              <Download className="h-4 w-4 mr-2 text-blue-600" />
+              <Download className='mr-2 h-4 w-4 text-blue-600' />
             )}
             <span>Download Template</span>
           </DropdownMenuItem>
-          
-          <DropdownMenuItem 
-            onClick={openBulkUploadDialog} 
-            className="cursor-pointer"
+
+          <DropdownMenuItem
+            onClick={openBulkUploadDialog}
+            className='cursor-pointer'
           >
-            <Upload className="h-4 w-4 mr-2 text-orange-600" />
+            <Upload className='mr-2 h-4 w-4 text-orange-600' />
             <span>Bulk Upload</span>
           </DropdownMenuItem>
-          
+
           <DropdownMenuSeparator />
-          
-          <DropdownMenuItem 
-            onClick={handleExport} 
-            className="cursor-pointer"
+
+          <DropdownMenuItem
+            onClick={handleExport}
+            className='cursor-pointer'
             disabled={isExporting}
           >
             {isExporting ? (
-              <Loader2 className="h-4 w-4 mr-2 animate-spin text-green-600" />
+              <Loader2 className='mr-2 h-4 w-4 animate-spin text-green-600' />
             ) : (
-              <FileSpreadsheet className="h-4 w-4 mr-2 text-green-600" />
+              <FileSpreadsheet className='mr-2 h-4 w-4 text-green-600' />
             )}
             <span>Export All Data</span>
           </DropdownMenuItem>
@@ -96,12 +107,12 @@ export function StatesPrimaryButtons() {
       </DropdownMenu>
 
       {/* Primary Action */}
-      <Button 
+      <Button
         onClick={handleCreateClick}
-        size="sm"
-        className="h-9 px-4 text-sm font-medium"
+        size='sm'
+        className='h-9 px-4 text-sm font-medium'
       >
-        <Plus className="h-4 w-4 mr-2" />
+        <Plus className='mr-2 h-4 w-4' />
         Add State
       </Button>
     </div>

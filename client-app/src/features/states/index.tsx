@@ -6,10 +6,10 @@ import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
-import { StatesProvider } from './context/states-provider'
-import { StatesTable } from './components/states-table'
 import { StatesDialogs } from './components/states-dialogs'
 import { StatesPrimaryButtons } from './components/states-primary-buttons'
+import { StatesTable } from './components/states-table'
+import { StatesProvider } from './context/states-provider'
 
 export default function StatesPage() {
   const [page, setPage] = useState(1)

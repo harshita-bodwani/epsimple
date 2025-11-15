@@ -1,10 +1,19 @@
-import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'sonner';
-
-import { Button } from '@/components/ui/button';
+import { useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { Loader2 } from 'lucide-react'
+import { toast } from 'sonner'
+import { Button } from '@/components/ui/button'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 import {
   Sheet,
   SheetClose,
@@ -13,26 +22,19 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle,
-} from '@/components/ui/sheet';
-import { Loader2 } from 'lucide-react';
+} from '@/components/ui/sheet'
+import { Textarea } from '@/components/ui/textarea'
+import { assetTypesApi } from '../api/asset-types-api'
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-
-import { assetTypesApi } from '../api/asset-types-api';
-import { assetTypeFormSchema, type AssetTypeFormData, type AssetType } from '../api/schema';
+  assetTypeFormSchema,
+  type AssetTypeFormData,
+  type AssetType,
+} from '../api/schema'
 
 interface AssetTypesMutateDrawerProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  currentRow: AssetType | null;
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  currentRow: AssetType | null
 }
 
 export function AssetTypesMutateDrawer({
@@ -40,8 +42,8 @@ export function AssetTypesMutateDrawer({
   onOpenChange,
   currentRow,
 }: AssetTypesMutateDrawerProps) {
-  const queryClient = useQueryClient();
-  const isUpdate = !!currentRow;
+  const queryClient = useQueryClient()
+  const isUpdate = !!currentRow
 
   const form = useForm<AssetTypeFormData>({
     resolver: zodResolver(assetTypeFormSchema),
@@ -50,7 +52,7 @@ export function AssetTypesMutateDrawer({
       typeCode: '',
       description: '',
     },
-  });
+  })
 
   // Reset form when currentRow changes
   useEffect(() => {
@@ -59,49 +61,49 @@ export function AssetTypesMutateDrawer({
         typeName: currentRow.typeName,
         typeCode: currentRow.typeCode,
         description: currentRow.description || '',
-      });
+      })
     } else {
       form.reset({
         typeName: '',
         typeCode: '',
         description: '',
-      });
+      })
     }
-  }, [currentRow, form]);
+  }, [currentRow, form])
 
   const createMutation = useMutation({
     mutationFn: assetTypesApi.create,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['asset-types'] });
-      toast.success('Asset type created successfully');
-      form.reset();
-      onOpenChange(false);
+      queryClient.invalidateQueries({ queryKey: ['asset-types'] })
+      toast.success('Asset type created successfully')
+      form.reset()
+      onOpenChange(false)
     },
-  });
+  })
 
   const updateMutation = useMutation({
     mutationFn: ({ id, data }: { id: number; data: AssetTypeFormData }) =>
       assetTypesApi.update(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['asset-types'] });
-      toast.success('Asset type updated successfully');
-      form.reset();
-      onOpenChange(false);
+      queryClient.invalidateQueries({ queryKey: ['asset-types'] })
+      toast.success('Asset type updated successfully')
+      form.reset()
+      onOpenChange(false)
     },
-  });
+  })
 
   const onSubmit = (data: AssetTypeFormData) => {
     if (isUpdate && currentRow) {
-      updateMutation.mutate({ id: currentRow.id, data });
+      updateMutation.mutate({ id: currentRow.id, data })
     } else {
-      createMutation.mutate(data);
+      createMutation.mutate(data)
     }
-  };
+  }
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="flex flex-col">
-        <SheetHeader className="text-start">
+      <SheetContent className='flex flex-col'>
+        <SheetHeader className='text-start'>
           <SheetTitle>{isUpdate ? 'Update' : 'Create'} Asset Type</SheetTitle>
           <SheetDescription>
             {isUpdate
@@ -112,18 +114,18 @@ export function AssetTypesMutateDrawer({
         </SheetHeader>
         <Form {...form}>
           <form
-            id="asset-types-form"
+            id='asset-types-form'
             onSubmit={form.handleSubmit(onSubmit)}
-            className="flex-1 space-y-6 overflow-y-auto px-4"
+            className='flex-1 space-y-6 overflow-y-auto px-4'
           >
             <FormField
               control={form.control}
-              name="typeName"
+              name='typeName'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Type Name *</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter type name" {...field} />
+                    <Input placeholder='Enter type name' {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -131,12 +133,12 @@ export function AssetTypesMutateDrawer({
             />
             <FormField
               control={form.control}
-              name="typeCode"
+              name='typeCode'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Type Code *</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter type code" {...field} />
+                    <Input placeholder='Enter type code' {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -144,14 +146,14 @@ export function AssetTypesMutateDrawer({
             />
             <FormField
               control={form.control}
-              name="description"
+              name='description'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Description</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Enter description"
-                      className="resize-none"
+                      placeholder='Enter description'
+                      className='resize-none'
                       rows={4}
                       {...field}
                     />
@@ -162,24 +164,24 @@ export function AssetTypesMutateDrawer({
             />
           </form>
         </Form>
-        <SheetFooter className="mt-4 gap-2 px-4 sm:space-x-0">
+        <SheetFooter className='mt-4 gap-2 px-4 sm:space-x-0'>
           <SheetClose asChild>
             <Button
-              type="button"
-              variant="outline"
+              type='button'
+              variant='outline'
               disabled={createMutation.isPending || updateMutation.isPending}
             >
               Cancel
             </Button>
           </SheetClose>
           <Button
-            type="submit"
-            form="asset-types-form"
+            type='submit'
+            form='asset-types-form'
             disabled={createMutation.isPending || updateMutation.isPending}
           >
             {createMutation.isPending || updateMutation.isPending ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Loader2 className='mr-2 h-4 w-4 animate-spin' />
                 Saving...
               </>
             ) : isUpdate ? (
@@ -191,5 +193,5 @@ export function AssetTypesMutateDrawer({
         </SheetFooter>
       </SheetContent>
     </Sheet>
-  );
+  )
 }

@@ -1,1 +1,1 @@
-export { useVoucher } from "./use-voucher.js";
+export { useVoucher } from './use-voucher.js'

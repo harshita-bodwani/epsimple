@@ -7,23 +7,23 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import { usePayee } from '../hooks/use-payee';
-import { payeeApi } from '../api/payee-api';
+} from '@/components/ui/alert-dialog'
+import { payeeApi } from '../api/payee-api'
+import { usePayee } from '../hooks/use-payee'
 
 export function PayeeDeleteDialog() {
-  const { isDeleteDialogOpen, closeDeleteDialog, selectedPayee } = usePayee();
-  const deleteMutation = payeeApi.useDelete();
+  const { isDeleteDialogOpen, closeDeleteDialog, selectedPayee } = usePayee()
+  const deleteMutation = payeeApi.useDelete()
 
   const handleDelete = () => {
     if (selectedPayee) {
       deleteMutation.mutate(selectedPayee.id, {
         onSuccess: () => {
-          closeDeleteDialog();
+          closeDeleteDialog()
         },
-      });
+      })
     }
-  };
+  }
 
   return (
     <AlertDialog open={isDeleteDialogOpen} onOpenChange={closeDeleteDialog}>
@@ -31,17 +31,21 @@ export function PayeeDeleteDialog() {
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This will permanently delete the payee <strong>{selectedPayee?.payeeName}</strong>.
-            This action cannot be undone.
+            This will permanently delete the payee{' '}
+            <strong>{selectedPayee?.payeeName}</strong>. This action cannot be
+            undone.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleDelete} disabled={deleteMutation.isPending}>
+          <AlertDialogAction
+            onClick={handleDelete}
+            disabled={deleteMutation.isPending}
+          >
             {deleteMutation.isPending ? 'Deleting...' : 'Delete'}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  );
+  )
 }

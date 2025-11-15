@@ -1,28 +1,30 @@
-import React, { useState } from 'react';
-import { WarehouseContext } from './warehouse-context';
-import type { Warehouse } from '../api/schema';
+import React, { useState } from 'react'
+import type { Warehouse } from '../api/schema'
+import { WarehouseContext } from './warehouse-context'
 
 export function WarehouseProvider({ children }: { children: React.ReactNode }) {
-  const [selectedWarehouse, setSelectedWarehouse] = useState<Warehouse | null>(null);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [isBulkUploadDialogOpen, setIsBulkUploadDialogOpen] = useState(false);
-  const [globalFilter, setGlobalFilter] = useState('');
+  const [selectedWarehouse, setSelectedWarehouse] = useState<Warehouse | null>(
+    null
+  )
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [isBulkUploadDialogOpen, setIsBulkUploadDialogOpen] = useState(false)
+  const [globalFilter, setGlobalFilter] = useState('')
 
-  const openDrawer = () => setIsDrawerOpen(true);
+  const openDrawer = () => setIsDrawerOpen(true)
   const closeDrawer = () => {
-    setIsDrawerOpen(false);
-    setSelectedWarehouse(null);
-  };
+    setIsDrawerOpen(false)
+    setSelectedWarehouse(null)
+  }
 
-  const openDeleteDialog = () => setIsDeleteDialogOpen(true);
+  const openDeleteDialog = () => setIsDeleteDialogOpen(true)
   const closeDeleteDialog = () => {
-    setIsDeleteDialogOpen(false);
-    setSelectedWarehouse(null);
-  };
+    setIsDeleteDialogOpen(false)
+    setSelectedWarehouse(null)
+  }
 
-  const openBulkUploadDialog = () => setIsBulkUploadDialogOpen(true);
-  const closeBulkUploadDialog = () => setIsBulkUploadDialogOpen(false);
+  const openBulkUploadDialog = () => setIsBulkUploadDialogOpen(true)
+  const closeBulkUploadDialog = () => setIsBulkUploadDialogOpen(false)
 
   return (
     <WarehouseContext.Provider
@@ -47,5 +49,5 @@ export function WarehouseProvider({ children }: { children: React.ReactNode }) {
     >
       {children}
     </WarehouseContext.Provider>
-  );
+  )
 }

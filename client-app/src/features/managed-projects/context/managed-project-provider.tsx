@@ -1,34 +1,44 @@
-import React, { createContext, useContext, useState } from "react";
-import type { ManagedProject } from "../api/schema";
+import React, { createContext, useContext, useState } from 'react'
+/* eslint-disable react-refresh/only-export-components */
+import type { ManagedProject } from '../api/schema'
 
 interface ManagedProjectContextType {
-  isDrawerOpen: boolean;
-  setIsDrawerOpen: (open: boolean) => void;
-  isDeleteDialogOpen: boolean;
-  setIsDeleteDialogOpen: (open: boolean) => void;
-  editingManagedProject: ManagedProject | null;
-  setEditingManagedProject: (project: ManagedProject | null) => void;
-  deletingManagedProjectId: number | null;
-  setDeletingManagedProjectId: (id: number | null) => void;
-  globalFilter: string;
-  setGlobalFilter: (filter: string) => void;
-  isBulkUploadDialogOpen: boolean;
-  openBulkUploadDialog: () => void;
-  closeBulkUploadDialog: () => void;
+  isDrawerOpen: boolean
+  setIsDrawerOpen: (open: boolean) => void
+  isDeleteDialogOpen: boolean
+  setIsDeleteDialogOpen: (open: boolean) => void
+  editingManagedProject: ManagedProject | null
+  setEditingManagedProject: (project: ManagedProject | null) => void
+  deletingManagedProjectId: number | null
+  setDeletingManagedProjectId: (id: number | null) => void
+  globalFilter: string
+  setGlobalFilter: (filter: string) => void
+  isBulkUploadDialogOpen: boolean
+  openBulkUploadDialog: () => void
+  closeBulkUploadDialog: () => void
 }
 
-const ManagedProjectContext = createContext<ManagedProjectContextType | undefined>(undefined);
+const ManagedProjectContext = createContext<
+  ManagedProjectContextType | undefined
+>(undefined)
 
-export function ManagedProjectProvider({ children }: { children: React.ReactNode }) {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [editingManagedProject, setEditingManagedProject] = useState<ManagedProject | null>(null);
-  const [deletingManagedProjectId, setDeletingManagedProjectId] = useState<number | null>(null);
-  const [globalFilter, setGlobalFilter] = useState("");
-  const [isBulkUploadDialogOpen, setIsBulkUploadDialogOpen] = useState(false);
+export function ManagedProjectProvider({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [editingManagedProject, setEditingManagedProject] =
+    useState<ManagedProject | null>(null)
+  const [deletingManagedProjectId, setDeletingManagedProjectId] = useState<
+    number | null
+  >(null)
+  const [globalFilter, setGlobalFilter] = useState('')
+  const [isBulkUploadDialogOpen, setIsBulkUploadDialogOpen] = useState(false)
 
-  const openBulkUploadDialog = () => setIsBulkUploadDialogOpen(true);
-  const closeBulkUploadDialog = () => setIsBulkUploadDialogOpen(false);
+  const openBulkUploadDialog = () => setIsBulkUploadDialogOpen(true)
+  const closeBulkUploadDialog = () => setIsBulkUploadDialogOpen(false)
 
   return (
     <ManagedProjectContext.Provider
@@ -50,13 +60,15 @@ export function ManagedProjectProvider({ children }: { children: React.ReactNode
     >
       {children}
     </ManagedProjectContext.Provider>
-  );
+  )
 }
 
 export function useManagedProjectContext() {
-  const context = useContext(ManagedProjectContext);
+  const context = useContext(ManagedProjectContext)
   if (!context) {
-    throw new Error("useManagedProjectContext must be used within ManagedProjectProvider");
+    throw new Error(
+      'useManagedProjectContext must be used within ManagedProjectProvider'
+    )
   }
-  return context;
+  return context
 }

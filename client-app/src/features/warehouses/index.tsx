@@ -1,41 +1,41 @@
-import { Header } from '@/components/layout/header';
-import { Main } from '@/components/layout/main';
-import { ProfileDropdown } from '@/components/profile-dropdown';
-import { Search } from '@/components/search';
-import { ThemeSwitch } from '@/components/theme-switch';
-import { ConfigDrawer } from '@/components/config-drawer';
-import { WarehouseProvider } from './context/warehouse-provider';
-import { WarehouseDialogs } from './components/warehouse-dialogs';
-import { WarehouseTable } from './components/warehouse-table';
-import { WarehousePrimaryButtons } from './components/warehouse-primary-buttons';
-import { warehouseColumns } from './components/warehouse-columns';
+import { ConfigDrawer } from '@/components/config-drawer'
+import { Header } from '@/components/layout/header'
+import { Main } from '@/components/layout/main'
+import { ProfileDropdown } from '@/components/profile-dropdown'
+import { Search } from '@/components/search'
+import { ThemeSwitch } from '@/components/theme-switch'
+import { warehouseColumns } from './components/warehouse-columns'
+import { WarehouseDialogs } from './components/warehouse-dialogs'
+import { WarehousePrimaryButtons } from './components/warehouse-primary-buttons'
+import { WarehouseTable } from './components/warehouse-table'
+import { WarehouseProvider } from './context/warehouse-provider'
 
 export default function WarehousesPage() {
   return (
     <WarehouseProvider>
       <Header fixed>
         <Search />
-        <div className="ml-auto flex items-center space-x-4">
+        <div className='ml-auto flex items-center space-x-4'>
           <ThemeSwitch />
           <ConfigDrawer />
           <ProfileDropdown />
         </div>
       </Header>
       <Main fixed>
-        <div className="mb-2 flex items-center justify-between space-y-2">
+        <div className='mb-2 flex items-center justify-between space-y-2'>
           <div>
-            <h2 className="text-2xl font-bold tracking-tight">Warehouses</h2>
-            <p className="text-muted-foreground">
+            <h2 className='text-2xl font-bold tracking-tight'>Warehouses</h2>
+            <p className='text-muted-foreground'>
               Manage warehouses across different locations
             </p>
           </div>
           <WarehousePrimaryButtons />
         </div>
-        <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
+        <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
           <WarehouseTable columns={warehouseColumns} />
         </div>
       </Main>
       <WarehouseDialogs />
     </WarehouseProvider>
-  );
+  )
 }

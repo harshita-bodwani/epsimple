@@ -1,25 +1,10 @@
-import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Check, ChevronsUpDown, Loader2 } from 'lucide-react';
-import { format } from 'date-fns';
-
-import { Button } from '@/components/ui/button';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { DatePicker } from '@/components/date-picker';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
+import { useEffect, useState } from 'react'
+import { format } from 'date-fns'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Check, ChevronsUpDown, Loader2 } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
 import {
   Command,
   CommandEmpty,
@@ -27,8 +12,21 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from '@/components/ui/command';
-import { cn } from '@/lib/utils';
+} from '@/components/ui/command'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 import {
   Sheet,
   SheetContent,
@@ -36,44 +34,53 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle,
-} from '@/components/ui/sheet';
-import { useActivityWork } from '../context/activity-work-provider';
-import { activityWorkApi } from '../api/activity-work-api';
-import { activityWorkSchema, type ActivityWorkFormData } from '../api/schema';
-import { activitiesApi } from '@/features/activities/api/activities-api';
-import { useSearchVendors, type Vendor } from '@/features/vendors/api/vendors-api';
-import { genericStatusTypeApi } from '@/features/generic-status-types/api/generic-status-type-api';
+} from '@/components/ui/sheet'
+import { DatePicker } from '@/components/date-picker'
+import { activitiesApi } from '@/features/activities/api/activities-api'
+import { genericStatusTypeApi } from '@/features/generic-status-types/api/generic-status-type-api'
+import {
+  useSearchVendors,
+  type Vendor,
+} from '@/features/vendors/api/vendors-api'
+import { activityWorkApi } from '../api/activity-work-api'
+import { activityWorkSchema, type ActivityWorkFormData } from '../api/schema'
+import { useActivityWork } from '../context/activity-work-provider'
 
 export function ActivityWorkDrawer() {
-  const { isDrawerOpen, closeDrawer, selectedActivityWork } = useActivityWork();
+  const { isDrawerOpen, closeDrawer, selectedActivityWork } = useActivityWork()
 
-  const [activitySearch, setActivitySearch] = useState('');
-  const [activityOpen, setActivityOpen] = useState(false);
-  const [vendorSearch, setVendorSearch] = useState('');
-  const [vendorOpen, setVendorOpen] = useState(false);
-  const [statusTypeSearch, setStatusTypeSearch] = useState('');
-  const [statusTypeOpen, setStatusTypeOpen] = useState(false);
+  const [activitySearch, setActivitySearch] = useState('')
+  const [activityOpen, setActivityOpen] = useState(false)
+  const [vendorSearch, setVendorSearch] = useState('')
+  const [vendorOpen, setVendorOpen] = useState(false)
+  const [statusTypeSearch, setStatusTypeSearch] = useState('')
+  const [statusTypeOpen, setStatusTypeOpen] = useState(false)
 
-  const createMutation = activityWorkApi.useCreate();
-  const updateMutation = activityWorkApi.useUpdate();
+  const createMutation = activityWorkApi.useCreate()
+  const updateMutation = activityWorkApi.useUpdate()
 
-  const { data: activities = [], isLoading: isLoadingActivities } = 
-    activitiesApi.useSearch(activitySearch);
-  const { data: allActivities = [] } = activitiesApi.useSearch('');
-  const { data: vendors = [], isLoading: isLoadingVendors } = 
-    useSearchVendors(vendorSearch);
-  const { data: statusTypes = [], isLoading: isLoadingStatusTypes } = 
-    genericStatusTypeApi.useSearch(statusTypeSearch);
+  const { data: activities = [], isLoading: isLoadingActivities } =
+    activitiesApi.useSearch(activitySearch)
+  const { data: allActivities = [] } = activitiesApi.useSearch('')
+  const { data: vendors = [], isLoading: isLoadingVendors } =
+    useSearchVendors(vendorSearch)
+  const { data: statusTypes = [], isLoading: isLoadingStatusTypes } =
+    genericStatusTypeApi.useSearch(statusTypeSearch)
 
   // Display logic for activities dropdown
   const displayActivities = (() => {
-    if (!selectedActivityWork?.activitiesId) return activities;
-    const selectedActivity = allActivities.find((a) => a.id === selectedActivityWork.activitiesId);
-    if (!selectedActivity || activities.some((a) => a.id === selectedActivity.id)) {
-      return activities;
+    if (!selectedActivityWork?.activitiesId) return activities
+    const selectedActivity = allActivities.find(
+      (a) => a.id === selectedActivityWork.activitiesId
+    )
+    if (
+      !selectedActivity ||
+      activities.some((a) => a.id === selectedActivity.id)
+    ) {
+      return activities
     }
-    return [selectedActivity, ...activities];
-  })();
+    return [selectedActivity, ...activities]
+  })()
 
   const form = useForm<ActivityWorkFormData>({
     resolver: zodResolver(activityWorkSchema),
@@ -86,7 +93,7 @@ export function ActivityWorkDrawer() {
       workCompletionDate: '',
       statusTypeId: 0,
     },
-  });
+  })
 
   useEffect(() => {
     if (selectedActivityWork) {
@@ -98,7 +105,7 @@ export function ActivityWorkDrawer() {
         workStartDate: selectedActivityWork.workStartDate || '',
         workCompletionDate: selectedActivityWork.workCompletionDate || '',
         statusTypeId: selectedActivityWork.statusTypeId,
-      });
+      })
     } else {
       form.reset({
         activitiesId: 0,
@@ -108,9 +115,9 @@ export function ActivityWorkDrawer() {
         workStartDate: '',
         workCompletionDate: '',
         statusTypeId: 0,
-      });
+      })
     }
-  }, [selectedActivityWork, form]);
+  }, [selectedActivityWork, form])
 
   const onSubmit = async (data: ActivityWorkFormData) => {
     // Convert empty strings to undefined for optional fields
@@ -120,7 +127,7 @@ export function ActivityWorkDrawer() {
       workOrderDate: data.workOrderDate || undefined,
       workStartDate: data.workStartDate || undefined,
       workCompletionDate: data.workCompletionDate || undefined,
-    };
+    }
 
     if (selectedActivityWork) {
       updateMutation.mutate(
@@ -130,27 +137,27 @@ export function ActivityWorkDrawer() {
         },
         {
           onSuccess: () => {
-            closeDrawer();
-            form.reset();
+            closeDrawer()
+            form.reset()
           },
         }
-      );
+      )
     } else {
       createMutation.mutate(payload, {
         onSuccess: () => {
-          closeDrawer();
-          form.reset();
+          closeDrawer()
+          form.reset()
         },
-      });
+      })
     }
-  };
+  }
 
-  const isLoading = createMutation.isPending || updateMutation.isPending;
+  const isLoading = createMutation.isPending || updateMutation.isPending
 
   return (
     <Sheet open={isDrawerOpen} onOpenChange={closeDrawer}>
-      <SheetContent className="flex flex-col sm:max-w-[600px]">
-        <SheetHeader className="text-start">
+      <SheetContent className='flex flex-col sm:max-w-[600px]'>
+        <SheetHeader className='text-start'>
           <SheetTitle>
             {selectedActivityWork ? 'Update' : 'Create'} Activity Work
           </SheetTitle>
@@ -164,13 +171,13 @@ export function ActivityWorkDrawer() {
 
         <Form {...form}>
           <form
-            id="activity-work-form"
+            id='activity-work-form'
             onSubmit={form.handleSubmit(onSubmit)}
-            className="flex-1 space-y-6 overflow-y-auto px-4"
+            className='flex-1 space-y-6 overflow-y-auto px-4'
           >
             <FormField
               control={form.control}
-              name="activitiesId"
+              name='activitiesId'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Activity *</FormLabel>
@@ -178,31 +185,33 @@ export function ActivityWorkDrawer() {
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
-                          variant="outline"
-                          role="combobox"
+                          variant='outline'
+                          role='combobox'
                           className={cn(
                             'w-full justify-between',
                             !field.value && 'text-muted-foreground'
                           )}
                         >
                           {field.value
-                            ? displayActivities.find((a) => a.id === field.value)?.activityName
+                            ? displayActivities.find(
+                                (a) => a.id === field.value
+                              )?.activityName
                             : 'Select an activity'}
-                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
-                    <PopoverContent className="w-full p-0" align="start">
+                    <PopoverContent className='w-full p-0' align='start'>
                       <Command shouldFilter={false}>
                         <CommandInput
-                          placeholder="Search activities..."
+                          placeholder='Search activities...'
                           value={activitySearch}
                           onValueChange={setActivitySearch}
                         />
                         <CommandList>
                           {isLoadingActivities ? (
-                            <div className="flex items-center justify-center py-6">
-                              <Loader2 className="h-4 w-4 animate-spin" />
+                            <div className='flex items-center justify-center py-6'>
+                              <Loader2 className='h-4 w-4 animate-spin' />
                             </div>
                           ) : displayActivities.length === 0 ? (
                             <CommandEmpty>No activities found.</CommandEmpty>
@@ -213,15 +222,17 @@ export function ActivityWorkDrawer() {
                                   key={activity.id}
                                   value={String(activity.id)}
                                   onSelect={() => {
-                                    field.onChange(activity.id);
-                                    setActivityOpen(false);
-                                    setActivitySearch('');
+                                    field.onChange(activity.id)
+                                    setActivityOpen(false)
+                                    setActivitySearch('')
                                   }}
                                 >
                                   <Check
                                     className={cn(
                                       'mr-2 h-4 w-4',
-                                      activity.id === field.value ? 'opacity-100' : 'opacity-0'
+                                      activity.id === field.value
+                                        ? 'opacity-100'
+                                        : 'opacity-0'
                                     )}
                                   />
                                   {activity.activityName}
@@ -240,7 +251,7 @@ export function ActivityWorkDrawer() {
 
             <FormField
               control={form.control}
-              name="vendorId"
+              name='vendorId'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Vendor *</FormLabel>
@@ -248,31 +259,32 @@ export function ActivityWorkDrawer() {
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
-                          variant="outline"
-                          role="combobox"
+                          variant='outline'
+                          role='combobox'
                           className={cn(
                             'w-full justify-between',
                             !field.value && 'text-muted-foreground'
                           )}
                         >
                           {field.value
-                            ? vendors.find((v: Vendor) => v.id === field.value)?.vendorName
+                            ? vendors.find((v: Vendor) => v.id === field.value)
+                                ?.vendorName
                             : 'Select a vendor'}
-                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
-                    <PopoverContent className="w-full p-0" align="start">
+                    <PopoverContent className='w-full p-0' align='start'>
                       <Command shouldFilter={false}>
                         <CommandInput
-                          placeholder="Search vendors..."
+                          placeholder='Search vendors...'
                           value={vendorSearch}
                           onValueChange={setVendorSearch}
                         />
                         <CommandList>
                           {isLoadingVendors ? (
-                            <div className="flex items-center justify-center py-6">
-                              <Loader2 className="h-4 w-4 animate-spin" />
+                            <div className='flex items-center justify-center py-6'>
+                              <Loader2 className='h-4 w-4 animate-spin' />
                             </div>
                           ) : vendors.length === 0 ? (
                             <CommandEmpty>No vendors found.</CommandEmpty>
@@ -283,15 +295,17 @@ export function ActivityWorkDrawer() {
                                   key={vendor.id}
                                   value={String(vendor.id)}
                                   onSelect={() => {
-                                    field.onChange(vendor.id);
-                                    setVendorOpen(false);
-                                    setVendorSearch('');
+                                    field.onChange(vendor.id)
+                                    setVendorOpen(false)
+                                    setVendorSearch('')
                                   }}
                                 >
                                   <Check
                                     className={cn(
                                       'mr-2 h-4 w-4',
-                                      vendor.id === field.value ? 'opacity-100' : 'opacity-0'
+                                      vendor.id === field.value
+                                        ? 'opacity-100'
+                                        : 'opacity-0'
                                     )}
                                   />
                                   {vendor.vendorName}
@@ -310,13 +324,13 @@ export function ActivityWorkDrawer() {
 
             <FormField
               control={form.control}
-              name="vendorOrderNumber"
+              name='vendorOrderNumber'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Vendor Order Number</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Enter vendor order number (e.g., WO-2024-001)"
+                      placeholder='Enter vendor order number (e.g., WO-2024-001)'
                       {...field}
                     />
                   </FormControl>
@@ -327,15 +341,15 @@ export function ActivityWorkDrawer() {
 
             <FormField
               control={form.control}
-              name="workOrderDate"
+              name='workOrderDate'
               render={({ field }) => (
-                <FormItem className="flex flex-col">
+                <FormItem className='flex flex-col'>
                   <FormLabel>Work Order Date</FormLabel>
                   <FormControl>
                     <DatePicker
                       selected={field.value ? new Date(field.value) : undefined}
                       onSelect={(date) => {
-                        field.onChange(date ? format(date, 'yyyy-MM-dd') : '');
+                        field.onChange(date ? format(date, 'yyyy-MM-dd') : '')
                       }}
                     />
                   </FormControl>
@@ -346,15 +360,15 @@ export function ActivityWorkDrawer() {
 
             <FormField
               control={form.control}
-              name="workStartDate"
+              name='workStartDate'
               render={({ field }) => (
-                <FormItem className="flex flex-col">
+                <FormItem className='flex flex-col'>
                   <FormLabel>Work Start Date</FormLabel>
                   <FormControl>
                     <DatePicker
                       selected={field.value ? new Date(field.value) : undefined}
                       onSelect={(date) => {
-                        field.onChange(date ? format(date, 'yyyy-MM-dd') : '');
+                        field.onChange(date ? format(date, 'yyyy-MM-dd') : '')
                       }}
                     />
                   </FormControl>
@@ -365,15 +379,15 @@ export function ActivityWorkDrawer() {
 
             <FormField
               control={form.control}
-              name="workCompletionDate"
+              name='workCompletionDate'
               render={({ field }) => (
-                <FormItem className="flex flex-col">
+                <FormItem className='flex flex-col'>
                   <FormLabel>Work Completion Date</FormLabel>
                   <FormControl>
                     <DatePicker
                       selected={field.value ? new Date(field.value) : undefined}
                       onSelect={(date) => {
-                        field.onChange(date ? format(date, 'yyyy-MM-dd') : '');
+                        field.onChange(date ? format(date, 'yyyy-MM-dd') : '')
                       }}
                     />
                   </FormControl>
@@ -384,39 +398,43 @@ export function ActivityWorkDrawer() {
 
             <FormField
               control={form.control}
-              name="statusTypeId"
+              name='statusTypeId'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Status Type *</FormLabel>
-                  <Popover open={statusTypeOpen} onOpenChange={setStatusTypeOpen}>
+                  <Popover
+                    open={statusTypeOpen}
+                    onOpenChange={setStatusTypeOpen}
+                  >
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
-                          variant="outline"
-                          role="combobox"
+                          variant='outline'
+                          role='combobox'
                           className={cn(
                             'w-full justify-between',
                             !field.value && 'text-muted-foreground'
                           )}
                         >
                           {field.value
-                            ? statusTypes.find((s) => s.id === field.value)?.statusName
+                            ? statusTypes.find((s) => s.id === field.value)
+                                ?.statusName
                             : 'Select a status type'}
-                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
-                    <PopoverContent className="w-full p-0" align="start">
+                    <PopoverContent className='w-full p-0' align='start'>
                       <Command shouldFilter={false}>
                         <CommandInput
-                          placeholder="Search status types..."
+                          placeholder='Search status types...'
                           value={statusTypeSearch}
                           onValueChange={setStatusTypeSearch}
                         />
                         <CommandList>
                           {isLoadingStatusTypes ? (
-                            <div className="flex items-center justify-center py-6">
-                              <Loader2 className="h-4 w-4 animate-spin" />
+                            <div className='flex items-center justify-center py-6'>
+                              <Loader2 className='h-4 w-4 animate-spin' />
                             </div>
                           ) : statusTypes.length === 0 ? (
                             <CommandEmpty>No status types found.</CommandEmpty>
@@ -427,15 +445,17 @@ export function ActivityWorkDrawer() {
                                   key={statusType.id}
                                   value={String(statusType.id)}
                                   onSelect={() => {
-                                    field.onChange(statusType.id);
-                                    setStatusTypeOpen(false);
-                                    setStatusTypeSearch('');
+                                    field.onChange(statusType.id)
+                                    setStatusTypeOpen(false)
+                                    setStatusTypeSearch('')
                                   }}
                                 >
                                   <Check
                                     className={cn(
                                       'mr-2 h-4 w-4',
-                                      statusType.id === field.value ? 'opacity-100' : 'opacity-0'
+                                      statusType.id === field.value
+                                        ? 'opacity-100'
+                                        : 'opacity-0'
                                     )}
                                   />
                                   {statusType.statusName}
@@ -454,25 +474,21 @@ export function ActivityWorkDrawer() {
           </form>
         </Form>
 
-        <SheetFooter className="flex-shrink-0 px-4">
+        <SheetFooter className='flex-shrink-0 px-4'>
           <Button
-            type="button"
-            variant="outline"
+            type='button'
+            variant='outline'
             onClick={closeDrawer}
             disabled={isLoading}
           >
             Cancel
           </Button>
-          <Button
-            type="submit"
-            form="activity-work-form"
-            disabled={isLoading}
-          >
-            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          <Button type='submit' form='activity-work-form' disabled={isLoading}>
+            {isLoading && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}
             {selectedActivityWork ? 'Update' : 'Create'}
           </Button>
         </SheetFooter>
       </SheetContent>
     </Sheet>
-  );
+  )
 }

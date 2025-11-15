@@ -1,22 +1,22 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { ConfirmDialog } from '@/components/confirm-dialog'
-import { StatesMutateDrawer } from './states-mutate-drawer'
-import { GenericBulkUploadDialog } from '@/components/bulk-upload/GenericBulkUploadDialog'
-import { useStates } from '../hooks/use-states'
-import { statesApi } from '@/features/states/api/states-api'
 import { toast } from 'sonner'
 import { handleServerError } from '@/lib/handle-server-error'
+import { GenericBulkUploadDialog } from '@/components/bulk-upload/GenericBulkUploadDialog'
+import { ConfirmDialog } from '@/components/confirm-dialog'
+import { statesApi } from '@/features/states/api/states-api'
+import { useStates } from '../hooks/use-states'
+import { StatesMutateDrawer } from './states-mutate-drawer'
 
 export function StatesDialogs() {
-  const { 
-    isDrawerOpen, 
-    closeDrawer, 
-    isDeleteDialogOpen, 
-    closeDeleteDialog, 
+  const {
+    isDrawerOpen,
+    closeDrawer,
+    isDeleteDialogOpen,
+    closeDeleteDialog,
     isBulkUploadDialogOpen,
     closeBulkUploadDialog,
-    selectedState, 
-    isEditMode 
+    selectedState,
+    isEditMode,
   } = useStates()
   const queryClient = useQueryClient()
 
@@ -46,7 +46,11 @@ export function StatesDialogs() {
   return (
     <>
       <StatesMutateDrawer
-        key={isEditMode && selectedState ? `state-update-${selectedState.id}` : 'state-create'}
+        key={
+          isEditMode && selectedState
+            ? `state-update-${selectedState.id}`
+            : 'state-create'
+        }
         open={isDrawerOpen}
         onOpenChange={closeDrawer}
         currentRow={isEditMode && selectedState ? selectedState : undefined}
@@ -73,7 +77,7 @@ export function StatesDialogs() {
           confirmText='Delete'
         />
       )}
-      
+
       <GenericBulkUploadDialog
         open={isBulkUploadDialogOpen}
         onOpenChange={closeBulkUploadDialog}

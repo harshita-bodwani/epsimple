@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod'
 
 export const assetTypeSchema = z.object({
   id: z.number(),
@@ -7,7 +7,7 @@ export const assetTypeSchema = z.object({
   description: z.string().nullable(),
   createdAt: z.string(),
   updatedAt: z.string(),
-});
+})
 
 export const assetTypeFormSchema = z.object({
   typeName: z
@@ -22,7 +22,7 @@ export const assetTypeFormSchema = z.object({
     .string()
     .max(5000, 'Description must not exceed 5000 characters')
     .optional(),
-});
+})
 
-export type AssetType = z.infer<typeof assetTypeSchema>;
-export type AssetTypeFormData = z.infer<typeof assetTypeFormSchema>;
+export type AssetType = z.infer<typeof assetTypeSchema>
+export type AssetTypeFormData = z.infer<typeof assetTypeFormSchema>

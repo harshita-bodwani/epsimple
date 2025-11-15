@@ -1,15 +1,22 @@
-import { useState } from 'react';
-import { useCostItems } from '@/features/cost-items/api/cost-items-api';
-import { CostItemRowActions } from './cost-item-row-actions';
+import { useState } from 'react'
 import {
-  ColumnDef,
-  SortingState,
-  VisibilityState,
+  type ColumnDef,
+  type SortingState,
+  type VisibilityState,
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
   useReactTable,
-} from '@tanstack/react-table';
+} from '@tanstack/react-table'
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+  Search,
+} from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import {
   Table,
   TableBody,
@@ -17,25 +24,24 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Search } from 'lucide-react';
-import type { CostItem } from '@/features/cost-items/api/cost-items-api';
+} from '@/components/ui/table'
+import { useCostItems } from '@/features/cost-items/api/cost-items-api'
+import type { CostItem } from '@/features/cost-items/api/cost-items-api'
+import { CostItemRowActions } from './cost-item-row-actions'
 
 interface CostItemsTableProps {
-  columns: ColumnDef<CostItem>[];
+  columns: ColumnDef<CostItem>[]
 }
 
 export const CostItemsTable = ({ columns }: CostItemsTableProps) => {
-  const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(10);
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [searchInput, setSearchInput] = useState('');
+  const [page, setPage] = useState(0)
+  const [pageSize, setPageSize] = useState(10)
+  const [sorting, setSorting] = useState<SortingState>([])
+  const [searchTerm, setSearchTerm] = useState('')
+  const [searchInput, setSearchInput] = useState('')
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
     createdAt: false,
-  });
+  })
 
   const { data, isLoading, error } = useCostItems({
     page,
@@ -43,7 +49,7 @@ export const CostItemsTable = ({ columns }: CostItemsTableProps) => {
     sortBy: sorting[0]?.id,
     sortDirection: sorting[0]?.desc ? 'desc' : 'asc',
     search: searchTerm,
-  });
+  })
 
   const columnsWithActions: ColumnDef<CostItem>[] = [
     ...columns,
@@ -52,7 +58,7 @@ export const CostItemsTable = ({ columns }: CostItemsTableProps) => {
       header: 'Actions',
       cell: ({ row }) => <CostItemRowActions costItem={row.original} />,
     },
-  ];
+  ]
 
   const table = useReactTable({
     data: data?.content || [],
@@ -68,45 +74,45 @@ export const CostItemsTable = ({ columns }: CostItemsTableProps) => {
     manualPagination: true,
     manualSorting: true,
     pageCount: data?.totalPages || 0,
-  });
+  })
 
   const handleSearch = () => {
-    setSearchTerm(searchInput);
-    setPage(0);
-  };
+    setSearchTerm(searchInput)
+    setPage(0)
+  }
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      handleSearch();
+      handleSearch()
     }
-  };
+  }
 
   if (error) {
     return (
-      <div className="rounded-md border border-destructive p-4 text-destructive">
+      <div className='border-destructive text-destructive rounded-md border p-4'>
         Error loading cost items. Please try again.
       </div>
-    );
+    )
   }
 
   return (
-    <div className="space-y-4">
+    <div className='space-y-4'>
       {/* Search */}
-      <div className="flex items-center gap-2">
+      <div className='flex items-center gap-2'>
         <Input
-          placeholder="Search cost items..."
+          placeholder='Search cost items...'
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
           onKeyPress={handleKeyPress}
-          className="max-w-sm"
+          className='max-w-sm'
         />
-        <Button onClick={handleSearch} size="icon" variant="outline">
-          <Search className="h-4 w-4" />
+        <Button onClick={handleSearch} size='icon' variant='outline'>
+          <Search className='h-4 w-4' />
         </Button>
       </div>
 
       {/* Table */}
-      <div className="rounded-md border">
+      <div className='rounded-md border'>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -115,7 +121,10 @@ export const CostItemsTable = ({ columns }: CostItemsTableProps) => {
                   <TableHead key={header.id}>
                     {header.isPlaceholder
                       ? null
-                      : flexRender(header.column.columnDef.header, header.getContext())}
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                   </TableHead>
                 ))}
               </TableRow>
@@ -124,23 +133,35 @@ export const CostItemsTable = ({ columns }: CostItemsTableProps) => {
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={columnsWithActions.length} className="h-24 text-center">
+                <TableCell
+                  colSpan={columnsWithActions.length}
+                  className='h-24 text-center'
+                >
                   Loading...
                 </TableCell>
               </TableRow>
             ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && 'selected'}
+                >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columnsWithActions.length} className="h-24 text-center">
+                <TableCell
+                  colSpan={columnsWithActions.length}
+                  className='h-24 text-center'
+                >
                   No results.
                 </TableCell>
               </TableRow>
@@ -150,16 +171,16 @@ export const CostItemsTable = ({ columns }: CostItemsTableProps) => {
       </div>
 
       {/* Pagination */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground">Rows per page:</span>
+      <div className='flex items-center justify-between'>
+        <div className='flex items-center gap-2'>
+          <span className='text-muted-foreground text-sm'>Rows per page:</span>
           <select
             value={pageSize}
             onChange={(e) => {
-              setPageSize(Number(e.target.value));
-              setPage(0);
+              setPageSize(Number(e.target.value))
+              setPage(0)
             }}
-            className="h-8 rounded-md border border-input bg-background px-2 text-sm"
+            className='border-input bg-background h-8 rounded-md border px-2 text-sm'
           >
             <option value={10}>10</option>
             <option value={20}>20</option>
@@ -168,46 +189,46 @@ export const CostItemsTable = ({ columns }: CostItemsTableProps) => {
           </select>
         </div>
 
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground">
+        <div className='flex items-center gap-2'>
+          <span className='text-muted-foreground text-sm'>
             Page {page + 1} of {data?.totalPages || 1}
           </span>
-          <div className="flex gap-1">
+          <div className='flex gap-1'>
             <Button
-              variant="outline"
-              size="icon"
+              variant='outline'
+              size='icon'
               onClick={() => setPage(0)}
               disabled={page === 0 || isLoading}
             >
-              <ChevronsLeft className="h-4 w-4" />
+              <ChevronsLeft className='h-4 w-4' />
             </Button>
             <Button
-              variant="outline"
-              size="icon"
+              variant='outline'
+              size='icon'
               onClick={() => setPage((p) => Math.max(0, p - 1))}
               disabled={page === 0 || isLoading}
             >
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className='h-4 w-4' />
             </Button>
             <Button
-              variant="outline"
-              size="icon"
+              variant='outline'
+              size='icon'
               onClick={() => setPage((p) => p + 1)}
               disabled={!data || page >= data.totalPages - 1 || isLoading}
             >
-              <ChevronRight className="h-4 w-4" />
+              <ChevronRight className='h-4 w-4' />
             </Button>
             <Button
-              variant="outline"
-              size="icon"
+              variant='outline'
+              size='icon'
               onClick={() => setPage((data?.totalPages || 1) - 1)}
               disabled={!data || page >= data.totalPages - 1 || isLoading}
             >
-              <ChevronsRight className="h-4 w-4" />
+              <ChevronsRight className='h-4 w-4' />
             </Button>
           </div>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
