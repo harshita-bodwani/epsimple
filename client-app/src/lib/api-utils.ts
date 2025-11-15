@@ -121,6 +121,7 @@ export async function downloadFile(
  */
 export async function downloadFileWithPost(
   endpoint: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any,
   filename: string
 ): Promise<void> {

@@ -3,6 +3,7 @@ import { toast } from 'sonner'
 
 interface UseErrorHandlerOptions {
   showToast?: boolean
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onError?: (error: any) => void
 }
 

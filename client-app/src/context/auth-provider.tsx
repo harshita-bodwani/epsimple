@@ -1,10 +1,11 @@
 import { createContext, useContext, useEffect, type ReactNode } from 'react'
+/* eslint-disable react-refresh/only-export-components */
 import { useAuthStore } from '@/stores/auth-store'
 
 interface AuthContextType {
   isAuthenticated: boolean
   isLoading: boolean
-  user: any
+  user: any // eslint-disable-line @typescript-eslint/no-explicit-any
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)

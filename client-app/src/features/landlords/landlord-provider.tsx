@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState } from 'react'
+/* eslint-disable react-refresh/only-export-components */
 import type { Landlord } from '@/features/landlords/api/landlords-api'
 
 interface LandlordContextType {

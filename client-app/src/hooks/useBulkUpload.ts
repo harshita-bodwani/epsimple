@@ -322,7 +322,7 @@ async function bulkUploadWithSSE(
             ) {
               return
             }
-          } catch (error) {
+          } catch (_error) {
             // Ignore parsing errors for SSE data
           }
         }

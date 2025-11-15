@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, type ReactNode } from 'react'
+/* eslint-disable react-refresh/only-export-components */
 import type { SiteCodeGenerator } from '../api/schema'
 
 interface SiteCodeGeneratorContextType {

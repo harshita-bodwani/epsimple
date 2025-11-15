@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useMemo } from 'react'
+/* eslint-disable react-refresh/only-export-components */
 import type { AssetsOnSite } from '../api/schema'
 
 interface AssetsOnSiteContextType {

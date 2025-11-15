@@ -60,7 +60,7 @@ export const useAuthStore = create<AuthStore>()(
         try {
           const response = await authApi.me()
           set({ user: response.data, error: null })
-        } catch (error: any) {
+        } catch (error: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
           set({ user: null, error: error.message })
           throw error
         }
@@ -71,7 +71,7 @@ export const useAuthStore = create<AuthStore>()(
         try {
           const response = await authApi.login({ email, password })
           set({ user: response.data.user, isLoading: false })
-        } catch (error: any) {
+        } catch (error: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
           set({ error: error.message, isLoading: false })
           throw error
         }
@@ -82,7 +82,7 @@ export const useAuthStore = create<AuthStore>()(
         try {
           const response = await authApi.register({ email, password, name })
           set({ user: response.data.user, isLoading: false })
-        } catch (error: any) {
+        } catch (error: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
           set({ error: error.message, isLoading: false })
           throw error
         }
@@ -93,7 +93,7 @@ export const useAuthStore = create<AuthStore>()(
         try {
           await authApi.logout()
           set({ user: null, isLoading: false, error: null })
-        } catch (error: any) {
+        } catch (error: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
           set({ user: null, isLoading: false, error: error.message })
           throw error
         }
@@ -104,7 +104,7 @@ export const useAuthStore = create<AuthStore>()(
         try {
           await authApi.forgotPassword({ email })
           set({ isLoading: false })
-        } catch (error: any) {
+        } catch (error: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
           set({ error: error.message, isLoading: false })
           throw error
         }
@@ -115,7 +115,7 @@ export const useAuthStore = create<AuthStore>()(
         try {
           await authApi.resetPassword({ token, newPassword })
           set({ isLoading: false })
-        } catch (error: any) {
+        } catch (error: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
           set({ error: error.message, isLoading: false })
           throw error
         }

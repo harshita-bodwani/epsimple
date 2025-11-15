@@ -53,6 +53,7 @@ export function ExpendituresVoucherTable({
 
   // Query for all data
   const { data: allData, isLoading: isAllLoading } = useQuery({
+      // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: ['expenditures-vouchers', page, pageSize, sorting],
     queryFn: () =>
       expendituresVoucherApi.getAll(

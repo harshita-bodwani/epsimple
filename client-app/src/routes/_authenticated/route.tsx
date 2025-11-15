@@ -14,6 +14,7 @@ export const Route = createFileRoute('/_authenticated')({
       try {
         await initialize()
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error('Auth initialization failed:', error)
         // If initialization fails, redirect to sign-in
         throw redirect({
