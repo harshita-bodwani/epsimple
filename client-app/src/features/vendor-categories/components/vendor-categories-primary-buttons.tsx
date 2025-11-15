@@ -7,7 +7,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useVendorCategories } from '../context/vendor-categories-provider';
+import { useVendorCategories } from '../hooks/use-vendor-categories';
 import { downloadFile } from '@/lib/api-utils';
 import { toast } from 'sonner';
 import { useState } from 'react';

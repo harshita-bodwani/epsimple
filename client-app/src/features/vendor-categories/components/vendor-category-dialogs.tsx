@@ -3,7 +3,7 @@ import { toast } from "sonner";
 import { ConfirmDialog } from "@/components/confirm-dialog";
 import { GenericBulkUploadDialog } from "@/components/bulk-upload/GenericBulkUploadDialog";
 import { VendorCategoriesMutateDrawer } from "./vendor-categories-mutate-drawer";
-import { useVendorCategories } from "../context/vendor-categories-provider";
+import { useVendorCategories } from "../hooks/use-vendor-categories";
 import { vendorCategoriesApi } from "../api/vendor-categories-api";
 
 export function VendorCategoryDialogs() {

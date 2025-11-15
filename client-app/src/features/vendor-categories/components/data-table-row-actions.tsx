@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-import { useVendorCategories } from '../context/vendor-categories-provider';
+import { useVendorCategories } from '../hooks/use-vendor-categories';
 import type { VendorCategory } from '../api/schema';
 
 interface DataTableRowActionsProps {

@@ -11,7 +11,7 @@ import { downloadFile } from "@/lib/api-utils";
 import { useExport } from "@/hooks/useExport";
 import { useState } from "react";
 import { toast } from "sonner";
-import { useVendorCategories } from "../context/vendor-categories-provider";
+import { useVendorCategories } from "../hooks/use-vendor-categories";
 
 export function VendorCategoryPrimaryButtons() {
   const { setSelectedVendorCategory, setIsDrawerOpen, openBulkUploadDialog } =
