@@ -4,12 +4,12 @@ import { ProfileDropdown } from '@/components/profile-dropdown';
 import { Search } from '@/components/search';
 import { ThemeSwitch } from '@/components/theme-switch';
 import { ConfigDrawer } from '@/components/config-drawer';
-import { VendorProvider } from './vendor-provider';
-import { VendorDrawer } from './vendor-drawer';
-import { VendorsTable } from './vendors-table';
+import { VendorProvider } from './context/vendor-provider';
+import { VendorDrawer } from './components/vendor-drawer';
+import { VendorsTable } from './components/vendors-table';
 import { VendorPrimaryButtons } from './components/vendor-primary-buttons';
 import { VendorDialogs } from './components/vendor-dialogs';
-import { vendorColumns } from './vendor-columns';
+import { vendorColumns } from './components/vendor-columns';
 
 export default function VendorsPage() {
   return (

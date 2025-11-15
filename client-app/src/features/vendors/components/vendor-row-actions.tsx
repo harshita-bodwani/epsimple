@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { ConfirmDialog } from '@/components/confirm-dialog';
 
-import { useVendorContext } from './vendor-provider';
+import { useVendor } from '../hooks/use-vendor';
 import { type Vendor, useDeleteVendor } from '@/features/vendors/api/vendors-api';
 import { useErrorHandler } from '@/hooks/use-error-handler';
 
@@ -22,7 +22,7 @@ interface VendorRowActionsProps {
 }
 
 export const VendorRowActions = ({ vendor }: VendorRowActionsProps) => {
-  const { openEditDrawer } = useVendorContext();
+  const { openEditDrawer } = useVendor();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const deleteVendor = useDeleteVendor();
   const handleError = useErrorHandler();

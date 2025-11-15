@@ -1,9 +1,9 @@
 import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useVendorContext } from './vendor-provider';
+import { useVendor } from '../hooks/use-vendor';
 
 export const CreateVendorButton = () => {
-  const { openCreateDrawer } = useVendorContext();
+  const { openCreateDrawer } = useVendor();
 
   return (
     <div className="flex items-center justify-between space-y-2">

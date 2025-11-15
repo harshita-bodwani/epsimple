@@ -10,10 +10,10 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { downloadFile } from '@/lib/api-utils'
-import { useVendorContext } from '../vendor-provider'
+import { useVendor } from '../hooks/use-vendor'
 
 export function VendorPrimaryButtons() {
-  const { openCreateDrawer, openBulkUploadDialog } = useVendorContext()
+  const { openCreateDrawer, openBulkUploadDialog } = useVendor()
   const [isDownloadingTemplate, setIsDownloadingTemplate] = useState(false)
   const [isExporting, setIsExporting] = useState(false)
 

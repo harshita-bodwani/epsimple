@@ -27,15 +27,15 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Command, CommandInput, CommandList, CommandEmpty, CommandItem } from '@/components/ui/command';
 import { cn } from '@/lib/utils';
 
-import { useVendorContext } from './vendor-provider';
-import { vendorFormSchema, type VendorFormValues } from './schema';
+import { useVendor } from '../hooks/use-vendor';
+import { vendorFormSchema, type VendorFormValues } from '../api/schema';
 import { useCreateVendor, useUpdateVendor } from '@/features/vendors/api/vendors-api';
 import { vendorTypesApi } from '@/features/vendor-types/api/vendor-types-api';
 import { personDetailsApi } from '@/features/person-details/api/person-details-api';
 import { useErrorHandler } from '@/hooks/use-error-handler';
 
 export const VendorDrawer = () => {
-  const { isDrawerOpen, closeDrawer, drawerMode, selectedVendor } = useVendorContext();
+  const { isDrawerOpen, closeDrawer, drawerMode, selectedVendor } = useVendor();
   
   const [vendorTypeSearch, setVendorTypeSearch] = useState("");
   const [vendorTypeOpen, setVendorTypeOpen] = useState(false);
