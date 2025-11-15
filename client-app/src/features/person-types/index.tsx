@@ -6,10 +6,10 @@ import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
-import { PersonTypesProvider } from './components/person-types-provider'
-import { PersonTypesTable } from './components/person-types-table'
 import { PersonTypesDialogs } from './components/person-types-dialogs'
 import { PersonTypesPrimaryButtons } from './components/person-types-primary-buttons'
+import { PersonTypesProvider } from './components/person-types-provider'
+import { PersonTypesTable } from './components/person-types-table'
 
 export default function PersonTypesPage() {
   const [page, setPage] = useState(1)
@@ -31,7 +31,9 @@ export default function PersonTypesPage() {
           <div>
             <div className='flex items-center gap-2'>
               <Users className='h-8 w-8' />
-              <h2 className='text-2xl font-bold tracking-tight'>Person Types</h2>
+              <h2 className='text-2xl font-bold tracking-tight'>
+                Person Types
+              </h2>
             </div>
             <p className='text-muted-foreground mt-1'>
               Manage person types and their information

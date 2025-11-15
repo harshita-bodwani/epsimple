@@ -3,10 +3,7 @@ import { GenericBulkUploadDialog } from '@/components/bulk-upload/GenericBulkUpl
 import { useLocation } from '../context/location-provider'
 
 export function LocationDialogs() {
-  const { 
-    isBulkUploadDialogOpen,
-    closeBulkUploadDialog,
-  } = useLocation()
+  const { isBulkUploadDialogOpen, closeBulkUploadDialog } = useLocation()
   const queryClient = useQueryClient()
 
   const handleBulkUploadSuccess = () => {

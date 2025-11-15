@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -11,9 +12,7 @@ import {
   getFilteredRowModel,
   getSortedRowModel,
   useReactTable,
-} from '@tanstack/react-table';
-import { useQuery } from '@tanstack/react-query';
-
+} from '@tanstack/react-table'
 import {
   Table,
   TableBody,
@@ -21,37 +20,43 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-
-import { DataTablePagination, DataTableToolbar } from '@/components/data-table';
-import { vendorTypesApi } from '../api/vendor-types-api';
-import { DataTableRowActions } from './data-table-row-actions';
+} from '@/components/ui/table'
+import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
+import { vendorTypesApi } from '../api/vendor-types-api'
+import { DataTableRowActions } from './data-table-row-actions'
 
 interface VendorTypesTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
+  columns: ColumnDef<TData, TValue>[]
 }
 
 export function VendorTypesTable<TData, TValue>({
   columns,
 }: VendorTypesTableProps<TData, TValue>) {
-  const [globalFilter, setGlobalFilter] = useState('');
-  const [rowSelection, setRowSelection] = useState({});
+  const [globalFilter, setGlobalFilter] = useState('')
+  const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
     createdAt: false,
     updatedAt: false,
-  });
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [sorting, setSorting] = useState<SortingState>([]);
+  })
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [sorting, setSorting] = useState<SortingState>([])
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,
-  });
+  })
 
   const { data, isLoading } = useQuery({
-    queryKey: ['vendor-types', pagination.pageIndex, pagination.pageSize, globalFilter, sorting],
+    queryKey: [
+      'vendor-types',
+      pagination.pageIndex,
+      pagination.pageSize,
+      globalFilter,
+      sorting,
+    ],
     queryFn: async () => {
-      const sortBy = sorting.length > 0 ? sorting[0].id : 'id';
-      const sortDirection = sorting.length > 0 && sorting[0].desc ? 'DESC' : 'ASC';
+      const sortBy = sorting.length > 0 ? sorting[0].id : 'id'
+      const sortDirection =
+        sorting.length > 0 && sorting[0].desc ? 'DESC' : 'ASC'
 
       if (globalFilter && globalFilter.trim() !== '') {
         return await vendorTypesApi.search(
@@ -60,7 +65,7 @@ export function VendorTypesTable<TData, TValue>({
           pagination.pageSize,
           sortBy,
           sortDirection
-        );
+        )
       }
 
       return await vendorTypesApi.getAll(
@@ -68,17 +73,17 @@ export function VendorTypesTable<TData, TValue>({
         pagination.pageSize,
         sortBy,
         sortDirection
-      );
+      )
     },
-  });
+  })
 
-  const vendorTypes = (data?.data?.content || []) as TData[];
-  const totalPages = data?.data?.totalPages || 0;
+  const vendorTypes = (data?.data?.content || []) as TData[]
+  const totalPages = data?.data?.totalPages || 0
 
   // Reset to first page when search query changes
   useEffect(() => {
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
-  }, [globalFilter]);
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }))
+  }, [globalFilter])
 
   // Add actions column
   const columnsWithActions = React.useMemo(
@@ -90,7 +95,7 @@ export function VendorTypesTable<TData, TValue>({
       },
     ],
     [columns]
-  );
+  )
 
   const table = useReactTable({
     data: vendorTypes,
@@ -118,12 +123,15 @@ export function VendorTypesTable<TData, TValue>({
     getFacetedUniqueValues: getFacetedUniqueValues(),
     manualPagination: true,
     manualSorting: true,
-  });
+  })
 
   return (
-    <div className="space-y-4">
-      <DataTableToolbar table={table} searchPlaceholder="Search vendor types..." />
-      <div className="rounded-md border">
+    <div className='space-y-4'>
+      <DataTableToolbar
+        table={table}
+        searchPlaceholder='Search vendor types...'
+      />
+      <div className='rounded-md border'>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -133,9 +141,12 @@ export function VendorTypesTable<TData, TValue>({
                     <TableHead key={header.id} colSpan={header.colSpan}>
                       {header.isPlaceholder
                         ? null
-                        : flexRender(header.column.columnDef.header, header.getContext())}
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                     </TableHead>
-                  );
+                  )
                 })}
               </TableRow>
             ))}
@@ -143,23 +154,35 @@ export function VendorTypesTable<TData, TValue>({
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={columns.length + 1} className="h-24 text-center">
+                <TableCell
+                  colSpan={columns.length + 1}
+                  className='h-24 text-center'
+                >
                   Loading...
                 </TableCell>
               </TableRow>
             ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && 'selected'}
+                >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length + 1} className="h-24 text-center">
+                <TableCell
+                  colSpan={columns.length + 1}
+                  className='h-24 text-center'
+                >
                   No results.
                 </TableCell>
               </TableRow>
@@ -169,5 +192,5 @@ export function VendorTypesTable<TData, TValue>({
       </div>
       <DataTablePagination table={table} />
     </div>
-  );
+  )
 }

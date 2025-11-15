@@ -1,12 +1,12 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'sonner';
-import { ConfirmDialog } from '@/components/confirm-dialog';
-import { VendorCategoriesMutateDrawer } from './vendor-categories-mutate-drawer';
-import { useVendorCategories } from '../hooks/use-vendor-categories';
-import { vendorCategoriesApi } from '../api/vendor-categories-api';
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { toast } from 'sonner'
+import { ConfirmDialog } from '@/components/confirm-dialog'
+import { vendorCategoriesApi } from '../api/vendor-categories-api'
+import { useVendorCategories } from '../hooks/use-vendor-categories'
+import { VendorCategoriesMutateDrawer } from './vendor-categories-mutate-drawer'
 
 export function VendorCategoriesDialogs() {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
   const {
     selectedVendorCategory,
     setSelectedVendorCategory,
@@ -14,23 +14,23 @@ export function VendorCategoriesDialogs() {
     setIsDrawerOpen,
     isDeleteDialogOpen,
     setIsDeleteDialogOpen,
-  } = useVendorCategories();
+  } = useVendorCategories()
 
   const deleteMutation = useMutation({
     mutationFn: vendorCategoriesApi.delete,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['vendor-categories'] });
-      toast.success('Vendor category deleted successfully');
-      setIsDeleteDialogOpen(false);
-      setSelectedVendorCategory(null);
+      queryClient.invalidateQueries({ queryKey: ['vendor-categories'] })
+      toast.success('Vendor category deleted successfully')
+      setIsDeleteDialogOpen(false)
+      setSelectedVendorCategory(null)
     },
-  });
+  })
 
   const handleDelete = () => {
     if (selectedVendorCategory) {
-      deleteMutation.mutate(selectedVendorCategory.id);
+      deleteMutation.mutate(selectedVendorCategory.id)
     }
-  };
+  }
 
   return (
     <>
@@ -42,12 +42,12 @@ export function VendorCategoriesDialogs() {
       <ConfirmDialog
         open={isDeleteDialogOpen}
         onOpenChange={setIsDeleteDialogOpen}
-        title="Delete Vendor Category"
+        title='Delete Vendor Category'
         desc={`Are you sure you want to delete the vendor category "${selectedVendorCategory?.categoryName}"? This action cannot be undone.`}
         handleConfirm={handleDelete}
         isLoading={deleteMutation.isPending}
         destructive
       />
     </>
-  );
+  )
 }

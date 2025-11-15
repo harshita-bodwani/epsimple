@@ -1,8 +1,8 @@
-import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
-import { useState } from 'react';
-import { toast } from 'sonner';
-
-import { Button } from '@/components/ui/button';
+import { useState } from 'react'
+import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react'
+import { toast } from 'sonner'
+import { useErrorHandler } from '@/hooks/use-error-handler'
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,59 +10,60 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { ConfirmDialog } from '@/components/confirm-dialog';
-
-import { useVendor } from '../hooks/use-vendor';
-import { type Vendor, useDeleteVendor } from '@/features/vendors/api/vendors-api';
-import { useErrorHandler } from '@/hooks/use-error-handler';
+} from '@/components/ui/dropdown-menu'
+import { ConfirmDialog } from '@/components/confirm-dialog'
+import {
+  type Vendor,
+  useDeleteVendor,
+} from '@/features/vendors/api/vendors-api'
+import { useVendor } from '../hooks/use-vendor'
 
 interface VendorRowActionsProps {
-  vendor: Vendor;
+  vendor: Vendor
 }
 
 export const VendorRowActions = ({ vendor }: VendorRowActionsProps) => {
-  const { openEditDrawer } = useVendor();
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const deleteVendor = useDeleteVendor();
-  const handleError = useErrorHandler();
+  const { openEditDrawer } = useVendor()
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const deleteVendor = useDeleteVendor()
+  const handleError = useErrorHandler()
 
   const handleEdit = () => {
-    openEditDrawer(vendor);
-  };
+    openEditDrawer(vendor)
+  }
 
   const handleDelete = async () => {
     try {
-      await deleteVendor.mutateAsync(vendor.id);
-      toast.success('Vendor deleted successfully');
-      setIsDeleteDialogOpen(false);
+      await deleteVendor.mutateAsync(vendor.id)
+      toast.success('Vendor deleted successfully')
+      setIsDeleteDialogOpen(false)
     } catch (error) {
-      const { message } = handleError.handleError(error);
-      toast.error(message);
+      const { message } = handleError.handleError(error)
+      toast.error(message)
     }
-  };
+  }
 
   return (
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0">
-            <span className="sr-only">Open menu</span>
-            <MoreHorizontal className="h-4 w-4" />
+          <Button variant='ghost' className='h-8 w-8 p-0'>
+            <span className='sr-only'>Open menu</span>
+            <MoreHorizontal className='h-4 w-4' />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
+        <DropdownMenuContent align='end'>
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={handleEdit}>
-            <Pencil className="mr-2 h-4 w-4" />
+            <Pencil className='mr-2 h-4 w-4' />
             Edit
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => setIsDeleteDialogOpen(true)}
-            className="text-destructive focus:text-destructive"
+            className='text-destructive focus:text-destructive'
           >
-            <Trash2 className="mr-2 h-4 w-4" />
+            <Trash2 className='mr-2 h-4 w-4' />
             Delete
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -72,12 +73,12 @@ export const VendorRowActions = ({ vendor }: VendorRowActionsProps) => {
         open={isDeleteDialogOpen}
         onOpenChange={setIsDeleteDialogOpen}
         handleConfirm={handleDelete}
-        title="Delete Vendor"
+        title='Delete Vendor'
         desc={`Are you sure you want to delete "${vendor.vendorName}"? This action cannot be undone.`}
-        confirmText="Delete"
+        confirmText='Delete'
         isLoading={deleteVendor.isPending}
         destructive
       />
     </>
-  );
-};
+  )
+}

@@ -1,1 +1,1 @@
-export { usePayee } from './use-payee';
+export { usePayee } from './use-payee'

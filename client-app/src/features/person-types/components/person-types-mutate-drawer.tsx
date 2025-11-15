@@ -2,6 +2,8 @@ import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { Loader2 } from 'lucide-react'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -12,7 +14,6 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
 import {
   Sheet,
   SheetClose,
@@ -22,10 +23,13 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet'
-import { type PersonType, personTypeFormSchema, type PersonTypeFormValues } from '../data/schema'
+import { Textarea } from '@/components/ui/textarea'
 import { personTypesApi } from '@/features/person-types/api/person-types-api'
-import { toast } from 'sonner'
-import { Loader2 } from 'lucide-react'
+import {
+  type PersonType,
+  personTypeFormSchema,
+  type PersonTypeFormValues,
+} from '../data/schema'
 
 type PersonTypesMutateDrawerProps = {
   open: boolean
@@ -169,7 +173,11 @@ export function PersonTypesMutateDrawer({
               Cancel
             </Button>
           </SheetClose>
-          <Button type='submit' form='person-types-form' disabled={isSubmitting}>
+          <Button
+            type='submit'
+            form='person-types-form'
+            disabled={isSubmitting}
+          >
             {isSubmitting && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}
             {isUpdate ? 'Update' : 'Create'}
           </Button>

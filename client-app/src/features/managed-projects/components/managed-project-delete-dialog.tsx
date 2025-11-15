@@ -7,23 +7,27 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { useManagedProjectContext } from "../context/managed-project-provider";
-import { managedProjectApi } from "../api/managed-project-api";
+} from '@/components/ui/alert-dialog'
+import { managedProjectApi } from '../api/managed-project-api'
+import { useManagedProjectContext } from '../context/managed-project-provider'
 
 export function ManagedProjectDeleteDialog() {
-  const { isDeleteDialogOpen, setIsDeleteDialogOpen, deletingManagedProjectId, setDeletingManagedProjectId } =
-    useManagedProjectContext();
+  const {
+    isDeleteDialogOpen,
+    setIsDeleteDialogOpen,
+    deletingManagedProjectId,
+    setDeletingManagedProjectId,
+  } = useManagedProjectContext()
 
-  const deleteMutation = managedProjectApi.useDelete();
+  const deleteMutation = managedProjectApi.useDelete()
 
   const handleDelete = async () => {
     if (deletingManagedProjectId) {
-      await deleteMutation.mutateAsync(deletingManagedProjectId);
-      setIsDeleteDialogOpen(false);
-      setDeletingManagedProjectId(null);
+      await deleteMutation.mutateAsync(deletingManagedProjectId)
+      setIsDeleteDialogOpen(false)
+      setDeletingManagedProjectId(null)
     }
-  };
+  }
 
   return (
     <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
@@ -31,18 +35,22 @@ export function ManagedProjectDeleteDialog() {
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete the managed project.
+            This action cannot be undone. This will permanently delete the
+            managed project.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel onClick={() => setDeletingManagedProjectId(null)}>
             Cancel
           </AlertDialogCancel>
-          <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+          <AlertDialogAction
+            onClick={handleDelete}
+            className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
+          >
             Delete
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  );
+  )
 }

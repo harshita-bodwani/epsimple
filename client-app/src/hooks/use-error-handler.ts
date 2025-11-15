@@ -16,15 +16,16 @@ export function useErrorHandler(options: UseErrorHandlerOptions = {}) {
     if (error instanceof AxiosError) {
       statusCode = error.response?.status
       // First, try to get the custom message from backend
-      const backendMessage = error.response?.data?.message || error.response?.data?.title
-      
+      const backendMessage =
+        error.response?.data?.message || error.response?.data?.title
+
       if (backendMessage) {
         // If backend provided a message, use it
         errorMessage = backendMessage
       } else {
         // Otherwise, use generic messages based on status codes
         errorMessage = error.message
-        
+
         switch (statusCode) {
           case 400:
             errorMessage = 'Invalid request. Please check your input.'

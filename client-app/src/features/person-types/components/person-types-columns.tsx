@@ -1,7 +1,7 @@
 import { type ColumnDef } from '@tanstack/react-table'
 import { DataTableColumnHeader } from '@/components/data-table'
-import { DataTableRowActions } from './data-table-row-actions'
 import type { PersonType } from '../data/schema'
+import { DataTableRowActions } from './data-table-row-actions'
 
 export const personTypesColumns: ColumnDef<PersonType>[] = [
   {
@@ -12,7 +12,7 @@ export const personTypesColumns: ColumnDef<PersonType>[] = [
     cell: ({ row }) => {
       return (
         <div className='flex space-x-2'>
-          <span className='inline-flex items-center rounded-md bg-orange-50 px-2 py-1 text-xs font-medium text-orange-700 ring-1 ring-inset ring-orange-700/10 dark:bg-orange-400/10 dark:text-orange-400 dark:ring-orange-400/30'>
+          <span className='inline-flex items-center rounded-md bg-orange-50 px-2 py-1 text-xs font-medium text-orange-700 ring-1 ring-orange-700/10 ring-inset dark:bg-orange-400/10 dark:text-orange-400 dark:ring-orange-400/30'>
             {row.getValue('typeName')}
           </span>
         </div>
@@ -29,9 +29,7 @@ export const personTypesColumns: ColumnDef<PersonType>[] = [
       const description = row.getValue('description') as string | undefined
       return (
         <div className='flex space-x-2'>
-          <span className='max-w-[500px] truncate'>
-            {description || '-'}
-          </span>
+          <span className='max-w-[500px] truncate'>{description || '-'}</span>
         </div>
       )
     },

@@ -1,4 +1,16 @@
-import { Download, Upload, Plus, Loader2, FileUp, ChevronDown, FileSpreadsheet } from 'lucide-react'
+import { useState } from 'react'
+import {
+  Download,
+  Upload,
+  Plus,
+  Loader2,
+  FileUp,
+  ChevronDown,
+  FileSpreadsheet,
+} from 'lucide-react'
+import { toast } from 'sonner'
+import { downloadFile } from '@/lib/api-utils'
+import { useExport } from '@/hooks/useExport'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -7,10 +19,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { downloadFile } from '@/lib/api-utils'
-import { useExport } from '@/hooks/useExport'
-import { useState } from 'react'
-import { toast } from 'sonner'
 import { useManagedProjectContext } from '../context/managed-project-provider'
 
 export function ManagedProjectPrimaryButtons() {
@@ -32,7 +40,8 @@ export function ManagedProjectPrimaryButtons() {
       toast.success('Template downloaded successfully')
     } catch (error) {
       toast.error('Failed to download template', {
-        description: error instanceof Error ? error.message : 'An error occurred',
+        description:
+          error instanceof Error ? error.message : 'An error occurred',
       })
     } finally {
       setIsDownloadingTemplate(false)
@@ -50,7 +59,10 @@ export function ManagedProjectPrimaryButtons() {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align='start' className='w-64'>
-          <DropdownMenuItem onClick={handleDownloadTemplate} disabled={isDownloadingTemplate}>
+          <DropdownMenuItem
+            onClick={handleDownloadTemplate}
+            disabled={isDownloadingTemplate}
+          >
             {isDownloadingTemplate ? (
               <Loader2 className='mr-2 h-4 w-4 animate-spin text-blue-600' />
             ) : (

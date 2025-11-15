@@ -1,1 +1,1 @@
-export { useVendorTypes } from './use-vendor-types';
+export { useVendorTypes } from './use-vendor-types'

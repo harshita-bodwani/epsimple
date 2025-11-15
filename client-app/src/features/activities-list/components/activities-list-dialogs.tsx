@@ -1,13 +1,13 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
-import { ConfirmDialog } from "@/components/confirm-dialog";
-import { GenericBulkUploadDialog } from "@/components/bulk-upload/GenericBulkUploadDialog";
-import { ActivitiesListMutateDrawer } from "./activities-list-mutate-drawer";
-import { useActivitiesList } from "../context/activities-list-provider";
-import { activitiesListApi } from "../api/activities-list-api";
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { toast } from 'sonner'
+import { GenericBulkUploadDialog } from '@/components/bulk-upload/GenericBulkUploadDialog'
+import { ConfirmDialog } from '@/components/confirm-dialog'
+import { activitiesListApi } from '../api/activities-list-api'
+import { useActivitiesList } from '../context/activities-list-provider'
+import { ActivitiesListMutateDrawer } from './activities-list-mutate-drawer'
 
 export function ActivitiesListDialogs() {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
   const {
     selectedActivitiesList,
     setSelectedActivitiesList,
@@ -17,23 +17,23 @@ export function ActivitiesListDialogs() {
     setIsDeleteDialogOpen,
     isBulkUploadDialogOpen,
     setIsBulkUploadDialogOpen,
-  } = useActivitiesList();
+  } = useActivitiesList()
 
   const deleteMutation = useMutation({
     mutationFn: activitiesListApi.delete,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["activities"] });
-      toast.success("Activities entry deleted successfully");
-      setIsDeleteDialogOpen(false);
-      setSelectedActivitiesList(null);
+      queryClient.invalidateQueries({ queryKey: ['activities'] })
+      toast.success('Activities entry deleted successfully')
+      setIsDeleteDialogOpen(false)
+      setSelectedActivitiesList(null)
     },
-  });
+  })
 
   const handleDelete = () => {
     if (selectedActivitiesList) {
-      deleteMutation.mutate(selectedActivitiesList.id);
+      deleteMutation.mutate(selectedActivitiesList.id)
     }
-  };
+  }
 
   return (
     <>
@@ -45,7 +45,7 @@ export function ActivitiesListDialogs() {
       <ConfirmDialog
         open={isDeleteDialogOpen}
         onOpenChange={setIsDeleteDialogOpen}
-        title="Delete Activities Entry"
+        title='Delete Activities Entry'
         desc={`Are you sure you want to delete the activities entry "${selectedActivitiesList?.activityName}"? This action cannot be undone.`}
         handleConfirm={handleDelete}
         isLoading={deleteMutation.isPending}
@@ -59,10 +59,10 @@ export function ActivitiesListDialogs() {
           errorReportEndpoint: '/api/activities/bulk-upload/errors',
           entityName: 'Activities',
           onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['activities'] });
+            queryClient.invalidateQueries({ queryKey: ['activities'] })
           },
         }}
       />
     </>
-  );
+  )
 }

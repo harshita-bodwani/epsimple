@@ -1,5 +1,8 @@
 import { useContext } from 'react'
-import { StatesContext, type StatesContextType } from '../context/states-context'
+import {
+  StatesContext,
+  type StatesContextType,
+} from '../context/states-context'
 
 export function useStates(): StatesContextType {
   const context = useContext(StatesContext)

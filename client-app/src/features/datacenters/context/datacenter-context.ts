@@ -19,4 +19,6 @@ export interface DatacenterContextType {
   closeBulkUploadDialog: () => void
 }
 
-export const DatacenterContext = createContext<DatacenterContextType | undefined>(undefined)
+export const DatacenterContext = createContext<
+  DatacenterContextType | undefined
+>(undefined)

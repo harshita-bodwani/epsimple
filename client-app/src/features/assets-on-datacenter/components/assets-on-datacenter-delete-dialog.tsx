@@ -7,24 +7,24 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import { useAssetsOnDatacenter } from '../context/assets-on-datacenter-provider';
-import { assetsOnDatacenterApi } from '../api/assets-on-datacenter-api';
+} from '@/components/ui/alert-dialog'
+import { assetsOnDatacenterApi } from '../api/assets-on-datacenter-api'
+import { useAssetsOnDatacenter } from '../context/assets-on-datacenter-provider'
 
 export function AssetsOnDatacenterDeleteDialog() {
   const { isDeleteDialogOpen, closeDeleteDialog, selectedPlacement } =
-    useAssetsOnDatacenter();
-  const deleteMutation = assetsOnDatacenterApi.useDelete();
+    useAssetsOnDatacenter()
+  const deleteMutation = assetsOnDatacenterApi.useDelete()
 
   const handleDelete = () => {
     if (selectedPlacement) {
       deleteMutation.mutate(selectedPlacement.id, {
         onSuccess: () => {
-          closeDeleteDialog();
+          closeDeleteDialog()
         },
-      });
+      })
     }
-  };
+  }
 
   return (
     <AlertDialog open={isDeleteDialogOpen} onOpenChange={closeDeleteDialog}>
@@ -39,11 +39,14 @@ export function AssetsOnDatacenterDeleteDialog() {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleDelete} disabled={deleteMutation.isPending}>
+          <AlertDialogAction
+            onClick={handleDelete}
+            disabled={deleteMutation.isPending}
+          >
             {deleteMutation.isPending ? 'Removing...' : 'Remove'}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  );
+  )
 }

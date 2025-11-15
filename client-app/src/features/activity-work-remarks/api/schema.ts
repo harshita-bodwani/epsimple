@@ -3,7 +3,10 @@ import { z } from 'zod'
 // Zod Schema
 export const activityWorkRemarksSchema = z.object({
   activityWorkId: z.number().min(1, 'Activity work is required'),
-  comment: z.string().min(1, 'Comment is required').max(5000, 'Comment too long'),
+  comment: z
+    .string()
+    .min(1, 'Comment is required')
+    .max(5000, 'Comment too long'),
   commentedBy: z.number().optional(),
 })
 
@@ -17,4 +20,6 @@ export interface ActivityWorkRemark {
   commentedByName?: string
 }
 
-export type ActivityWorkRemarkRequest = z.infer<typeof activityWorkRemarksSchema>
+export type ActivityWorkRemarkRequest = z.infer<
+  typeof activityWorkRemarksSchema
+>

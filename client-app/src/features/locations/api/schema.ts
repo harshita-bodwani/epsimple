@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod'
 
 export const locationFormSchema = z.object({
   locationName: z
@@ -43,23 +43,23 @@ export const locationFormSchema = z.object({
     .max(90, 'Latitude must be between -90 and 90')
     .optional()
     .nullable(),
-});
+})
 
-export type LocationFormData = z.infer<typeof locationFormSchema>;
+export type LocationFormData = z.infer<typeof locationFormSchema>
 
 export interface Location {
-  id: number;
-  locationName: string;
-  address?: string;
-  district?: string;
-  cityId: number;
-  cityName: string;
-  stateName: string;
-  pincode?: string;
-  region?: string;
-  zone?: string;
-  longitude?: number;
-  latitude?: number;
-  createdAt: string;
-  updatedAt: string;
+  id: number
+  locationName: string
+  address?: string
+  district?: string
+  cityId: number
+  cityName: string
+  stateName: string
+  pincode?: string
+  region?: string
+  zone?: string
+  longitude?: number
+  latitude?: number
+  createdAt: string
+  updatedAt: string
 }

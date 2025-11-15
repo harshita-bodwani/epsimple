@@ -1,19 +1,19 @@
-import { Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useSite } from "../hooks/use-site";
+import { Plus } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { useSite } from '../hooks/use-site'
 
 export function CreateSiteButton() {
-  const { setIsDrawerOpen, setEditingSite } = useSite();
+  const { setIsDrawerOpen, setEditingSite } = useSite()
 
   const handleClick = () => {
-    setEditingSite(null);
-    setIsDrawerOpen(true);
-  };
+    setEditingSite(null)
+    setIsDrawerOpen(true)
+  }
 
   return (
     <Button onClick={handleClick}>
-      <Plus className="mr-2 h-4 w-4" />
+      <Plus className='mr-2 h-4 w-4' />
       Add Site
     </Button>
-  );
+  )
 }

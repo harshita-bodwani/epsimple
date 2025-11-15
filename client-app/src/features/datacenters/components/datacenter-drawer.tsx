@@ -1,9 +1,16 @@
-import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Check, ChevronsUpDown, Loader2 } from 'lucide-react';
-
-import { Button } from '@/components/ui/button';
+import { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Check, ChevronsUpDown, Loader2 } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
+import {
+  Command,
+  CommandInput,
+  CommandList,
+  CommandEmpty,
+  CommandItem,
+} from '@/components/ui/command'
 import {
   Form,
   FormControl,
@@ -11,11 +18,13 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Command, CommandInput, CommandList, CommandEmpty, CommandItem } from "@/components/ui/command";
-import { cn } from "@/lib/utils";
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 import {
   Sheet,
   SheetContent,
@@ -23,27 +32,28 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle,
-} from '@/components/ui/sheet';
-import { useDatacenter } from '../hooks/use-datacenter';
-import { datacenterApi } from '../api/datacenter-api';
-import { datacenterSchema, type DatacenterFormData } from '../api/schema';
-import { locationApi } from '@/features/locations/api/location-api';
+} from '@/components/ui/sheet'
+import { locationApi } from '@/features/locations/api/location-api'
+import { datacenterApi } from '../api/datacenter-api'
+import { datacenterSchema, type DatacenterFormData } from '../api/schema'
+import { useDatacenter } from '../hooks/use-datacenter'
 
 export function DatacenterDrawer() {
-  const { isDrawerOpen, closeDrawer, selectedDatacenter } = useDatacenter();
-  const [locationSearch, setLocationSearch] = useState("");
-  const [locationOpen, setLocationOpen] = useState(false);
+  const { isDrawerOpen, closeDrawer, selectedDatacenter } = useDatacenter()
+  const [locationSearch, setLocationSearch] = useState('')
+  const [locationOpen, setLocationOpen] = useState(false)
 
-  const createMutation = datacenterApi.useCreate();
-  const updateMutation = datacenterApi.useUpdate();
+  const createMutation = datacenterApi.useCreate()
+  const updateMutation = datacenterApi.useUpdate()
 
-  const { data: locationsData, isLoading: isLoadingLocations } = locationApi.useSearch({
-    searchTerm: locationSearch,
-    page: 0,
-    size: 50,
-  });
-  
-  const locations = locationsData || [];
+  const { data: locationsData, isLoading: isLoadingLocations } =
+    locationApi.useSearch({
+      searchTerm: locationSearch,
+      page: 0,
+      size: 50,
+    })
+
+  const locations = locationsData || []
 
   const form = useForm<DatacenterFormData>({
     resolver: zodResolver(datacenterSchema),
@@ -53,7 +63,7 @@ export function DatacenterDrawer() {
       datacenterType: '',
       locationId: 0,
     },
-  });
+  })
 
   useEffect(() => {
     if (selectedDatacenter) {
@@ -62,16 +72,16 @@ export function DatacenterDrawer() {
         datacenterCode: selectedDatacenter.datacenterCode || '',
         datacenterType: selectedDatacenter.datacenterType || '',
         locationId: selectedDatacenter.locationId,
-      });
+      })
     } else {
       form.reset({
         datacenterName: '',
         datacenterCode: '',
         datacenterType: '',
         locationId: 0,
-      });
+      })
     }
-  }, [selectedDatacenter, form]);
+  }, [selectedDatacenter, form])
 
   const onSubmit = async (data: DatacenterFormData) => {
     // Convert empty strings to undefined for optional fields
@@ -79,7 +89,7 @@ export function DatacenterDrawer() {
       ...data,
       datacenterCode: data.datacenterCode || undefined,
       datacenterType: data.datacenterType || undefined,
-    };
+    }
 
     if (selectedDatacenter) {
       updateMutation.mutate(
@@ -89,27 +99,27 @@ export function DatacenterDrawer() {
         },
         {
           onSuccess: () => {
-            closeDrawer();
-            form.reset();
+            closeDrawer()
+            form.reset()
           },
         }
-      );
+      )
     } else {
       createMutation.mutate(payload, {
         onSuccess: () => {
-          closeDrawer();
-          form.reset();
+          closeDrawer()
+          form.reset()
         },
-      });
+      })
     }
-  };
+  }
 
-  const isLoading = createMutation.isPending || updateMutation.isPending;
+  const isLoading = createMutation.isPending || updateMutation.isPending
 
   return (
     <Sheet open={isDrawerOpen} onOpenChange={closeDrawer}>
-      <SheetContent className="flex flex-col sm:max-w-[600px]">
-        <SheetHeader className="text-start">
+      <SheetContent className='flex flex-col sm:max-w-[600px]'>
+        <SheetHeader className='text-start'>
           <SheetTitle>
             {selectedDatacenter ? 'Update' : 'Create'} Datacenter
           </SheetTitle>
@@ -123,13 +133,13 @@ export function DatacenterDrawer() {
 
         <Form {...form}>
           <form
-            id="datacenter-form"
+            id='datacenter-form'
             onSubmit={form.handleSubmit(onSubmit)}
-            className="flex-1 space-y-6 overflow-y-auto px-4"
+            className='flex-1 space-y-6 overflow-y-auto px-4'
           >
             <FormField
               control={form.control}
-              name="locationId"
+              name='locationId'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Location *</FormLabel>
@@ -137,36 +147,37 @@ export function DatacenterDrawer() {
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
-                          variant="outline"
-                          role="combobox"
+                          variant='outline'
+                          role='combobox'
                           aria-expanded={locationOpen}
                           className={cn(
-                            "w-full justify-between",
-                            !field.value && "text-muted-foreground"
+                            'w-full justify-between',
+                            !field.value && 'text-muted-foreground'
                           )}
                         >
                           {field.value
-                            ? locations.find((l) => l.id === field.value)?.locationName || "Select location"
-                            : "Select a location"}
-                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            ? locations.find((l) => l.id === field.value)
+                                ?.locationName || 'Select location'
+                            : 'Select a location'}
+                          <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
-                    <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
+                    <PopoverContent className='w-[var(--radix-popover-trigger-width)] p-0'>
                       <Command shouldFilter={false}>
                         <CommandInput
-                          placeholder="Search locations..."
+                          placeholder='Search locations...'
                           value={locationSearch}
                           onValueChange={setLocationSearch}
                         />
                         <CommandList>
                           <CommandEmpty>
                             {isLoadingLocations ? (
-                              <div className="flex items-center justify-center py-6">
-                                <Loader2 className="h-4 w-4 animate-spin" />
+                              <div className='flex items-center justify-center py-6'>
+                                <Loader2 className='h-4 w-4 animate-spin' />
                               </div>
                             ) : (
-                              "No location found."
+                              'No location found.'
                             )}
                           </CommandEmpty>
                           {locations.map((location) => (
@@ -174,18 +185,21 @@ export function DatacenterDrawer() {
                               key={location.id}
                               value={String(location.id)}
                               onSelect={() => {
-                                field.onChange(location.id);
-                                setLocationOpen(false);
-                                setLocationSearch("");
+                                field.onChange(location.id)
+                                setLocationOpen(false)
+                                setLocationSearch('')
                               }}
                             >
                               <Check
                                 className={cn(
-                                  "mr-2 h-4 w-4",
-                                  field.value === location.id ? "opacity-100" : "opacity-0"
+                                  'mr-2 h-4 w-4',
+                                  field.value === location.id
+                                    ? 'opacity-100'
+                                    : 'opacity-0'
                                 )}
                               />
-                              {location.locationName} ({location.cityName}, {location.stateName})
+                              {location.locationName} ({location.cityName},{' '}
+                              {location.stateName})
                             </CommandItem>
                           ))}
                         </CommandList>
@@ -199,12 +213,12 @@ export function DatacenterDrawer() {
 
             <FormField
               control={form.control}
-              name="datacenterName"
+              name='datacenterName'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Datacenter Name *</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter datacenter name" {...field} />
+                    <Input placeholder='Enter datacenter name' {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -213,16 +227,18 @@ export function DatacenterDrawer() {
 
             <FormField
               control={form.control}
-              name="datacenterCode"
+              name='datacenterCode'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Datacenter Code</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Enter datacenter code (e.g., DC-001)"
-                      className="font-mono uppercase"
+                      placeholder='Enter datacenter code (e.g., DC-001)'
+                      className='font-mono uppercase'
                       {...field}
-                      onChange={(e) => field.onChange(e.target.value.toUpperCase())}
+                      onChange={(e) =>
+                        field.onChange(e.target.value.toUpperCase())
+                      }
                     />
                   </FormControl>
                   <FormMessage />
@@ -232,12 +248,15 @@ export function DatacenterDrawer() {
 
             <FormField
               control={form.control}
-              name="datacenterType"
+              name='datacenterType'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Datacenter Type</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter datacenter type (e.g., Primary, Backup, Edge)" {...field} />
+                    <Input
+                      placeholder='Enter datacenter type (e.g., Primary, Backup, Edge)'
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -246,25 +265,21 @@ export function DatacenterDrawer() {
           </form>
         </Form>
 
-        <SheetFooter className="flex-shrink-0 px-4">
+        <SheetFooter className='flex-shrink-0 px-4'>
           <Button
-            type="button"
-            variant="outline"
+            type='button'
+            variant='outline'
             onClick={closeDrawer}
             disabled={isLoading}
           >
             Cancel
           </Button>
-          <Button
-            type="submit"
-            form="datacenter-form"
-            disabled={isLoading}
-          >
-            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          <Button type='submit' form='datacenter-form' disabled={isLoading}>
+            {isLoading && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}
             {selectedDatacenter ? 'Update' : 'Create'}
           </Button>
         </SheetFooter>
       </SheetContent>
     </Sheet>
-  );
+  )
 }

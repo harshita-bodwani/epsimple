@@ -1,77 +1,90 @@
-import api from '@/lib/api';
-import { useQuery } from '@tanstack/react-query';
-import { type BackendPageResponse, flattenPageResponse } from '@/lib/api-utils';
-import type { MovementTypeFormData } from '@/features/movement-types/api/schema';
+import { useQuery } from '@tanstack/react-query'
+import api from '@/lib/api'
+import { type BackendPageResponse, flattenPageResponse } from '@/lib/api-utils'
+import type { MovementTypeFormData } from '@/features/movement-types/api/schema'
 
-const BASE_URL = '/api/movement-types';
+const BASE_URL = '/api/movement-types'
 
 interface ApiResponse<T> {
-  data: T;
-  message: string;
-  status: number;
+  data: T
+  message: string
+  status: number
 }
 
 export interface MovementType {
-  id: number;
-  typeName: string;
-  typeDescription: string | null;
-  createdAt: string;
-  updatedAt: string;
+  id: number
+  typeName: string
+  typeDescription: string | null
+  createdAt: string
+  updatedAt: string
 }
 
 export const movementTypesApi = {
   // Create movement type
   create: async (data: MovementTypeFormData) => {
-    const response = await api.post(BASE_URL, data);
-    return response.data;
+    const response = await api.post(BASE_URL, data)
+    return response.data
   },
 
   // Get all movement types (paginated)
-  getAll: async (page: number, size: number, sortBy: string, sortDirection: string) => {
+  getAll: async (
+    page: number,
+    size: number,
+    sortBy: string,
+    sortDirection: string
+  ) => {
     const response = await api.get(BASE_URL, {
       params: { page, size, sortBy, sortDirection },
-    });
-    return response.data;
+    })
+    return response.data
   },
 
   // Search movement types
-  search: async (searchTerm: string, page: number, size: number, sortBy: string, sortDirection: string) => {
+  search: async (
+    searchTerm: string,
+    page: number,
+    size: number,
+    sortBy: string,
+    sortDirection: string
+  ) => {
     const response = await api.get(`${BASE_URL}/search`, {
       params: { searchTerm, page, size, sortBy, sortDirection },
-    });
-    return response.data;
+    })
+    return response.data
   },
 
   // Get movement types list (no pagination)
   getList: async () => {
-    const response = await api.get(`${BASE_URL}/list`);
-    return response.data;
+    const response = await api.get(`${BASE_URL}/list`)
+    return response.data
   },
 
   // Get movement type by ID
   getById: async (id: number) => {
-    const response = await api.get(`${BASE_URL}/${id}`);
-    return response.data;
+    const response = await api.get(`${BASE_URL}/${id}`)
+    return response.data
   },
 
   // Update movement type
   update: async (id: number, data: MovementTypeFormData) => {
-    const response = await api.put(`${BASE_URL}/${id}`, data);
-    return response.data;
+    const response = await api.put(`${BASE_URL}/${id}`, data)
+    return response.data
   },
 
   // Delete movement type
   delete: async (id: number) => {
-    const response = await api.delete(`${BASE_URL}/${id}`);
-    return response.data;
+    const response = await api.delete(`${BASE_URL}/${id}`)
+    return response.data
   },
 
   useSearch: (searchTerm: string) => {
     return useQuery({
       queryKey: ['movement-types', 'search', searchTerm],
       queryFn: async () => {
-        if (!searchTerm || searchTerm.trim().length === 0) return [];
-        const response = await api.get<ApiResponse<BackendPageResponse<MovementType>>>(`${BASE_URL}/search`, {
+        if (!searchTerm || searchTerm.trim().length === 0) return []
+        const response = await api.get<
+          ApiResponse<BackendPageResponse<MovementType>>
+        >(`${BASE_URL}/search`, {
           params: {
             searchTerm: searchTerm.trim(),
             page: 0,
@@ -79,11 +92,11 @@ export const movementTypesApi = {
             sortBy: 'typeName',
             sortDirection: 'ASC',
           },
-        });
-        return flattenPageResponse(response.data.data).content;
+        })
+        return flattenPageResponse(response.data.data).content
       },
       enabled: searchTerm.trim().length > 0,
       staleTime: 30000,
-    });
+    })
   },
-};
+}

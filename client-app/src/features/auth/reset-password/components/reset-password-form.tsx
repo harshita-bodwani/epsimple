@@ -23,24 +23,29 @@ import {
 } from '@/components/ui/input-otp'
 import { PasswordInput } from '@/components/password-input'
 
-const formSchema = z.object({
-  otp: z
-    .string()
-    .min(6, 'Please enter the 6-digit code.')
-    .max(6, 'Please enter the 6-digit code.'),
-  newPassword: z
-    .string()
-    .min(1, 'Please enter your new password')
-    .min(7, 'Password must be at least 7 characters long'),
-  confirmPassword: z.string().min(1, 'Please confirm your password'),
-}).refine((data) => data.newPassword === data.confirmPassword, {
-  message: "Passwords don't match.",
-  path: ['confirmPassword'],
-})
+const formSchema = z
+  .object({
+    otp: z
+      .string()
+      .min(6, 'Please enter the 6-digit code.')
+      .max(6, 'Please enter the 6-digit code.'),
+    newPassword: z
+      .string()
+      .min(1, 'Please enter your new password')
+      .min(7, 'Password must be at least 7 characters long'),
+    confirmPassword: z.string().min(1, 'Please confirm your password'),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: "Passwords don't match.",
+    path: ['confirmPassword'],
+  })
 
 type ResetPasswordFormProps = React.HTMLAttributes<HTMLFormElement>
 
-export function ResetPasswordForm({ className, ...props }: ResetPasswordFormProps) {
+export function ResetPasswordForm({
+  className,
+  ...props
+}: ResetPasswordFormProps) {
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
   const { resetPassword, clearError } = useAuthStore()
@@ -58,7 +63,7 @@ export function ResetPasswordForm({ className, ...props }: ResetPasswordFormProp
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
     setIsLoading(true)
-    
+
     try {
       clearError()
       await resetPassword(data.otp, data.newPassword)

@@ -1,23 +1,26 @@
-import { z } from 'zod';
+import { z } from 'zod'
 
 // PayeeDetails interface
 export interface PayeeDetails {
-  id: number;
-  payeeName: string;
-  panNumber?: string;
-  aadhaarNumber?: string;
-  bankId?: number;
-  bankName?: string;
-  ifscCode?: string;
-  beneficiaryName?: string;
-  accountNumber?: string;
-  createdAt?: string;
-  updatedAt?: string;
+  id: number
+  payeeName: string
+  panNumber?: string
+  aadhaarNumber?: string
+  bankId?: number
+  bankName?: string
+  ifscCode?: string
+  beneficiaryName?: string
+  accountNumber?: string
+  createdAt?: string
+  updatedAt?: string
 }
 
 // Validation schema
 export const payeeDetailsSchema = z.object({
-  payeeName: z.string().min(1, 'Payee name is required').max(255, 'Payee name cannot exceed 255 characters'),
+  payeeName: z
+    .string()
+    .min(1, 'Payee name is required')
+    .max(255, 'Payee name cannot exceed 255 characters'),
   panNumber: z
     .string()
     .optional()
@@ -51,6 +54,6 @@ export const payeeDetailsSchema = z.object({
       (val) => !val || /^[0-9]{9,18}$/.test(val),
       'Account number must be between 9 to 18 digits'
     ),
-});
+})
 
-export type PayeeDetailsFormData = z.infer<typeof payeeDetailsSchema>;
+export type PayeeDetailsFormData = z.infer<typeof payeeDetailsSchema>

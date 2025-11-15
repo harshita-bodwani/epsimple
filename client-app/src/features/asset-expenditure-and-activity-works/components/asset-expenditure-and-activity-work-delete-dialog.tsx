@@ -7,24 +7,24 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import { useAssetExpenditureAndActivityWork } from '../context/asset-expenditure-and-activity-work-provider';
-import { assetExpenditureAndActivityWorkApi } from '../api/asset-expenditure-and-activity-work-api';
+} from '@/components/ui/alert-dialog'
+import { assetExpenditureAndActivityWorkApi } from '../api/asset-expenditure-and-activity-work-api'
+import { useAssetExpenditureAndActivityWork } from '../context/asset-expenditure-and-activity-work-provider'
 
 export function AssetExpenditureAndActivityWorkDeleteDialog() {
   const { isDeleteDialogOpen, closeDeleteDialog, selectedExpenditure } =
-    useAssetExpenditureAndActivityWork();
-  const deleteMutation = assetExpenditureAndActivityWorkApi.useDelete();
+    useAssetExpenditureAndActivityWork()
+  const deleteMutation = assetExpenditureAndActivityWorkApi.useDelete()
 
   const handleDelete = async () => {
-    if (!selectedExpenditure) return;
+    if (!selectedExpenditure) return
 
     deleteMutation.mutate(selectedExpenditure.id, {
       onSuccess: () => {
-        closeDeleteDialog();
+        closeDeleteDialog()
       },
-    });
-  };
+    })
+  }
 
   return (
     <AlertDialog open={isDeleteDialogOpen} onOpenChange={closeDeleteDialog}>
@@ -32,20 +32,21 @@ export function AssetExpenditureAndActivityWorkDeleteDialog() {
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete the expenditure
-            link for asset <strong>{selectedExpenditure?.assetTagId}</strong>.
+            This action cannot be undone. This will permanently delete the
+            expenditure link for asset{' '}
+            <strong>{selectedExpenditure?.assetTagId}</strong>.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDelete}
-            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
           >
             {deleteMutation.isPending ? 'Deleting...' : 'Delete'}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  );
+  )
 }

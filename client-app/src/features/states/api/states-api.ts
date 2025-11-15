@@ -1,6 +1,10 @@
-import api from '@/lib/api'
-import { flattenPageResponse, type BackendPageResponse, type FlatPageResponse } from '@/lib/api-utils'
 import { useQuery } from '@tanstack/react-query'
+import api from '@/lib/api'
+import {
+  flattenPageResponse,
+  type BackendPageResponse,
+  type FlatPageResponse,
+} from '@/lib/api-utils'
 
 export interface State {
   id: number
@@ -30,20 +34,22 @@ export interface ApiResponse<T> {
 
 export const statesApi = {
   // Get paginated states with optional search
-  getAll: async (params: StateListParams = {}): Promise<ApiResponse<FlatPageResponse<State>>> => {
+  getAll: async (
+    params: StateListParams = {}
+  ): Promise<ApiResponse<FlatPageResponse<State>>> => {
     const { page = 0, size = 10, search = '' } = params
     const queryParams = new URLSearchParams({
       page: page.toString(),
       size: size.toString(),
       ...(search && { search }),
     })
-    
+
     const response = await api.get<ApiResponse<BackendPageResponse<State>>>(
       `/api/states?${queryParams}`
     )
     return {
       ...response.data,
-      data: flattenPageResponse(response.data.data)
+      data: flattenPageResponse(response.data.data),
     }
   },
 
@@ -66,8 +72,14 @@ export const statesApi = {
   },
 
   // Update state
-  update: async (id: number, data: StateFormData): Promise<ApiResponse<State>> => {
-    const response = await api.put<ApiResponse<State>>(`/api/states/${id}`, data)
+  update: async (
+    id: number,
+    data: StateFormData
+  ): Promise<ApiResponse<State>> => {
+    const response = await api.put<ApiResponse<State>>(
+      `/api/states/${id}`,
+      data
+    )
     return response.data
   },
 
@@ -78,20 +90,23 @@ export const statesApi = {
   },
 
   // Search states
-  search: async (query: string, params: { page?: number; size?: number } = {}): Promise<ApiResponse<FlatPageResponse<State>>> => {
+  search: async (
+    query: string,
+    params: { page?: number; size?: number } = {}
+  ): Promise<ApiResponse<FlatPageResponse<State>>> => {
     const { page = 0, size = 10 } = params
     const queryParams = new URLSearchParams({
       search: query,
       page: page.toString(),
       size: size.toString(),
     })
-    
+
     const response = await api.get<ApiResponse<BackendPageResponse<State>>>(
       `/api/states/search?${queryParams}`
     )
     return {
       ...response.data,
-      data: flattenPageResponse(response.data.data)
+      data: flattenPageResponse(response.data.data),
     }
   },
 
@@ -102,16 +117,17 @@ export const statesApi = {
       queryFn: async () => {
         const response = await statesApi.getList()
         const allStates = response.data
-        
+
         // If no search term, return first 20 states
         if (!searchTerm || searchTerm.trim().length === 0) {
           return allStates.slice(0, 20)
         }
-        
+
         // Client-side filtering
-        return allStates.filter(state => 
-          state.stateName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          state.stateCode?.toLowerCase().includes(searchTerm.toLowerCase())
+        return allStates.filter(
+          (state) =>
+            state.stateName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            state.stateCode?.toLowerCase().includes(searchTerm.toLowerCase())
         )
       },
       staleTime: 30000,

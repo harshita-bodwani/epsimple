@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react'
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -11,7 +11,7 @@ import {
   getFilteredRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table";
+} from '@tanstack/react-table'
 import {
   Table,
   TableBody,
@@ -19,58 +19,59 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { DataTablePagination, DataTableToolbar } from "@/components/data-table";
-import { useSite } from "../hooks/use-site";
-import { siteApi } from "../api/site-api";
-import { SiteRowActions } from "./site-row-actions";
+} from '@/components/ui/table'
+import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
+import { siteApi } from '../api/site-api'
+import { useSite } from '../hooks/use-site'
+import { SiteRowActions } from './site-row-actions'
 
 interface SiteTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
+  columns: ColumnDef<TData, TValue>[]
 }
 
 export function SiteTable<TData, TValue>({
   columns,
 }: SiteTableProps<TData, TValue>) {
-  const { globalFilter, setGlobalFilter } = useSite();
-  const [rowSelection, setRowSelection] = useState({});
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const { globalFilter, setGlobalFilter } = useSite()
+  const [rowSelection, setRowSelection] = useState({})
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [sorting, setSorting] = useState<SortingState>([
-    { id: "id", desc: false },
-  ]);
+    { id: 'id', desc: false },
+  ])
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,
-  });
+  })
 
   const { data, isLoading } = siteApi.useGetAll({
     page: pagination.pageIndex,
     size: pagination.pageSize,
-    sortBy: sorting[0]?.id || "id",
-    sortOrder: sorting[0]?.desc ? "DESC" : "ASC",
-    search: globalFilter && globalFilter.trim() !== "" ? globalFilter : undefined,
-  });
+    sortBy: sorting[0]?.id || 'id',
+    sortOrder: sorting[0]?.desc ? 'DESC' : 'ASC',
+    search:
+      globalFilter && globalFilter.trim() !== '' ? globalFilter : undefined,
+  })
 
-  const sites = (data?.content || []) as TData[];
-  const totalPages = data?.totalPages || 0;
+  const sites = (data?.content || []) as TData[]
+  const totalPages = data?.totalPages || 0
 
   // Reset to first page when search query changes
   useEffect(() => {
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
-  }, [globalFilter]);
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }))
+  }, [globalFilter])
 
   // Add actions column
   const columnsWithActions = React.useMemo(
     () => [
       ...columns,
       {
-        id: "actions",
+        id: 'actions',
         cell: ({ row }: { row: any }) => <SiteRowActions site={row.original} />,
       },
     ],
     [columns]
-  );
+  )
 
   const table = useReactTable({
     data: sites,
@@ -99,12 +100,12 @@ export function SiteTable<TData, TValue>({
     manualPagination: true,
     manualFiltering: true,
     manualSorting: true,
-  });
+  })
 
   return (
-    <div className="space-y-4">
-      <DataTableToolbar table={table} searchPlaceholder="Search sites..." />
-      <div className="rounded-md border">
+    <div className='space-y-4'>
+      <DataTableToolbar table={table} searchPlaceholder='Search sites...' />
+      <div className='rounded-md border'>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -127,7 +128,7 @@ export function SiteTable<TData, TValue>({
               <TableRow>
                 <TableCell
                   colSpan={columnsWithActions.length}
-                  className="h-24 text-center"
+                  className='h-24 text-center'
                 >
                   Loading...
                 </TableCell>
@@ -136,7 +137,7 @@ export function SiteTable<TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
+                  data-state={row.getIsSelected() && 'selected'}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -152,7 +153,7 @@ export function SiteTable<TData, TValue>({
               <TableRow>
                 <TableCell
                   colSpan={columnsWithActions.length}
-                  className="h-24 text-center"
+                  className='h-24 text-center'
                 >
                   No results.
                 </TableCell>
@@ -163,5 +164,5 @@ export function SiteTable<TData, TValue>({
       </div>
       <DataTablePagination table={table} />
     </div>
-  );
+  )
 }

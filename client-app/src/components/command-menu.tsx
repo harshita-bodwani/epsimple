@@ -91,30 +91,30 @@ export function CommandMenu() {
                 runCommand(() => navigate({ to: item.url }))
               }}
             >
-              <ArrowRight className='mr-2 size-4 text-muted-foreground' />
+              <ArrowRight className='text-muted-foreground mr-2 size-4' />
               <span className='font-medium'>{item.title}</span>
               {item.breadcrumb.length > 0 && (
-                <span className='ml-2 text-xs text-muted-foreground'>
+                <span className='text-muted-foreground ml-2 text-xs'>
                   {item.breadcrumb.join(' › ')}
                 </span>
               )}
             </CommandItem>
           ))}
         </CommandGroup>
-          <CommandSeparator />
-          <CommandGroup heading='Theme'>
-            <CommandItem onSelect={() => runCommand(() => setTheme('light'))}>
-              <Sun /> <span>Light</span>
-            </CommandItem>
-            <CommandItem onSelect={() => runCommand(() => setTheme('dark'))}>
-              <Moon className='scale-90' />
-              <span>Dark</span>
-            </CommandItem>
-            <CommandItem onSelect={() => runCommand(() => setTheme('system'))}>
-              <Laptop />
-              <span>System</span>
-            </CommandItem>
-          </CommandGroup>
+        <CommandSeparator />
+        <CommandGroup heading='Theme'>
+          <CommandItem onSelect={() => runCommand(() => setTheme('light'))}>
+            <Sun /> <span>Light</span>
+          </CommandItem>
+          <CommandItem onSelect={() => runCommand(() => setTheme('dark'))}>
+            <Moon className='scale-90' />
+            <span>Dark</span>
+          </CommandItem>
+          <CommandItem onSelect={() => runCommand(() => setTheme('system'))}>
+            <Laptop />
+            <span>System</span>
+          </CommandItem>
+        </CommandGroup>
       </CommandList>
     </CommandDialog>
   )

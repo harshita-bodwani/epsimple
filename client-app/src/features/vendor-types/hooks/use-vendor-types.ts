@@ -1,10 +1,13 @@
-import { useContext } from 'react';
-import { VendorTypesContext, type VendorTypesContextType } from '../context/vendor-types-context';
+import { useContext } from 'react'
+import {
+  VendorTypesContext,
+  type VendorTypesContextType,
+} from '../context/vendor-types-context'
 
 export function useVendorTypes(): VendorTypesContextType {
-  const context = useContext(VendorTypesContext);
+  const context = useContext(VendorTypesContext)
   if (context === undefined) {
-    throw new Error('useVendorTypes must be used within VendorTypesProvider');
+    throw new Error('useVendorTypes must be used within VendorTypesProvider')
   }
-  return context;
+  return context
 }

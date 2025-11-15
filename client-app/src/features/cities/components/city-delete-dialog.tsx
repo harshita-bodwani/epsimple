@@ -7,9 +7,9 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { useCityContext } from "../context/city-provider";
-import { cityApi } from "../api/city-api";
+} from '@/components/ui/alert-dialog'
+import { cityApi } from '../api/city-api'
+import { useCityContext } from '../context/city-provider'
 
 export function CityDeleteDialog() {
   const {
@@ -17,20 +17,20 @@ export function CityDeleteDialog() {
     setIsDeleteDialogOpen,
     editingCity,
     setEditingCity,
-  } = useCityContext();
+  } = useCityContext()
 
-  const deleteMutation = cityApi.useDelete();
+  const deleteMutation = cityApi.useDelete()
 
   const handleDelete = () => {
     if (editingCity) {
       deleteMutation.mutate(editingCity.id, {
         onSuccess: () => {
-          setIsDeleteDialogOpen(false);
-          setEditingCity(null);
+          setIsDeleteDialogOpen(false)
+          setEditingCity(null)
         },
-      });
+      })
     }
-  };
+  }
 
   return (
     <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
@@ -50,10 +50,10 @@ export function CityDeleteDialog() {
             onClick={handleDelete}
             disabled={deleteMutation.isPending}
           >
-            {deleteMutation.isPending ? "Deleting..." : "Delete"}
+            {deleteMutation.isPending ? 'Deleting...' : 'Delete'}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  );
+  )
 }

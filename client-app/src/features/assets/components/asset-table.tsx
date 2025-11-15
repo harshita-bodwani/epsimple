@@ -47,7 +47,8 @@ export function AssetTable<TData, TValue>({
     size: pagination.pageSize,
     sortBy: sorting[0]?.id || 'id',
     sortOrder: sorting[0]?.desc ? 'desc' : 'asc',
-    search: globalFilter && globalFilter.trim() !== '' ? globalFilter : undefined,
+    search:
+      globalFilter && globalFilter.trim() !== '' ? globalFilter : undefined,
   })
 
   const assets = (data?.content || []) as TData[]
@@ -88,12 +89,9 @@ export function AssetTable<TData, TValue>({
   })
 
   return (
-    <div className="space-y-4">
-      <DataTableToolbar
-        table={table}
-        searchPlaceholder="Search assets..."
-      />
-      <div className="rounded-md border">
+    <div className='space-y-4'>
+      <DataTableToolbar table={table} searchPlaceholder='Search assets...' />
+      <div className='rounded-md border'>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -116,7 +114,7 @@ export function AssetTable<TData, TValue>({
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="h-24 text-center"
+                  className='h-24 text-center'
                 >
                   Loading...
                 </TableCell>
@@ -141,7 +139,7 @@ export function AssetTable<TData, TValue>({
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="h-24 text-center"
+                  className='h-24 text-center'
                 >
                   No results.
                 </TableCell>

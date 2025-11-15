@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import useDialogState from '@/hooks/use-dialog-state'
-import { BanksContext, type BanksDialogType } from './banks-context'
 import type { Bank } from '../data/schema'
+import { BanksContext, type BanksDialogType } from './banks-context'
 
 export function BanksProvider({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useDialogState<BanksDialogType>(null)

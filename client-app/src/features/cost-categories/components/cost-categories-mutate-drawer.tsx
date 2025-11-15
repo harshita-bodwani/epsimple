@@ -1,10 +1,19 @@
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
-
-import { Button } from "@/components/ui/button";
+import { useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { Loader2 } from 'lucide-react'
+import { toast } from 'sonner'
+import { Button } from '@/components/ui/button'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 import {
   Sheet,
   SheetClose,
@@ -13,30 +22,19 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle,
-} from "@/components/ui/sheet";
-import { Loader2 } from "lucide-react";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-
-import { costCategoriesApi } from "../api/cost-categories-api";
+} from '@/components/ui/sheet'
+import { Textarea } from '@/components/ui/textarea'
+import { costCategoriesApi } from '../api/cost-categories-api'
 import {
   costCategoryFormSchema,
   type CostCategoryFormData,
   type CostCategory,
-} from "../api/schema";
+} from '../api/schema'
 
 interface CostCategoriesMutateDrawerProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  currentRow: CostCategory | null;
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  currentRow: CostCategory | null
 }
 
 export function CostCategoriesMutateDrawer({
@@ -44,89 +42,89 @@ export function CostCategoriesMutateDrawer({
   onOpenChange,
   currentRow,
 }: CostCategoriesMutateDrawerProps) {
-  const queryClient = useQueryClient();
-  const isUpdate = !!currentRow;
+  const queryClient = useQueryClient()
+  const isUpdate = !!currentRow
 
   const form = useForm<CostCategoryFormData>({
     resolver: zodResolver(costCategoryFormSchema),
     defaultValues: {
-      categoryName: "",
-      categoryDescription: "",
+      categoryName: '',
+      categoryDescription: '',
     },
-  });
+  })
 
   // Reset form when currentRow changes
   useEffect(() => {
     if (currentRow) {
       form.reset({
         categoryName: currentRow.categoryName,
-        categoryDescription: currentRow.categoryDescription || "",
-      });
+        categoryDescription: currentRow.categoryDescription || '',
+      })
     } else {
       form.reset({
-        categoryName: "",
-        categoryDescription: "",
-      });
+        categoryName: '',
+        categoryDescription: '',
+      })
     }
-  }, [currentRow, form]);
+  }, [currentRow, form])
 
   const createMutation = useMutation({
     mutationFn: costCategoriesApi.create,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["cost-categories"] });
-      toast.success("Cost category created successfully");
-      form.reset();
-      onOpenChange(false);
+      queryClient.invalidateQueries({ queryKey: ['cost-categories'] })
+      toast.success('Cost category created successfully')
+      form.reset()
+      onOpenChange(false)
     },
-  });
+  })
 
   const updateMutation = useMutation({
     mutationFn: ({ id, data }: { id: number; data: CostCategoryFormData }) =>
       costCategoriesApi.update(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["cost-categories"] });
-      toast.success("Cost category updated successfully");
-      form.reset();
-      onOpenChange(false);
+      queryClient.invalidateQueries({ queryKey: ['cost-categories'] })
+      toast.success('Cost category updated successfully')
+      form.reset()
+      onOpenChange(false)
     },
-  });
+  })
 
   const onSubmit = (data: CostCategoryFormData) => {
     if (isUpdate && currentRow) {
-      updateMutation.mutate({ id: currentRow.id, data });
+      updateMutation.mutate({ id: currentRow.id, data })
     } else {
-      createMutation.mutate(data);
+      createMutation.mutate(data)
     }
-  };
+  }
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="flex flex-col">
-        <SheetHeader className="text-start">
+      <SheetContent className='flex flex-col'>
+        <SheetHeader className='text-start'>
           <SheetTitle>
-            {isUpdate ? "Update" : "Create"} Cost Category
+            {isUpdate ? 'Update' : 'Create'} Cost Category
           </SheetTitle>
           <SheetDescription>
             {isUpdate
-              ? "Update the cost category by providing necessary info."
-              : "Add a new cost category by providing necessary info."}
+              ? 'Update the cost category by providing necessary info.'
+              : 'Add a new cost category by providing necessary info.'}
             Click save when you&apos;re done.
           </SheetDescription>
         </SheetHeader>
         <Form {...form}>
           <form
-            id="cost-categories-form"
+            id='cost-categories-form'
             onSubmit={form.handleSubmit(onSubmit)}
-            className="flex-1 space-y-6 overflow-y-auto px-4"
+            className='flex-1 space-y-6 overflow-y-auto px-4'
           >
             <FormField
               control={form.control}
-              name="categoryName"
+              name='categoryName'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Category Name *</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter category name" {...field} />
+                    <Input placeholder='Enter category name' {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -134,14 +132,14 @@ export function CostCategoriesMutateDrawer({
             />
             <FormField
               control={form.control}
-              name="categoryDescription"
+              name='categoryDescription'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Description</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Enter description"
-                      className="resize-none"
+                      placeholder='Enter description'
+                      className='resize-none'
                       rows={4}
                       {...field}
                     />
@@ -152,34 +150,34 @@ export function CostCategoriesMutateDrawer({
             />
           </form>
         </Form>
-        <SheetFooter className="mt-4 gap-2 px-4 sm:space-x-0">
+        <SheetFooter className='mt-4 gap-2 px-4 sm:space-x-0'>
           <SheetClose asChild>
             <Button
-              type="button"
-              variant="outline"
+              type='button'
+              variant='outline'
               disabled={createMutation.isPending || updateMutation.isPending}
             >
               Cancel
             </Button>
           </SheetClose>
           <Button
-            type="submit"
-            form="cost-categories-form"
+            type='submit'
+            form='cost-categories-form'
             disabled={createMutation.isPending || updateMutation.isPending}
           >
             {createMutation.isPending || updateMutation.isPending ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Loader2 className='mr-2 h-4 w-4 animate-spin' />
                 Saving...
               </>
             ) : isUpdate ? (
-              "Update"
+              'Update'
             ) : (
-              "Create"
+              'Create'
             )}
           </Button>
         </SheetFooter>
       </SheetContent>
     </Sheet>
-  );
+  )
 }

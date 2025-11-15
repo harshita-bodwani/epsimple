@@ -3,7 +3,11 @@ import { z } from 'zod'
 export const activityWorkSchema = z.object({
   activitiesId: z.number().positive('Activity is required'),
   vendorId: z.number().positive('Vendor is required'),
-  vendorOrderNumber: z.string().max(100, 'Vendor order number must not exceed 100 characters').optional().or(z.literal('')),
+  vendorOrderNumber: z
+    .string()
+    .max(100, 'Vendor order number must not exceed 100 characters')
+    .optional()
+    .or(z.literal('')),
   workOrderDate: z.string().optional().or(z.literal('')),
   workStartDate: z.string().optional().or(z.literal('')),
   workCompletionDate: z.string().optional().or(z.literal('')),

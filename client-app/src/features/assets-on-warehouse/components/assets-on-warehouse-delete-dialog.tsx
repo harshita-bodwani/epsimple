@@ -7,24 +7,24 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import { useAssetsOnWarehouse } from '../context/assets-on-warehouse-provider';
-import { assetsOnWarehouseApi } from '../api/assets-on-warehouse-api';
+} from '@/components/ui/alert-dialog'
+import { assetsOnWarehouseApi } from '../api/assets-on-warehouse-api'
+import { useAssetsOnWarehouse } from '../context/assets-on-warehouse-provider'
 
 export function AssetsOnWarehouseDeleteDialog() {
   const { isDeleteDialogOpen, closeDeleteDialog, selectedPlacement } =
-    useAssetsOnWarehouse();
-  const deleteMutation = assetsOnWarehouseApi.useDelete();
+    useAssetsOnWarehouse()
+  const deleteMutation = assetsOnWarehouseApi.useDelete()
 
   const handleDelete = () => {
     if (selectedPlacement) {
       deleteMutation.mutate(selectedPlacement.id, {
         onSuccess: () => {
-          closeDeleteDialog();
+          closeDeleteDialog()
         },
-      });
+      })
     }
-  };
+  }
 
   return (
     <AlertDialog open={isDeleteDialogOpen} onOpenChange={closeDeleteDialog}>
@@ -39,11 +39,14 @@ export function AssetsOnWarehouseDeleteDialog() {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleDelete} disabled={deleteMutation.isPending}>
+          <AlertDialogAction
+            onClick={handleDelete}
+            disabled={deleteMutation.isPending}
+          >
             {deleteMutation.isPending ? 'Removing...' : 'Remove'}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  );
+  )
 }

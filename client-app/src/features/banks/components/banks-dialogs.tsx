@@ -1,13 +1,20 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { ConfirmDialog } from '@/components/confirm-dialog'
-import { GenericBulkUploadDialog } from '@/components/bulk-upload/GenericBulkUploadDialog'
-import { BanksMutateDrawer } from './banks-mutate-drawer'
-import { useBanks } from '../hooks/use-banks'
-import { deleteBank } from '@/features/banks/api/banks-api'
 import { toast } from 'sonner'
+import { GenericBulkUploadDialog } from '@/components/bulk-upload/GenericBulkUploadDialog'
+import { ConfirmDialog } from '@/components/confirm-dialog'
+import { deleteBank } from '@/features/banks/api/banks-api'
+import { useBanks } from '../hooks/use-banks'
+import { BanksMutateDrawer } from './banks-mutate-drawer'
 
 export function BanksDialogs() {
-  const { open, setOpen, currentRow, setCurrentRow, isBulkUploadDialogOpen, closeBulkUploadDialog } = useBanks()
+  const {
+    open,
+    setOpen,
+    currentRow,
+    setCurrentRow,
+    isBulkUploadDialogOpen,
+    closeBulkUploadDialog,
+  } = useBanks()
   const queryClient = useQueryClient()
 
   const deleteMutation = useMutation({

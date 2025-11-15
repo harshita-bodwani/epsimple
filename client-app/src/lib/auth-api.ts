@@ -75,16 +75,18 @@ export const authApi = {
   },
 
   // Forgot password
-  forgotPassword: async (data: ForgotPasswordRequest): Promise<{ message: string }> => {
+  forgotPassword: async (
+    data: ForgotPasswordRequest
+  ): Promise<{ message: string }> => {
     const response = await api.post('/api/auth/forgot-password', data)
     return response.data
   },
 
   // Reset password
-  resetPassword: async (data: ResetPasswordRequest): Promise<{ message: string }> => {
+  resetPassword: async (
+    data: ResetPasswordRequest
+  ): Promise<{ message: string }> => {
     const response = await api.post('/api/auth/reset-password', data)
     return response.data
   },
-
- 
 }

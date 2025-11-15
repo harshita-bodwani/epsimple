@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod'
 
 export const voucherSchema = z.object({
   id: z.number(),
@@ -28,18 +28,18 @@ export const voucherSchema = z.object({
   updatedAt: z.string(),
   createdBy: z.string(),
   updatedBy: z.string(),
-});
+})
 
 export const voucherFormSchema = z.object({
-  voucherNumber: z.string().min(1, "Voucher number is required").max(100),
-  voucherDate: z.string().min(1, "Voucher date is required"),
-  orderNumber: z.string().max(100).optional().or(z.literal("")),
-  payeeId: z.number().min(1, "Payee is required"),
+  voucherNumber: z.string().min(1, 'Voucher number is required').max(100),
+  voucherDate: z.string().min(1, 'Voucher date is required'),
+  orderNumber: z.string().max(100).optional().or(z.literal('')),
+  payeeId: z.number().min(1, 'Payee is required'),
   paymentDetailsId: z.number().optional(),
-  paymentDueDate: z.string().optional().or(z.literal("")),
-  paymentStatus: z.string().max(20).optional().or(z.literal("")),
+  paymentDueDate: z.string().optional().or(z.literal('')),
+  paymentStatus: z.string().max(20).optional().or(z.literal('')),
   quantity: z.number().optional().or(z.literal(0)),
-  unit: z.string().max(50).optional().or(z.literal("")),
+  unit: z.string().max(50).optional().or(z.literal('')),
   unitPrice: z.number().optional().or(z.literal(0)),
   taxCgst: z.number().optional().or(z.literal(0)),
   taxSgst: z.number().optional().or(z.literal(0)),
@@ -49,8 +49,8 @@ export const voucherFormSchema = z.object({
   discountPercentage: z.number().optional().or(z.literal(0)),
   discountAmount: z.number().optional().or(z.literal(0)),
   finalAmount: z.number().optional().or(z.literal(0)),
-  remarks: z.string().optional().or(z.literal("")),
-});
+  remarks: z.string().optional().or(z.literal('')),
+})
 
-export type Voucher = z.infer<typeof voucherSchema>;
-export type VoucherFormData = z.infer<typeof voucherFormSchema>;
+export type Voucher = z.infer<typeof voucherSchema>
+export type VoucherFormData = z.infer<typeof voucherFormSchema>

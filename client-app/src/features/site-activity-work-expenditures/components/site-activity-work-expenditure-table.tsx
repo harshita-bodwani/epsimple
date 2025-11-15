@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react'
 import {
   type ColumnFiltersState,
   type SortingState,
@@ -10,8 +10,7 @@ import {
   getFilteredRowModel,
   getSortedRowModel,
   useReactTable,
-} from '@tanstack/react-table';
-
+} from '@tanstack/react-table'
 import {
   Table,
   TableBody,
@@ -19,56 +18,60 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-
-import { DataTablePagination, DataTableToolbar } from '@/components/data-table';
-import { siteActivityWorkExpenditureApi } from '../api/site-activity-work-expenditure-api';
-import { useSiteActivityWorkExpenditure } from '../context/site-activity-work-expenditure-provider';
-import { siteActivityWorkExpenditureColumns } from './site-activity-work-expenditure-columns';
+} from '@/components/ui/table'
+import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
+import { siteActivityWorkExpenditureApi } from '../api/site-activity-work-expenditure-api'
+import { useSiteActivityWorkExpenditure } from '../context/site-activity-work-expenditure-provider'
+import { siteActivityWorkExpenditureColumns } from './site-activity-work-expenditure-columns'
 
 export function SiteActivityWorkExpenditureTable() {
-  const { globalFilter, setGlobalFilter, siteId } = useSiteActivityWorkExpenditure();
-  const [rowSelection, setRowSelection] = useState({});
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const { globalFilter, setGlobalFilter, siteId } =
+    useSiteActivityWorkExpenditure()
+  const [rowSelection, setRowSelection] = useState({})
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [sorting, setSorting] = useState<SortingState>([])
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,
-  });
+  })
 
-  const hasSearch = globalFilter && globalFilter.trim() !== '';
-  
+  const hasSearch = globalFilter && globalFilter.trim() !== ''
+
   // Use site-specific API when siteId is provided
-  const { data: siteData, isLoading: isSiteLoading } = siteActivityWorkExpenditureApi.useGetBySiteId(
-    siteId || 0,
-    {
+  const { data: siteData, isLoading: isSiteLoading } =
+    siteActivityWorkExpenditureApi.useGetBySiteId(siteId || 0, {
       page: pagination.pageIndex,
       size: pagination.pageSize,
       sortBy: sorting.length > 0 ? sorting[0].id : 'id',
       sortOrder: sorting.length > 0 && sorting[0].desc ? 'DESC' : 'ASC',
-    }
-  );
-  
-  const { data: searchData, isLoading: isSearchLoading } = siteActivityWorkExpenditureApi.useSearch(globalFilter);
+    })
 
-  const { data: allData, isLoading: isAllLoading } = siteActivityWorkExpenditureApi.useGetAll({
-    page: pagination.pageIndex,
-    size: pagination.pageSize,
-    sortBy: sorting.length > 0 ? sorting[0].id : 'id',
-    sortOrder: sorting.length > 0 && sorting[0].desc ? 'DESC' : 'ASC',
-  });
+  const { data: searchData, isLoading: isSearchLoading } =
+    siteActivityWorkExpenditureApi.useSearch(globalFilter)
+
+  const { data: allData, isLoading: isAllLoading } =
+    siteActivityWorkExpenditureApi.useGetAll({
+      page: pagination.pageIndex,
+      size: pagination.pageSize,
+      sortBy: sorting.length > 0 ? sorting[0].id : 'id',
+      sortOrder: sorting.length > 0 && sorting[0].desc ? 'DESC' : 'ASC',
+    })
 
   // Use siteData if siteId is provided, otherwise use search or all data
-  const data = siteId ? siteData : (hasSearch ? searchData : allData);
-  const isLoading = siteId ? isSiteLoading : (hasSearch ? isSearchLoading : isAllLoading);
-  
-  const expenditures = data?.content || [];
-  const totalPages = data?.totalPages || 0;
+  const data = siteId ? siteData : hasSearch ? searchData : allData
+  const isLoading = siteId
+    ? isSiteLoading
+    : hasSearch
+      ? isSearchLoading
+      : isAllLoading
+
+  const expenditures = data?.content || []
+  const totalPages = data?.totalPages || 0
 
   useEffect(() => {
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
-  }, [globalFilter]);
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }))
+  }, [globalFilter])
 
   const table = useReactTable({
     data: expenditures,
@@ -96,12 +99,12 @@ export function SiteActivityWorkExpenditureTable() {
     getFacetedUniqueValues: getFacetedUniqueValues(),
     manualPagination: true,
     manualSorting: true,
-  });
+  })
 
   return (
-    <div className="space-y-4">
+    <div className='space-y-4'>
       <DataTableToolbar table={table} />
-      <div className="rounded-md border">
+      <div className='rounded-md border'>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -116,7 +119,7 @@ export function SiteActivityWorkExpenditureTable() {
                             header.getContext()
                           )}
                     </TableHead>
-                  );
+                  )
                 })}
               </TableRow>
             ))}
@@ -126,7 +129,7 @@ export function SiteActivityWorkExpenditureTable() {
               <TableRow>
                 <TableCell
                   colSpan={siteActivityWorkExpenditureColumns.length + 1}
-                  className="h-24 text-center"
+                  className='h-24 text-center'
                 >
                   Loading...
                 </TableCell>
@@ -151,7 +154,7 @@ export function SiteActivityWorkExpenditureTable() {
               <TableRow>
                 <TableCell
                   colSpan={siteActivityWorkExpenditureColumns.length + 1}
-                  className="h-24 text-center"
+                  className='h-24 text-center'
                 >
                   No results.
                 </TableCell>
@@ -162,5 +165,5 @@ export function SiteActivityWorkExpenditureTable() {
       </div>
       <DataTablePagination table={table} />
     </div>
-  );
+  )
 }

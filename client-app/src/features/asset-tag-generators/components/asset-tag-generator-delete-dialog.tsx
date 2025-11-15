@@ -7,27 +7,31 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { useAssetTagCodeGeneratorContext } from "../context/asset-tag-generator-provider";
-import { assetTagCodeGeneratorApi } from "../api/asset-tag-generator-api";
+} from '@/components/ui/alert-dialog'
+import { assetTagCodeGeneratorApi } from '../api/asset-tag-generator-api'
+import { useAssetTagCodeGeneratorContext } from '../context/asset-tag-generator-provider'
 
 export function AssetTagCodeGeneratorDeleteDialog() {
-  const { isDeleteDialogOpen, setIsDeleteDialogOpen, generatorToDelete, setGeneratorToDelete } =
-    useAssetTagCodeGeneratorContext();
+  const {
+    isDeleteDialogOpen,
+    setIsDeleteDialogOpen,
+    generatorToDelete,
+    setGeneratorToDelete,
+  } = useAssetTagCodeGeneratorContext()
 
-  const deleteMutation = assetTagCodeGeneratorApi.useDelete();
+  const deleteMutation = assetTagCodeGeneratorApi.useDelete()
 
   const handleDelete = async () => {
-    if (!generatorToDelete) return;
+    if (!generatorToDelete) return
 
     try {
-      await deleteMutation.mutateAsync(generatorToDelete.id);
-      setIsDeleteDialogOpen(false);
-      setGeneratorToDelete(null);
+      await deleteMutation.mutateAsync(generatorToDelete.id)
+      setIsDeleteDialogOpen(false)
+      setGeneratorToDelete(null)
     } catch (error) {
       // Error handled by mutation
     }
-  };
+  }
 
   return (
     <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
@@ -35,20 +39,26 @@ export function AssetTagCodeGeneratorDeleteDialog() {
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This will permanently delete the asset tag generator for{" "}
+            This will permanently delete the asset tag generator for{' '}
             <strong>
-              {generatorToDelete?.assetCategoryName} - {generatorToDelete?.vendorName} - {generatorToDelete?.bankName}
+              {generatorToDelete?.assetCategoryName} -{' '}
+              {generatorToDelete?.vendorName} - {generatorToDelete?.bankName}
             </strong>
             . This action cannot be undone.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={() => setGeneratorToDelete(null)}>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+          <AlertDialogCancel onClick={() => setGeneratorToDelete(null)}>
+            Cancel
+          </AlertDialogCancel>
+          <AlertDialogAction
+            onClick={handleDelete}
+            className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
+          >
             Delete
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  );
+  )
 }

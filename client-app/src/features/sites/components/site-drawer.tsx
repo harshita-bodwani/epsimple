@@ -1,11 +1,10 @@
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
-
-import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
+import { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useQuery } from '@tanstack/react-query'
+import { Loader2 } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Form } from '@/components/ui/form'
 import {
   Sheet,
   SheetClose,
@@ -14,12 +13,12 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle,
-} from "@/components/ui/sheet";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useSite } from "../hooks/use-site";
-import { siteApi } from "../api/site-api";
-import { siteSchema, type SiteFormData } from "../api/schema";
-import { statesApi } from "@/features/states/api/states-api";
+} from '@/components/ui/sheet'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { statesApi } from '@/features/states/api/states-api'
+import { siteSchema, type SiteFormData } from '../api/schema'
+import { siteApi } from '../api/site-api'
+import { useSite } from '../hooks/use-site'
 import {
   BasicTab,
   DatesTab,
@@ -27,74 +26,75 @@ import {
   NetworkTab,
   TechnicalTab,
   CassettesTab,
-} from "./site-drawer-tabs";
+} from './site-drawer-tabs'
 
 export function SiteDrawer() {
-  const { isDrawerOpen, setIsDrawerOpen, editingSite, setEditingSite } = useSite();
-  const [activeTab, setActiveTab] = useState("basic");
+  const { isDrawerOpen, setIsDrawerOpen, editingSite, setEditingSite } =
+    useSite()
+  const [activeTab, setActiveTab] = useState('basic')
 
-  const createMutation = siteApi.useCreate();
-  const updateMutation = siteApi.useUpdate();
+  const createMutation = siteApi.useCreate()
+  const updateMutation = siteApi.useUpdate()
 
   const { data: statesResponse } = useQuery({
-    queryKey: ["states", "list"],
+    queryKey: ['states', 'list'],
     queryFn: () => statesApi.getList(),
-  });
+  })
 
-  const states = statesResponse?.data || [];
+  const states = statesResponse?.data || []
 
   const form = useForm<SiteFormData>({
     resolver: zodResolver(siteSchema),
     defaultValues: {
-      siteCode: "",
+      siteCode: '',
       locationId: 0,
       projectId: null,
       siteCategoryId: null,
       siteTypeId: null,
       siteStatusId: null,
-      projectPhase: "",
-      oldSiteCode: "",
-      previousMspTermId: "",
-      locationClass: "",
+      projectPhase: '',
+      oldSiteCode: '',
+      previousMspTermId: '',
+      locationClass: '',
       techLiveDate: null,
       cashLiveDate: null,
       siteCloseDate: null,
       possessionDate: null,
       actualPossessionDate: null,
-      groutingStatus: "",
-      itStabilizer: "",
-      rampStatus: "",
-      upsBatteryBackupCapacity: "",
-      connectivityType: "",
-      acUnits: "",
+      groutingStatus: '',
+      itStabilizer: '',
+      rampStatus: '',
+      upsBatteryBackupCapacity: '',
+      connectivityType: '',
+      acUnits: '',
       mainDoorGlassWidth: null,
       fixedGlassWidth: null,
-      signboardSize: "",
-      brandingSize: "",
+      signboardSize: '',
+      brandingSize: '',
       channelManagerContactId: null,
       regionalManagerContactId: null,
       stateHeadContactId: null,
       bankPersonContactId: null,
       masterFranchiseeContactId: null,
-      gatewayIp: "",
-      atmIp: "",
-      subnetMask: "",
-      natIp: "",
-      switchIp: "",
-      tlsPort: "",
-      tlsDomainName: "",
-      ejDocket: "",
-      tssDocket: "",
-      otcActivationStatus: "",
+      gatewayIp: '',
+      atmIp: '',
+      subnetMask: '',
+      natIp: '',
+      switchIp: '',
+      tlsPort: '',
+      tlsDomainName: '',
+      ejDocket: '',
+      tssDocket: '',
+      otcActivationStatus: '',
       otcActivationDate: null,
-      craName: "",
-      cassetteSwapStatus: "",
-      cassetteType1: "",
-      cassetteType2: "",
-      cassetteType3: "",
-      cassetteType4: "",
+      craName: '',
+      cassetteSwapStatus: '',
+      cassetteType1: '',
+      cassetteType2: '',
+      cassetteType3: '',
+      cassetteType4: '',
     },
-  });
+  })
 
   useEffect(() => {
     if (editingSite) {
@@ -105,52 +105,53 @@ export function SiteDrawer() {
         siteCategoryId: editingSite.siteCategoryId || null,
         siteTypeId: editingSite.siteTypeId || null,
         siteStatusId: editingSite.siteStatusId || null,
-        projectPhase: editingSite.projectPhase || "",
-        oldSiteCode: editingSite.oldSiteCode || "",
-        previousMspTermId: editingSite.previousMspTermId || "",
-        locationClass: editingSite.locationClass || "",
+        projectPhase: editingSite.projectPhase || '',
+        oldSiteCode: editingSite.oldSiteCode || '',
+        previousMspTermId: editingSite.previousMspTermId || '',
+        locationClass: editingSite.locationClass || '',
         techLiveDate: editingSite.techLiveDate || null,
         cashLiveDate: editingSite.cashLiveDate || null,
         siteCloseDate: editingSite.siteCloseDate || null,
         possessionDate: editingSite.possessionDate || null,
         actualPossessionDate: editingSite.actualPossessionDate || null,
-        groutingStatus: editingSite.groutingStatus || "",
-        itStabilizer: editingSite.itStabilizer || "",
-        rampStatus: editingSite.rampStatus || "",
-        upsBatteryBackupCapacity: editingSite.upsBatteryBackupCapacity || "",
-        connectivityType: editingSite.connectivityType || "",
-        acUnits: editingSite.acUnits || "",
+        groutingStatus: editingSite.groutingStatus || '',
+        itStabilizer: editingSite.itStabilizer || '',
+        rampStatus: editingSite.rampStatus || '',
+        upsBatteryBackupCapacity: editingSite.upsBatteryBackupCapacity || '',
+        connectivityType: editingSite.connectivityType || '',
+        acUnits: editingSite.acUnits || '',
         mainDoorGlassWidth: editingSite.mainDoorGlassWidth || null,
         fixedGlassWidth: editingSite.fixedGlassWidth || null,
-        signboardSize: editingSite.signboardSize || "",
-        brandingSize: editingSite.brandingSize || "",
+        signboardSize: editingSite.signboardSize || '',
+        brandingSize: editingSite.brandingSize || '',
         channelManagerContactId: editingSite.channelManagerContactId || null,
         regionalManagerContactId: editingSite.regionalManagerContactId || null,
         stateHeadContactId: editingSite.stateHeadContactId || null,
         bankPersonContactId: editingSite.bankPersonContactId || null,
-        masterFranchiseeContactId: editingSite.masterFranchiseeContactId || null,
-        gatewayIp: editingSite.gatewayIp || "",
-        atmIp: editingSite.atmIp || "",
-        subnetMask: editingSite.subnetMask || "",
-        natIp: editingSite.natIp || "",
-        switchIp: editingSite.switchIp || "",
-        tlsPort: editingSite.tlsPort || "",
-        tlsDomainName: editingSite.tlsDomainName || "",
-        ejDocket: editingSite.ejDocket || "",
-        tssDocket: editingSite.tssDocket || "",
-        otcActivationStatus: editingSite.otcActivationStatus || "",
+        masterFranchiseeContactId:
+          editingSite.masterFranchiseeContactId || null,
+        gatewayIp: editingSite.gatewayIp || '',
+        atmIp: editingSite.atmIp || '',
+        subnetMask: editingSite.subnetMask || '',
+        natIp: editingSite.natIp || '',
+        switchIp: editingSite.switchIp || '',
+        tlsPort: editingSite.tlsPort || '',
+        tlsDomainName: editingSite.tlsDomainName || '',
+        ejDocket: editingSite.ejDocket || '',
+        tssDocket: editingSite.tssDocket || '',
+        otcActivationStatus: editingSite.otcActivationStatus || '',
         otcActivationDate: editingSite.otcActivationDate || null,
-        craName: editingSite.craName || "",
-        cassetteSwapStatus: editingSite.cassetteSwapStatus || "",
-        cassetteType1: editingSite.cassetteType1 || "",
-        cassetteType2: editingSite.cassetteType2 || "",
-        cassetteType3: editingSite.cassetteType3 || "",
-        cassetteType4: editingSite.cassetteType4 || "",
-      });
+        craName: editingSite.craName || '',
+        cassetteSwapStatus: editingSite.cassetteSwapStatus || '',
+        cassetteType1: editingSite.cassetteType1 || '',
+        cassetteType2: editingSite.cassetteType2 || '',
+        cassetteType3: editingSite.cassetteType3 || '',
+        cassetteType4: editingSite.cassetteType4 || '',
+      })
     } else {
-      form.reset();
+      form.reset()
     }
-  }, [editingSite, form]);
+  }, [editingSite, form])
 
   const onSubmit = async (data: SiteFormData) => {
     if (editingSite) {
@@ -161,66 +162,82 @@ export function SiteDrawer() {
         },
         {
           onSuccess: () => {
-            setIsDrawerOpen(false);
-            setEditingSite(null);
-            form.reset();
-            setActiveTab("basic");
+            setIsDrawerOpen(false)
+            setEditingSite(null)
+            form.reset()
+            setActiveTab('basic')
           },
         }
-      );
+      )
     } else {
       createMutation.mutate(data, {
         onSuccess: () => {
-          setIsDrawerOpen(false);
-          form.reset();
-          setActiveTab("basic");
+          setIsDrawerOpen(false)
+          form.reset()
+          setActiveTab('basic')
         },
-      });
+      })
     }
-  };
+  }
 
   const handleClose = () => {
-    setIsDrawerOpen(false);
-    setEditingSite(null);
-    form.reset();
-    setActiveTab("basic");
-  };
+    setIsDrawerOpen(false)
+    setEditingSite(null)
+    form.reset()
+    setActiveTab('basic')
+  }
 
-  const isLoading = createMutation.isPending || updateMutation.isPending;
+  const isLoading = createMutation.isPending || updateMutation.isPending
 
   return (
     <Sheet open={isDrawerOpen} onOpenChange={handleClose}>
-      <SheetContent className="flex w-full flex-col sm:max-w-3xl overflow-hidden">
-        <SheetHeader className="text-start">
-          <SheetTitle>{editingSite ? "Update" : "Create"} Site</SheetTitle>
+      <SheetContent className='flex w-full flex-col overflow-hidden sm:max-w-3xl'>
+        <SheetHeader className='text-start'>
+          <SheetTitle>{editingSite ? 'Update' : 'Create'} Site</SheetTitle>
           <SheetDescription>
             {editingSite
-              ? "Update the site by providing necessary info."
-              : "Add a new site by providing necessary info. "}
+              ? 'Update the site by providing necessary info.'
+              : 'Add a new site by providing necessary info. '}
             Click save when you&apos;re done.
           </SheetDescription>
         </SheetHeader>
 
         <Form {...form}>
           <form
-            id="site-form"
+            id='site-form'
             onSubmit={form.handleSubmit(onSubmit)}
-            className="flex-1 overflow-hidden flex flex-col"
+            className='flex flex-1 flex-col overflow-hidden'
           >
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col overflow-hidden">
-              <TabsList className="grid grid-cols-6 flex-shrink-0 mx-4 mb-1 w-[calc(100%-2rem)]">
-                <TabsTrigger value="basic" className="text-xs sm:text-sm">Basic</TabsTrigger>
-                <TabsTrigger value="dates" className="text-xs sm:text-sm">Dates</TabsTrigger>
-                <TabsTrigger value="infrastructure" className="text-xs sm:text-sm">Infrastructure</TabsTrigger>
-                <TabsTrigger value="network" className="text-xs sm:text-sm">Network</TabsTrigger>
-                <TabsTrigger value="technical" className="text-xs sm:text-sm">Technical</TabsTrigger>
-                <TabsTrigger value="cassettes" className="text-xs sm:text-sm">Cassettes</TabsTrigger>
+            <Tabs
+              value={activeTab}
+              onValueChange={setActiveTab}
+              className='flex flex-1 flex-col overflow-hidden'
+            >
+              <TabsList className='mx-4 mb-1 grid w-[calc(100%-2rem)] flex-shrink-0 grid-cols-6'>
+                <TabsTrigger value='basic' className='text-xs sm:text-sm'>
+                  Basic
+                </TabsTrigger>
+                <TabsTrigger value='dates' className='text-xs sm:text-sm'>
+                  Dates
+                </TabsTrigger>
+                <TabsTrigger
+                  value='infrastructure'
+                  className='text-xs sm:text-sm'
+                >
+                  Infrastructure
+                </TabsTrigger>
+                <TabsTrigger value='network' className='text-xs sm:text-sm'>
+                  Network
+                </TabsTrigger>
+                <TabsTrigger value='technical' className='text-xs sm:text-sm'>
+                  Technical
+                </TabsTrigger>
+                <TabsTrigger value='cassettes' className='text-xs sm:text-sm'>
+                  Cassettes
+                </TabsTrigger>
               </TabsList>
 
-              <BasicTab
-                form={form}
-                states={states}
-              />
+              <BasicTab form={form} states={states} />
               <DatesTab form={form} />
               <InfrastructureTab form={form} />
               <NetworkTab form={form} />
@@ -230,16 +247,16 @@ export function SiteDrawer() {
           </form>
         </Form>
 
-        <SheetFooter className="flex-shrink-0 px-4">
+        <SheetFooter className='flex-shrink-0 px-4'>
           <SheetClose asChild>
-            <Button variant="outline">Cancel</Button>
+            <Button variant='outline'>Cancel</Button>
           </SheetClose>
-          <Button type="submit" form="site-form" disabled={isLoading}>
-            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            {editingSite ? "Update" : "Save"}
+          <Button type='submit' form='site-form' disabled={isLoading}>
+            {isLoading && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}
+            {editingSite ? 'Update' : 'Save'}
           </Button>
         </SheetFooter>
       </SheetContent>
     </Sheet>
-  );
+  )
 }

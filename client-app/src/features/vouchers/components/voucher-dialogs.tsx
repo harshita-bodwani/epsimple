@@ -1,7 +1,6 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
-
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { Loader2 } from 'lucide-react'
+import { toast } from 'sonner'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,14 +10,13 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { GenericBulkUploadDialog } from "@/components/bulk-upload/GenericBulkUploadDialog";
-
-import { vouchersApi } from "../api/vouchers-api";
-import { useVoucher } from "../hooks/use-voucher";
+} from '@/components/ui/alert-dialog'
+import { GenericBulkUploadDialog } from '@/components/bulk-upload/GenericBulkUploadDialog'
+import { vouchersApi } from '../api/vouchers-api'
+import { useVoucher } from '../hooks/use-voucher'
 
 export function VoucherDialogs() {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
   const {
     isDeleteDialogOpen,
     setIsDeleteDialogOpen,
@@ -26,26 +24,26 @@ export function VoucherDialogs() {
     setVoucherToDelete,
     isBulkUploadDialogOpen,
     setIsBulkUploadDialogOpen,
-  } = useVoucher();
+  } = useVoucher()
 
   const deleteMutation = useMutation({
     mutationFn: vouchersApi.delete,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["vouchers"] });
-      toast.success("Voucher deleted successfully");
-      setIsDeleteDialogOpen(false);
-      setVoucherToDelete(null);
+      queryClient.invalidateQueries({ queryKey: ['vouchers'] })
+      toast.success('Voucher deleted successfully')
+      setIsDeleteDialogOpen(false)
+      setVoucherToDelete(null)
     },
     onError: () => {
-      toast.error("Failed to delete voucher");
+      toast.error('Failed to delete voucher')
     },
-  });
+  })
 
   const handleDelete = () => {
     if (voucherToDelete) {
-      deleteMutation.mutate(voucherToDelete.id);
+      deleteMutation.mutate(voucherToDelete.id)
     }
-  };
+  }
 
   return (
     <>
@@ -69,15 +67,15 @@ export function VoucherDialogs() {
             <AlertDialogAction
               onClick={handleDelete}
               disabled={deleteMutation.isPending}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
             >
               {deleteMutation.isPending ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <Loader2 className='mr-2 h-4 w-4 animate-spin' />
                   Deleting...
                 </>
               ) : (
-                "Delete"
+                'Delete'
               )}
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -88,14 +86,14 @@ export function VoucherDialogs() {
         open={isBulkUploadDialogOpen}
         onOpenChange={setIsBulkUploadDialogOpen}
         config={{
-          entityName: "Voucher",
-          uploadEndpoint: "/api/vouchers/bulk-upload",
-          errorReportEndpoint: "/api/vouchers/bulk-upload/errors",
+          entityName: 'Voucher',
+          uploadEndpoint: '/api/vouchers/bulk-upload',
+          errorReportEndpoint: '/api/vouchers/bulk-upload/errors',
           onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["vouchers"] });
+            queryClient.invalidateQueries({ queryKey: ['vouchers'] })
           },
         }}
       />
     </>
-  );
+  )
 }

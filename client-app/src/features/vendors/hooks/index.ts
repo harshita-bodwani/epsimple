@@ -1,1 +1,1 @@
-export { useVendor } from './use-vendor';
+export { useVendor } from './use-vendor'

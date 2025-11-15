@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod'
 
 export const assetsOnSiteFormSchema = z.object({
   assetId: z.number().min(1, 'Asset is required'),
@@ -11,30 +11,30 @@ export const assetsOnSiteFormSchema = z.object({
   activatedOn: z.string().optional().or(z.literal('')),
   decommissionedOn: z.string().optional().or(z.literal('')),
   vacatedOn: z.string().optional().or(z.literal('')),
-});
+})
 
-export type AssetsOnSiteFormData = z.infer<typeof assetsOnSiteFormSchema>;
+export type AssetsOnSiteFormData = z.infer<typeof assetsOnSiteFormSchema>
 
 export interface AssetsOnSite {
-  id: number;
-  assetId: number;
-  assetTagId: string;
-  assetName: string;
-  assetTypeName: string;
-  assetCategoryName: string;
-  siteId: number;
-  siteCode: string;
-  siteName: string;
-  assetStatusId: number;
-  assetStatusName: string;
-  activityWorkId?: number;
-  activityWorkNumber?: string;
-  assignedOn?: string;
-  deliveredOn?: string;
-  deployedOn?: string;
-  activatedOn?: string;
-  decommissionedOn?: string;
-  vacatedOn?: string;
-  createdAt: string;
-  updatedAt: string;
+  id: number
+  assetId: number
+  assetTagId: string
+  assetName: string
+  assetTypeName: string
+  assetCategoryName: string
+  siteId: number
+  siteCode: string
+  siteName: string
+  assetStatusId: number
+  assetStatusName: string
+  activityWorkId?: number
+  activityWorkNumber?: string
+  assignedOn?: string
+  deliveredOn?: string
+  deployedOn?: string
+  activatedOn?: string
+  decommissionedOn?: string
+  vacatedOn?: string
+  createdAt: string
+  updatedAt: string
 }

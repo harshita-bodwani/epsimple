@@ -6,36 +6,36 @@
  * Backend pagination response structure (with nested page object)
  */
 export interface BackendPageResponse<T> {
-  content: T[];
+  content: T[]
   page: {
-    totalElements: number;
-    totalPages: number;
-    size: number;
-    number: number;
-  };
-  first?: boolean;
-  last?: boolean;
-  empty?: boolean;
+    totalElements: number
+    totalPages: number
+    size: number
+    number: number
+  }
+  first?: boolean
+  last?: boolean
+  empty?: boolean
 }
 
 /**
  * Frontend pagination response structure (flattened)
  */
 export interface FlatPageResponse<T> {
-  content: T[];
-  totalElements: number;
-  totalPages: number;
-  size: number;
-  number: number;
-  first?: boolean;
-  last?: boolean;
-  empty?: boolean;
+  content: T[]
+  totalElements: number
+  totalPages: number
+  size: number
+  number: number
+  first?: boolean
+  last?: boolean
+  empty?: boolean
 }
 
 /**
  * Flattens the backend pagination response structure to a flat structure
  * that's easier to work with in the frontend.
- * 
+ *
  * @param backendResponse - The response from the backend with nested page object
  * @returns Flattened response with pagination metadata at the root level
  */
@@ -51,7 +51,7 @@ export function flattenPageResponse<T>(
     first: backendResponse.first,
     last: backendResponse.last,
     empty: backendResponse.empty,
-  };
+  }
 }
 
 /**
@@ -87,7 +87,10 @@ export function createAuthHeaders(): Record<string, string> {
  * @param endpoint - The API endpoint to download from
  * @param filename - The filename to save as
  */
-export async function downloadFile(endpoint: string, filename: string): Promise<void> {
+export async function downloadFile(
+  endpoint: string,
+  filename: string
+): Promise<void> {
   const response = await fetch(`${import.meta.env.VITE_API_URL}${endpoint}`, {
     method: 'GET',
     credentials: 'include',
@@ -116,7 +119,11 @@ export async function downloadFile(endpoint: string, filename: string): Promise<
  * @param data - The data to send in the request body
  * @param filename - The filename to save as
  */
-export async function downloadFileWithPost(endpoint: string, data: any, filename: string): Promise<void> {
+export async function downloadFileWithPost(
+  endpoint: string,
+  data: any,
+  filename: string
+): Promise<void> {
   const headers: Record<string, string> = {
     ...createAuthHeaders(),
     'Content-Type': 'application/json',

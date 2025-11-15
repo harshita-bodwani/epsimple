@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react'
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -11,8 +11,7 @@ import {
   getFilteredRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table";
-
+} from '@tanstack/react-table'
 import {
   Table,
   TableBody,
@@ -20,57 +19,57 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-
-import { DataTablePagination, DataTableToolbar } from "@/components/data-table";
-import { assetCategoryApi } from "../api/asset-categories-api";
-import { AssetCategoryRowActions } from "./asset-category-row-actions";
-import { useAssetCategoryContext } from "../context/asset-category-provider";
+} from '@/components/ui/table'
+import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
+import { assetCategoryApi } from '../api/asset-categories-api'
+import { useAssetCategoryContext } from '../context/asset-category-provider'
+import { AssetCategoryRowActions } from './asset-category-row-actions'
 
 interface AssetCategoryTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
+  columns: ColumnDef<TData, TValue>[]
 }
 
 export function AssetCategoryTable<TData, TValue>({
   columns,
 }: AssetCategoryTableProps<TData, TValue>) {
-  const { globalFilter, setGlobalFilter } = useAssetCategoryContext();
-  const [rowSelection, setRowSelection] = useState({});
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const { globalFilter, setGlobalFilter } = useAssetCategoryContext()
+  const [rowSelection, setRowSelection] = useState({})
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [sorting, setSorting] = useState<SortingState>([])
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,
-  });
+  })
 
   const { data, isLoading } = assetCategoryApi.useGetAll({
     page: pagination.pageIndex,
     size: pagination.pageSize,
-    sortBy: sorting.length > 0 ? sorting[0].id : "categoryName",
-    sortOrder: sorting.length > 0 && sorting[0].desc ? "DESC" : "ASC",
-    search: globalFilter && globalFilter.trim() !== "" ? globalFilter : undefined,
-  });
+    sortBy: sorting.length > 0 ? sorting[0].id : 'categoryName',
+    sortOrder: sorting.length > 0 && sorting[0].desc ? 'DESC' : 'ASC',
+    search:
+      globalFilter && globalFilter.trim() !== '' ? globalFilter : undefined,
+  })
 
-  const assetCategories = (data?.content || []) as TData[];
-  const totalPages = data?.totalPages || 0;
+  const assetCategories = (data?.content || []) as TData[]
+  const totalPages = data?.totalPages || 0
 
   // Reset to first page when search query changes
   useEffect(() => {
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
-  }, [globalFilter]);
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }))
+  }, [globalFilter])
 
   // Add actions column
   const columnsWithActions = React.useMemo(
     () => [
       ...columns,
       {
-        id: "actions",
+        id: 'actions',
         cell: ({ row }: { row: any }) => <AssetCategoryRowActions row={row} />,
       },
     ],
     [columns]
-  );
+  )
 
   const table = useReactTable({
     data: assetCategories,
@@ -98,12 +97,12 @@ export function AssetCategoryTable<TData, TValue>({
     getFacetedUniqueValues: getFacetedUniqueValues(),
     manualPagination: true,
     manualSorting: true,
-  });
+  })
 
   return (
-    <div className="space-y-4">
+    <div className='space-y-4'>
       <DataTableToolbar table={table} />
-      <div className="rounded-md border">
+      <div className='rounded-md border'>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -118,7 +117,7 @@ export function AssetCategoryTable<TData, TValue>({
                             header.getContext()
                           )}
                     </TableHead>
-                  );
+                  )
                 })}
               </TableRow>
             ))}
@@ -128,7 +127,7 @@ export function AssetCategoryTable<TData, TValue>({
               <TableRow>
                 <TableCell
                   colSpan={columns.length + 1}
-                  className="h-24 text-center"
+                  className='h-24 text-center'
                 >
                   Loading...
                 </TableCell>
@@ -137,7 +136,7 @@ export function AssetCategoryTable<TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
+                  data-state={row.getIsSelected() && 'selected'}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -153,7 +152,7 @@ export function AssetCategoryTable<TData, TValue>({
               <TableRow>
                 <TableCell
                   colSpan={columns.length + 1}
-                  className="h-24 text-center"
+                  className='h-24 text-center'
                 >
                   No results.
                 </TableCell>
@@ -164,5 +163,5 @@ export function AssetCategoryTable<TData, TValue>({
       </div>
       <DataTablePagination table={table} />
     </div>
-  );
+  )
 }

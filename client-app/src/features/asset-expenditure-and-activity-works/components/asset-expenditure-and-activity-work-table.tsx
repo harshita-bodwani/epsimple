@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react'
 import {
   type ColumnFiltersState,
   type SortingState,
@@ -10,8 +10,7 @@ import {
   getFilteredRowModel,
   getSortedRowModel,
   useReactTable,
-} from '@tanstack/react-table';
-
+} from '@tanstack/react-table'
 import {
   Table,
   TableBody,
@@ -19,54 +18,58 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-
-import { DataTablePagination, DataTableToolbar } from '@/components/data-table';
-import { assetExpenditureAndActivityWorkApi } from '../api/asset-expenditure-and-activity-work-api';
-import { useAssetExpenditureAndActivityWork } from '../context/asset-expenditure-and-activity-work-provider';
-import { assetExpenditureAndActivityWorkColumns } from './asset-expenditure-and-activity-work-columns';
+} from '@/components/ui/table'
+import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
+import { assetExpenditureAndActivityWorkApi } from '../api/asset-expenditure-and-activity-work-api'
+import { useAssetExpenditureAndActivityWork } from '../context/asset-expenditure-and-activity-work-provider'
+import { assetExpenditureAndActivityWorkColumns } from './asset-expenditure-and-activity-work-columns'
 
 export function AssetExpenditureAndActivityWorkTable() {
-  const { globalFilter, setGlobalFilter, assetId } = useAssetExpenditureAndActivityWork();
-  const [rowSelection, setRowSelection] = useState({});
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const { globalFilter, setGlobalFilter, assetId } =
+    useAssetExpenditureAndActivityWork()
+  const [rowSelection, setRowSelection] = useState({})
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [sorting, setSorting] = useState<SortingState>([])
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,
-  });
+  })
 
-  const hasSearch = globalFilter && globalFilter.trim() !== '';
-  
-  const { data: assetData, isLoading: isAssetLoading } = assetExpenditureAndActivityWorkApi.useGetByAssetId(
-    assetId || 0,
-    {
+  const hasSearch = globalFilter && globalFilter.trim() !== ''
+
+  const { data: assetData, isLoading: isAssetLoading } =
+    assetExpenditureAndActivityWorkApi.useGetByAssetId(assetId || 0, {
       page: pagination.pageIndex,
       size: pagination.pageSize,
       sortBy: sorting.length > 0 ? sorting[0].id : 'id',
       sortOrder: sorting.length > 0 && sorting[0].desc ? 'DESC' : 'ASC',
-    }
-  );
-  
-  const { data: searchData, isLoading: isSearchLoading } = assetExpenditureAndActivityWorkApi.useSearch(globalFilter);
+    })
 
-  const { data: allData, isLoading: isAllLoading } = assetExpenditureAndActivityWorkApi.useGetAll({
-    page: pagination.pageIndex,
-    size: pagination.pageSize,
-    sortBy: sorting.length > 0 ? sorting[0].id : 'id',
-    sortOrder: sorting.length > 0 && sorting[0].desc ? 'DESC' : 'ASC',
-  });
+  const { data: searchData, isLoading: isSearchLoading } =
+    assetExpenditureAndActivityWorkApi.useSearch(globalFilter)
 
-  const data = assetId ? assetData : (hasSearch ? searchData : allData);
-  const isLoading = assetId ? isAssetLoading : (hasSearch ? isSearchLoading : isAllLoading);
-  
-  const expenditures = data?.content || [];
-  const totalPages = data?.totalPages || 0;
+  const { data: allData, isLoading: isAllLoading } =
+    assetExpenditureAndActivityWorkApi.useGetAll({
+      page: pagination.pageIndex,
+      size: pagination.pageSize,
+      sortBy: sorting.length > 0 ? sorting[0].id : 'id',
+      sortOrder: sorting.length > 0 && sorting[0].desc ? 'DESC' : 'ASC',
+    })
+
+  const data = assetId ? assetData : hasSearch ? searchData : allData
+  const isLoading = assetId
+    ? isAssetLoading
+    : hasSearch
+      ? isSearchLoading
+      : isAllLoading
+
+  const expenditures = data?.content || []
+  const totalPages = data?.totalPages || 0
 
   useEffect(() => {
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
-  }, [globalFilter]);
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }))
+  }, [globalFilter])
 
   const table = useReactTable({
     data: expenditures,
@@ -94,12 +97,12 @@ export function AssetExpenditureAndActivityWorkTable() {
     getFacetedUniqueValues: getFacetedUniqueValues(),
     manualPagination: true,
     manualSorting: true,
-  });
+  })
 
   return (
-    <div className="space-y-4">
+    <div className='space-y-4'>
       <DataTableToolbar table={table} />
-      <div className="rounded-md border">
+      <div className='rounded-md border'>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -114,7 +117,7 @@ export function AssetExpenditureAndActivityWorkTable() {
                             header.getContext()
                           )}
                     </TableHead>
-                  );
+                  )
                 })}
               </TableRow>
             ))}
@@ -124,7 +127,7 @@ export function AssetExpenditureAndActivityWorkTable() {
               <TableRow>
                 <TableCell
                   colSpan={table.getAllColumns().length}
-                  className="h-24 text-center"
+                  className='h-24 text-center'
                 >
                   Loading...
                 </TableCell>
@@ -149,7 +152,7 @@ export function AssetExpenditureAndActivityWorkTable() {
               <TableRow>
                 <TableCell
                   colSpan={table.getAllColumns().length}
-                  className="h-24 text-center"
+                  className='h-24 text-center'
                 >
                   No results.
                 </TableCell>
@@ -160,5 +163,5 @@ export function AssetExpenditureAndActivityWorkTable() {
       </div>
       <DataTablePagination table={table} />
     </div>
-  );
+  )
 }

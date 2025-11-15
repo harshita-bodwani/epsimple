@@ -1,25 +1,20 @@
-import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Check, ChevronsUpDown, Loader2 } from 'lucide-react';
-import { format } from 'date-fns';
-import { useExpendituresVoucherContext } from '../context/expenditures-voucher-provider';
-import { expendituresVoucherFormSchema, type ExpendituresVoucherFormData } from '../api/schema';
-import { expendituresVoucherApi } from '../api/expenditures-voucher-api';
-import type { CostItem } from '@/features/cost-items/api/cost-items-api';
-import type { Voucher } from '@/features/vouchers/api/schema';
-import type { ManagedProject } from '@/features/managed-projects/api/schema';
-import api from '@/lib/api';
-import { cn } from '@/lib/utils';
+import { useEffect, useState } from 'react'
+import { format } from 'date-fns'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useQuery } from '@tanstack/react-query'
+import { Check, ChevronsUpDown, Loader2 } from 'lucide-react'
+import api from '@/lib/api'
+import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
+import { Calendar } from '@/components/ui/calendar'
 import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-} from '@/components/ui/sheet';
-import { Button } from '@/components/ui/button';
+  Command,
+  CommandEmpty,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command'
 import {
   Form,
   FormControl,
@@ -27,68 +22,86 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover';
+} from '@/components/ui/popover'
 import {
-  Command,
-  CommandEmpty,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from '@/components/ui/command';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Calendar } from '@/components/ui/calendar';
-import { useQuery } from '@tanstack/react-query';
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet'
+import { Textarea } from '@/components/ui/textarea'
+import type { CostItem } from '@/features/cost-items/api/cost-items-api'
+import type { ManagedProject } from '@/features/managed-projects/api/schema'
+import type { Voucher } from '@/features/vouchers/api/schema'
+import { expendituresVoucherApi } from '../api/expenditures-voucher-api'
+import {
+  expendituresVoucherFormSchema,
+  type ExpendituresVoucherFormData,
+} from '../api/schema'
+import { useExpendituresVoucherContext } from '../context/expenditures-voucher-provider'
 
 export const ExpendituresVoucherDrawer = () => {
-  const { isDrawerOpen, closeDrawer, editingExpenditure } = useExpendituresVoucherContext();
-  const [costItemSearch, setCostItemSearch] = useState('');
-  const [costItemOpen, setCostItemOpen] = useState(false);
-  const [voucherSearch, setVoucherSearch] = useState('');
-  const [voucherOpen, setVoucherOpen] = useState(false);
-  const [projectSearch, setProjectSearch] = useState('');
-  const [projectOpen, setProjectOpen] = useState(false);
+  const { isDrawerOpen, closeDrawer, editingExpenditure } =
+    useExpendituresVoucherContext()
+  const [costItemSearch, setCostItemSearch] = useState('')
+  const [costItemOpen, setCostItemOpen] = useState(false)
+  const [voucherSearch, setVoucherSearch] = useState('')
+  const [voucherOpen, setVoucherOpen] = useState(false)
+  const [projectSearch, setProjectSearch] = useState('')
+  const [projectOpen, setProjectOpen] = useState(false)
 
   // Fetch cost items
   const { data: costItems = [], isLoading: costItemsLoading } = useQuery({
     queryKey: ['cost-items', 'search', costItemSearch],
     queryFn: async () => {
-      const response = await api.get<{ data: CostItem[]; message: string }>('/api/cost-items/list');
-      return response.data.data.filter((item: CostItem) => 
+      const response = await api.get<{ data: CostItem[]; message: string }>(
+        '/api/cost-items/list'
+      )
+      return response.data.data.filter((item: CostItem) =>
         item.costItemFor.toLowerCase().includes(costItemSearch.toLowerCase())
-      );
+      )
     },
-  });
+  })
 
   // Fetch vouchers
   const { data: vouchers = [], isLoading: vouchersLoading } = useQuery({
     queryKey: ['vouchers', 'search', voucherSearch],
     queryFn: async () => {
-      const response = await api.get<{ data: Voucher[]; message: string }>('/api/vouchers/list');
-      return response.data.data.filter((voucher: Voucher) => 
-        voucher.voucherNumber.toLowerCase().includes(voucherSearch.toLowerCase())
-      );
+      const response = await api.get<{ data: Voucher[]; message: string }>(
+        '/api/vouchers/list'
+      )
+      return response.data.data.filter((voucher: Voucher) =>
+        voucher.voucherNumber
+          .toLowerCase()
+          .includes(voucherSearch.toLowerCase())
+      )
     },
-  });
+  })
 
   // Fetch projects
   const { data: projects = [], isLoading: projectsLoading } = useQuery({
     queryKey: ['managed-projects', 'search', projectSearch],
     queryFn: async () => {
-      const response = await api.get<{ data: ManagedProject[]; message: string }>('/api/managed-projects/list');
-      return response.data.data.filter((proj: ManagedProject) => 
+      const response = await api.get<{
+        data: ManagedProject[]
+        message: string
+      }>('/api/managed-projects/list')
+      return response.data.data.filter((proj: ManagedProject) =>
         proj.projectName.toLowerCase().includes(projectSearch.toLowerCase())
-      );
+      )
     },
-  });
-  
-  const createMutation = expendituresVoucherApi.useCreate();
-  const updateMutation = expendituresVoucherApi.useUpdate();
+  })
+
+  const createMutation = expendituresVoucherApi.useCreate()
+  const updateMutation = expendituresVoucherApi.useUpdate()
 
   const form = useForm<ExpendituresVoucherFormData>({
     resolver: zodResolver(expendituresVoucherFormSchema),
@@ -100,7 +113,7 @@ export const ExpendituresVoucherDrawer = () => {
       description: '',
       claimAmount: 0,
     },
-  });
+  })
 
   useEffect(() => {
     if (editingExpenditure) {
@@ -111,7 +124,7 @@ export const ExpendituresVoucherDrawer = () => {
         incurredDate: editingExpenditure.incurredDate || '',
         description: editingExpenditure.description || '',
         claimAmount: editingExpenditure.claimAmount || 0,
-      });
+      })
     } else {
       form.reset({
         costItemId: 0,
@@ -120,9 +133,9 @@ export const ExpendituresVoucherDrawer = () => {
         incurredDate: '',
         description: '',
         claimAmount: 0,
-      });
+      })
     }
-  }, [editingExpenditure, form]);
+  }, [editingExpenditure, form])
 
   const onSubmit = async (data: ExpendituresVoucherFormData) => {
     try {
@@ -130,20 +143,20 @@ export const ExpendituresVoucherDrawer = () => {
         await updateMutation.mutateAsync({
           id: editingExpenditure.id,
           data,
-        });
+        })
       } else {
-        await createMutation.mutateAsync(data);
+        await createMutation.mutateAsync(data)
       }
-      closeDrawer();
-      form.reset();
+      closeDrawer()
+      form.reset()
     } catch (error) {
-      console.error('Failed to save expenditure:', error);
+      console.error('Failed to save expenditure:', error)
     }
-  };
+  }
 
   return (
     <Sheet open={isDrawerOpen} onOpenChange={closeDrawer}>
-      <SheetContent className="flex flex-col sm:max-w-[500px]">
+      <SheetContent className='flex flex-col sm:max-w-[500px]'>
         <SheetHeader>
           <SheetTitle>
             {editingExpenditure ? 'Edit Expenditure' : 'Create Expenditure'}
@@ -156,47 +169,49 @@ export const ExpendituresVoucherDrawer = () => {
         </SheetHeader>
 
         <Form {...form}>
-          <form 
-            id="expenditure-form"
-            onSubmit={form.handleSubmit(onSubmit)} 
-            className="flex-1 space-y-6 overflow-y-auto px-4"
+          <form
+            id='expenditure-form'
+            onSubmit={form.handleSubmit(onSubmit)}
+            className='flex-1 space-y-6 overflow-y-auto px-4'
           >
             <FormField
               control={form.control}
-              name="costItemId"
+              name='costItemId'
               render={({ field }) => (
-                <FormItem className="flex flex-col">
+                <FormItem className='flex flex-col'>
                   <FormLabel>Cost Item *</FormLabel>
                   <Popover open={costItemOpen} onOpenChange={setCostItemOpen}>
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
-                          variant="outline"
-                          role="combobox"
+                          variant='outline'
+                          role='combobox'
                           aria-expanded={costItemOpen}
                           className={cn(
-                            "justify-between font-normal",
-                            !field.value && "text-muted-foreground"
+                            'justify-between font-normal',
+                            !field.value && 'text-muted-foreground'
                           )}
                         >
                           {field.value
-                            ? costItems.find((item: CostItem) => item.id === field.value)?.costItemFor || "Select cost item"
-                            : "Select cost item"}
-                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            ? costItems.find(
+                                (item: CostItem) => item.id === field.value
+                              )?.costItemFor || 'Select cost item'
+                            : 'Select cost item'}
+                          <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
-                    <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
+                    <PopoverContent className='w-[var(--radix-popover-trigger-width)] p-0'>
                       <Command shouldFilter={false}>
                         <CommandInput
-                          placeholder="Search cost items..."
+                          placeholder='Search cost items...'
                           value={costItemSearch}
                           onValueChange={setCostItemSearch}
                         />
                         <CommandList>
                           {costItemsLoading ? (
-                            <div className="flex items-center justify-center py-6">
-                              <Loader2 className="h-4 w-4 animate-spin" />
+                            <div className='flex items-center justify-center py-6'>
+                              <Loader2 className='h-4 w-4 animate-spin' />
                             </div>
                           ) : costItems.length === 0 ? (
                             <CommandEmpty>No cost item found.</CommandEmpty>
@@ -206,14 +221,16 @@ export const ExpendituresVoucherDrawer = () => {
                                 key={item.id}
                                 value={String(item.id)}
                                 onSelect={() => {
-                                  field.onChange(item.id);
-                                  setCostItemOpen(false);
+                                  field.onChange(item.id)
+                                  setCostItemOpen(false)
                                 }}
                               >
                                 <Check
                                   className={cn(
-                                    "mr-2 h-4 w-4",
-                                    item.id === field.value ? "opacity-100" : "opacity-0"
+                                    'mr-2 h-4 w-4',
+                                    item.id === field.value
+                                      ? 'opacity-100'
+                                      : 'opacity-0'
                                   )}
                                 />
                                 {item.costItemFor}
@@ -231,40 +248,42 @@ export const ExpendituresVoucherDrawer = () => {
 
             <FormField
               control={form.control}
-              name="voucherId"
+              name='voucherId'
               render={({ field }) => (
-                <FormItem className="flex flex-col">
+                <FormItem className='flex flex-col'>
                   <FormLabel>Voucher *</FormLabel>
                   <Popover open={voucherOpen} onOpenChange={setVoucherOpen}>
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
-                          variant="outline"
-                          role="combobox"
+                          variant='outline'
+                          role='combobox'
                           aria-expanded={voucherOpen}
                           className={cn(
-                            "justify-between font-normal",
-                            !field.value && "text-muted-foreground"
+                            'justify-between font-normal',
+                            !field.value && 'text-muted-foreground'
                           )}
                         >
                           {field.value
-                            ? vouchers.find((voucher: Voucher) => voucher.id === field.value)?.voucherNumber || "Select voucher"
-                            : "Select voucher"}
-                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            ? vouchers.find(
+                                (voucher: Voucher) => voucher.id === field.value
+                              )?.voucherNumber || 'Select voucher'
+                            : 'Select voucher'}
+                          <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
-                    <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
+                    <PopoverContent className='w-[var(--radix-popover-trigger-width)] p-0'>
                       <Command shouldFilter={false}>
                         <CommandInput
-                          placeholder="Search vouchers..."
+                          placeholder='Search vouchers...'
                           value={voucherSearch}
                           onValueChange={setVoucherSearch}
                         />
                         <CommandList>
                           {vouchersLoading ? (
-                            <div className="flex items-center justify-center py-6">
-                              <Loader2 className="h-4 w-4 animate-spin" />
+                            <div className='flex items-center justify-center py-6'>
+                              <Loader2 className='h-4 w-4 animate-spin' />
                             </div>
                           ) : vouchers.length === 0 ? (
                             <CommandEmpty>No voucher found.</CommandEmpty>
@@ -274,14 +293,16 @@ export const ExpendituresVoucherDrawer = () => {
                                 key={voucher.id}
                                 value={String(voucher.id)}
                                 onSelect={() => {
-                                  field.onChange(voucher.id);
-                                  setVoucherOpen(false);
+                                  field.onChange(voucher.id)
+                                  setVoucherOpen(false)
                                 }}
                               >
                                 <Check
                                   className={cn(
-                                    "mr-2 h-4 w-4",
-                                    voucher.id === field.value ? "opacity-100" : "opacity-0"
+                                    'mr-2 h-4 w-4',
+                                    voucher.id === field.value
+                                      ? 'opacity-100'
+                                      : 'opacity-0'
                                   )}
                                 />
                                 {voucher.voucherNumber}
@@ -299,40 +320,43 @@ export const ExpendituresVoucherDrawer = () => {
 
             <FormField
               control={form.control}
-              name="managedProjectId"
+              name='managedProjectId'
               render={({ field }) => (
-                <FormItem className="flex flex-col">
+                <FormItem className='flex flex-col'>
                   <FormLabel>Project *</FormLabel>
                   <Popover open={projectOpen} onOpenChange={setProjectOpen}>
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
-                          variant="outline"
-                          role="combobox"
+                          variant='outline'
+                          role='combobox'
                           aria-expanded={projectOpen}
                           className={cn(
-                            "justify-between font-normal",
-                            !field.value && "text-muted-foreground"
+                            'justify-between font-normal',
+                            !field.value && 'text-muted-foreground'
                           )}
                         >
                           {field.value
-                            ? projects.find((proj: ManagedProject) => proj.id === field.value)?.projectName || "Select project"
-                            : "Select project"}
-                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            ? projects.find(
+                                (proj: ManagedProject) =>
+                                  proj.id === field.value
+                              )?.projectName || 'Select project'
+                            : 'Select project'}
+                          <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
-                    <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
+                    <PopoverContent className='w-[var(--radix-popover-trigger-width)] p-0'>
                       <Command shouldFilter={false}>
                         <CommandInput
-                          placeholder="Search projects..."
+                          placeholder='Search projects...'
                           value={projectSearch}
                           onValueChange={setProjectSearch}
                         />
                         <CommandList>
                           {projectsLoading ? (
-                            <div className="flex items-center justify-center py-6">
-                              <Loader2 className="h-4 w-4 animate-spin" />
+                            <div className='flex items-center justify-center py-6'>
+                              <Loader2 className='h-4 w-4 animate-spin' />
                             </div>
                           ) : projects.length === 0 ? (
                             <CommandEmpty>No project found.</CommandEmpty>
@@ -342,14 +366,16 @@ export const ExpendituresVoucherDrawer = () => {
                                 key={proj.id}
                                 value={String(proj.id)}
                                 onSelect={() => {
-                                  field.onChange(proj.id);
-                                  setProjectOpen(false);
+                                  field.onChange(proj.id)
+                                  setProjectOpen(false)
                                 }}
                               >
                                 <Check
                                   className={cn(
-                                    "mr-2 h-4 w-4",
-                                    proj.id === field.value ? "opacity-100" : "opacity-0"
+                                    'mr-2 h-4 w-4',
+                                    proj.id === field.value
+                                      ? 'opacity-100'
+                                      : 'opacity-0'
                                   )}
                                 />
                                 {proj.projectName}
@@ -367,18 +393,18 @@ export const ExpendituresVoucherDrawer = () => {
 
             <FormField
               control={form.control}
-              name="incurredDate"
+              name='incurredDate'
               render={({ field }) => (
-                <FormItem className="flex flex-col">
+                <FormItem className='flex flex-col'>
                   <FormLabel>Incurred Date *</FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
-                          variant="outline"
+                          variant='outline'
                           className={cn(
-                            "justify-start text-left font-normal",
-                            !field.value && "text-muted-foreground"
+                            'justify-start text-left font-normal',
+                            !field.value && 'text-muted-foreground'
                           )}
                         >
                           {field.value ? (
@@ -389,12 +415,14 @@ export const ExpendituresVoucherDrawer = () => {
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
+                    <PopoverContent className='w-auto p-0' align='start'>
                       <Calendar
-                        mode="single"
-                        selected={field.value ? new Date(field.value) : undefined}
+                        mode='single'
+                        selected={
+                          field.value ? new Date(field.value) : undefined
+                        }
                         onSelect={(date) => {
-                          field.onChange(date ? format(date, 'yyyy-MM-dd') : '');
+                          field.onChange(date ? format(date, 'yyyy-MM-dd') : '')
                         }}
                         disabled={(date) =>
                           date > new Date() || date < new Date('1900-01-01')
@@ -410,17 +438,19 @@ export const ExpendituresVoucherDrawer = () => {
 
             <FormField
               control={form.control}
-              name="claimAmount"
+              name='claimAmount'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Claim Amount *</FormLabel>
                   <FormControl>
                     <Input
-                      type="number"
-                      step="0.01"
-                      placeholder="Enter amount"
+                      type='number'
+                      step='0.01'
+                      placeholder='Enter amount'
                       {...field}
-                      onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                      onChange={(e) =>
+                        field.onChange(parseFloat(e.target.value) || 0)
+                      }
                     />
                   </FormControl>
                   <FormMessage />
@@ -430,13 +460,13 @@ export const ExpendituresVoucherDrawer = () => {
 
             <FormField
               control={form.control}
-              name="description"
+              name='description'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Description</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Enter description (optional)"
+                      placeholder='Enter description (optional)'
                       {...field}
                       maxLength={1000}
                       rows={4}
@@ -449,27 +479,27 @@ export const ExpendituresVoucherDrawer = () => {
           </form>
         </Form>
 
-        <SheetFooter className="flex-shrink-0 gap-2 px-4 sm:space-x-0">
+        <SheetFooter className='flex-shrink-0 gap-2 px-4 sm:space-x-0'>
           <Button
-            type="button"
-            variant="outline"
+            type='button'
+            variant='outline'
             onClick={closeDrawer}
             disabled={createMutation.isPending || updateMutation.isPending}
           >
             Cancel
           </Button>
           <Button
-            type="submit"
-            form="expenditure-form"
+            type='submit'
+            form='expenditure-form'
             disabled={createMutation.isPending || updateMutation.isPending}
           >
             {(createMutation.isPending || updateMutation.isPending) && (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              <Loader2 className='mr-2 h-4 w-4 animate-spin' />
             )}
             {editingExpenditure ? 'Update' : 'Create'}
           </Button>
         </SheetFooter>
       </SheetContent>
     </Sheet>
-  );
-};
+  )
+}

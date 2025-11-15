@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -11,9 +12,7 @@ import {
   getFilteredRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table";
-import { useQuery } from "@tanstack/react-query";
-
+} from '@tanstack/react-table'
 import {
   Table,
   TableBody,
@@ -21,72 +20,72 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-
-import { DataTablePagination, DataTableToolbar } from "@/components/data-table";
-import { siteCategoryApi } from "../api/site-category-api";
-import { SiteCategoryRowActions } from "./site-category-row-actions";
-import { useSiteCategoryContext } from "../context/site-category-provider";
+} from '@/components/ui/table'
+import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
+import { siteCategoryApi } from '../api/site-category-api'
+import { useSiteCategoryContext } from '../context/site-category-provider'
+import { SiteCategoryRowActions } from './site-category-row-actions'
 
 interface SiteCategoryTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
+  columns: ColumnDef<TData, TValue>[]
 }
 
 export function SiteCategoryTable<TData, TValue>({
   columns,
 }: SiteCategoryTableProps<TData, TValue>) {
-  const { globalFilter, setGlobalFilter } = useSiteCategoryContext();
-  const [rowSelection, setRowSelection] = useState({});
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const { globalFilter, setGlobalFilter } = useSiteCategoryContext()
+  const [rowSelection, setRowSelection] = useState({})
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [sorting, setSorting] = useState<SortingState>([])
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,
-  });
+  })
 
   const { data, isLoading } = useQuery({
     queryKey: [
-      "site-categories",
+      'site-categories',
       pagination.pageIndex,
       pagination.pageSize,
       globalFilter,
       sorting,
     ],
     queryFn: async () => {
-      const sortBy = sorting.length > 0 ? sorting[0].id : "id";
+      const sortBy = sorting.length > 0 ? sorting[0].id : 'id'
       const sortDirection =
-        sorting.length > 0 && sorting[0].desc ? "DESC" : "ASC";
+        sorting.length > 0 && sorting[0].desc ? 'DESC' : 'ASC'
 
       return await siteCategoryApi.getAll({
         page: pagination.pageIndex,
         size: pagination.pageSize,
         sortBy,
         sortDirection,
-        searchTerm: globalFilter && globalFilter.trim() !== "" ? globalFilter : undefined,
-      });
+        searchTerm:
+          globalFilter && globalFilter.trim() !== '' ? globalFilter : undefined,
+      })
     },
-  });
+  })
 
-  const siteCategories = (data?.content || []) as TData[];
-  const totalPages = data?.totalPages || 0;
+  const siteCategories = (data?.content || []) as TData[]
+  const totalPages = data?.totalPages || 0
 
   // Reset to first page when search query changes
   useEffect(() => {
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
-  }, [globalFilter]);
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }))
+  }, [globalFilter])
 
   // Add actions column
   const columnsWithActions = React.useMemo(
     () => [
       ...columns,
       {
-        id: "actions",
+        id: 'actions',
         cell: ({ row }: { row: any }) => <SiteCategoryRowActions row={row} />,
       },
     ],
     [columns]
-  );
+  )
 
   const table = useReactTable({
     data: siteCategories,
@@ -114,12 +113,12 @@ export function SiteCategoryTable<TData, TValue>({
     getFacetedUniqueValues: getFacetedUniqueValues(),
     manualPagination: true,
     manualSorting: true,
-  });
+  })
 
   return (
-    <div className="space-y-4">
+    <div className='space-y-4'>
       <DataTableToolbar table={table} />
-      <div className="rounded-md border">
+      <div className='rounded-md border'>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -134,7 +133,7 @@ export function SiteCategoryTable<TData, TValue>({
                             header.getContext()
                           )}
                     </TableHead>
-                  );
+                  )
                 })}
               </TableRow>
             ))}
@@ -144,7 +143,7 @@ export function SiteCategoryTable<TData, TValue>({
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="h-24 text-center"
+                  className='h-24 text-center'
                 >
                   Loading...
                 </TableCell>
@@ -153,7 +152,7 @@ export function SiteCategoryTable<TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
+                  data-state={row.getIsSelected() && 'selected'}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -169,7 +168,7 @@ export function SiteCategoryTable<TData, TValue>({
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="h-24 text-center"
+                  className='h-24 text-center'
                 >
                   No results.
                 </TableCell>
@@ -180,5 +179,5 @@ export function SiteCategoryTable<TData, TValue>({
       </div>
       <DataTablePagination table={table} />
     </div>
-  );
+  )
 }

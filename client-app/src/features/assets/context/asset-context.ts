@@ -24,4 +24,6 @@ export interface AssetContextType {
   setIsPlacementBulkUploadDialogOpen: (open: boolean) => void
 }
 
-export const AssetContext = createContext<AssetContextType | undefined>(undefined)
+export const AssetContext = createContext<AssetContextType | undefined>(
+  undefined
+)

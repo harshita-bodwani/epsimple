@@ -1,13 +1,13 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
-import { ConfirmDialog } from "@/components/confirm-dialog";
-import { PaymentMethodsMutateDrawer } from "./payment-methods-mutate-drawer";
-import { usePaymentMethods } from "../context/payment-methods-provider";
-import { paymentMethodsApi } from "../api/payment-methods-api";
-import { GenericBulkUploadDialog } from "@/components/bulk-upload/GenericBulkUploadDialog";
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { toast } from 'sonner'
+import { GenericBulkUploadDialog } from '@/components/bulk-upload/GenericBulkUploadDialog'
+import { ConfirmDialog } from '@/components/confirm-dialog'
+import { paymentMethodsApi } from '../api/payment-methods-api'
+import { usePaymentMethods } from '../context/payment-methods-provider'
+import { PaymentMethodsMutateDrawer } from './payment-methods-mutate-drawer'
 
 export function PaymentMethodsDialogs() {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
   const {
     selectedPaymentMethod,
     setSelectedPaymentMethod,
@@ -17,28 +17,28 @@ export function PaymentMethodsDialogs() {
     setIsDeleteDialogOpen,
     isBulkUploadDialogOpen,
     closeBulkUploadDialog,
-  } = usePaymentMethods();
+  } = usePaymentMethods()
 
   const deleteMutation = useMutation({
     mutationFn: paymentMethodsApi.delete,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["payment-methods"] });
-      toast.success("Payment method deleted successfully");
-      setIsDeleteDialogOpen(false);
-      setSelectedPaymentMethod(null);
+      queryClient.invalidateQueries({ queryKey: ['payment-methods'] })
+      toast.success('Payment method deleted successfully')
+      setIsDeleteDialogOpen(false)
+      setSelectedPaymentMethod(null)
     },
-  });
+  })
 
   const handleDelete = () => {
     if (selectedPaymentMethod) {
-      deleteMutation.mutate(selectedPaymentMethod.id);
+      deleteMutation.mutate(selectedPaymentMethod.id)
     }
-  };
+  }
 
   const handleBulkUploadSuccess = () => {
-    queryClient.invalidateQueries({ queryKey: ["payment-methods"] });
-    toast.success("Payment methods imported successfully");
-  };
+    queryClient.invalidateQueries({ queryKey: ['payment-methods'] })
+    toast.success('Payment methods imported successfully')
+  }
 
   return (
     <>
@@ -50,7 +50,7 @@ export function PaymentMethodsDialogs() {
       <ConfirmDialog
         open={isDeleteDialogOpen}
         onOpenChange={setIsDeleteDialogOpen}
-        title="Delete Payment Method"
+        title='Delete Payment Method'
         desc={`Are you sure you want to delete the payment method "${selectedPaymentMethod?.methodName}"? This action cannot be undone.`}
         handleConfirm={handleDelete}
         isLoading={deleteMutation.isPending}
@@ -60,12 +60,12 @@ export function PaymentMethodsDialogs() {
         open={isBulkUploadDialogOpen}
         onOpenChange={closeBulkUploadDialog}
         config={{
-          entityName: "PaymentMethod",
-          uploadEndpoint: "/api/payment-methods/bulk-upload",
-          errorReportEndpoint: "/api/payment-methods/export-errors",
+          entityName: 'PaymentMethod',
+          uploadEndpoint: '/api/payment-methods/bulk-upload',
+          errorReportEndpoint: '/api/payment-methods/export-errors',
           onSuccess: handleBulkUploadSuccess,
         }}
       />
     </>
-  );
+  )
 }

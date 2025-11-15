@@ -1,43 +1,43 @@
-import { Header } from "@/components/layout/header";
-import { Main } from "@/components/layout/main";
-import { ProfileDropdown } from "@/components/profile-dropdown";
-import { Search } from "@/components/search";
-import { ThemeSwitch } from "@/components/theme-switch";
-import { ConfigDrawer } from "@/components/config-drawer";
-import { PaymentDetailsProvider } from "./context/payment-details-provider";
-import { PaymentDetailsTable } from "./components/payment-details-table";
-import { paymentDetailsColumns } from "./components/payment-details-columns";
-import { PaymentDetailsDialogs } from "./components/payment-details-dialogs";
-import { PaymentDetailsPrimaryButtons } from "./components/payment-details-primary-buttons";
+import { ConfigDrawer } from '@/components/config-drawer'
+import { Header } from '@/components/layout/header'
+import { Main } from '@/components/layout/main'
+import { ProfileDropdown } from '@/components/profile-dropdown'
+import { Search } from '@/components/search'
+import { ThemeSwitch } from '@/components/theme-switch'
+import { paymentDetailsColumns } from './components/payment-details-columns'
+import { PaymentDetailsDialogs } from './components/payment-details-dialogs'
+import { PaymentDetailsPrimaryButtons } from './components/payment-details-primary-buttons'
+import { PaymentDetailsTable } from './components/payment-details-table'
+import { PaymentDetailsProvider } from './context/payment-details-provider'
 
 export default function PaymentDetails() {
   return (
     <PaymentDetailsProvider>
       <Header fixed>
         <Search />
-        <div className="ml-auto flex items-center space-x-4">
+        <div className='ml-auto flex items-center space-x-4'>
           <ThemeSwitch />
           <ConfigDrawer />
           <ProfileDropdown />
         </div>
       </Header>
       <Main fixed>
-        <div className="mb-2 flex items-center justify-between space-y-2">
+        <div className='mb-2 flex items-center justify-between space-y-2'>
           <div>
-            <h2 className="text-2xl font-bold tracking-tight">
+            <h2 className='text-2xl font-bold tracking-tight'>
               Payment Details
             </h2>
-            <p className="text-muted-foreground">
+            <p className='text-muted-foreground'>
               Manage payment transaction records
             </p>
           </div>
           <PaymentDetailsPrimaryButtons />
         </div>
-        <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
+        <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
           <PaymentDetailsTable columns={paymentDetailsColumns} />
         </div>
       </Main>
       <PaymentDetailsDialogs />
     </PaymentDetailsProvider>
-  );
+  )
 }

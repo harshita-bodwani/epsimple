@@ -1,92 +1,107 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Download, FileUp, Plus, ChevronDown, Loader2, FileSpreadsheet } from "lucide-react";
-import { useSite } from "../hooks/use-site";
-import { toast } from "sonner";
-import { downloadFile } from "@/lib/api-utils";
-import { useExport } from "@/hooks/useExport";
+import { useState } from 'react'
+import {
+  Download,
+  FileUp,
+  Plus,
+  ChevronDown,
+  Loader2,
+  FileSpreadsheet,
+} from 'lucide-react'
+import { toast } from 'sonner'
+import { downloadFile } from '@/lib/api-utils'
+import { useExport } from '@/hooks/useExport'
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from '@/components/ui/dropdown-menu'
+import { useSite } from '../hooks/use-site'
 
 export function SitePrimaryButtons() {
-  const { setIsDrawerOpen, setEditingSite, setIsBulkUploadDialogOpen } = useSite();
-  const [isDownloadingTemplate, setIsDownloadingTemplate] = useState(false);
-  
+  const { setIsDrawerOpen, setEditingSite, setIsBulkUploadDialogOpen } =
+    useSite()
+  const [isDownloadingTemplate, setIsDownloadingTemplate] = useState(false)
+
   const { isExporting, handleExport } = useExport({
     entityName: 'Site',
     exportEndpoint: '/api/sites/export',
-  });
+  })
 
   const handleDownloadTemplate = async () => {
-    setIsDownloadingTemplate(true);
+    setIsDownloadingTemplate(true)
     try {
-      await downloadFile('/api/sites/bulk-upload/template', 'Site_Upload_Template.xlsx');
-      toast.success("Template downloaded successfully");
+      await downloadFile(
+        '/api/sites/bulk-upload/template',
+        'Site_Upload_Template.xlsx'
+      )
+      toast.success('Template downloaded successfully')
     } catch (error) {
-      toast.error("Failed to download template", {
-        description: error instanceof Error ? error.message : 'An error occurred',
-      });
+      toast.error('Failed to download template', {
+        description:
+          error instanceof Error ? error.message : 'An error occurred',
+      })
     } finally {
-      setIsDownloadingTemplate(false);
+      setIsDownloadingTemplate(false)
     }
-  };
+  }
 
   const handleCreate = () => {
-    setEditingSite(null);
-    setIsDrawerOpen(true);
-  };
+    setEditingSite(null)
+    setIsDrawerOpen(true)
+  }
 
   return (
-    <div className="flex items-center gap-2">
+    <div className='flex items-center gap-2'>
       {/* Bulk Actions Dropdown */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
-            variant="outline"
-            size="sm"
-            className="h-9 px-3 text-sm font-medium"
+            variant='outline'
+            size='sm'
+            className='h-9 px-3 text-sm font-medium'
             disabled={isDownloadingTemplate || isExporting}
           >
-            <FileUp className="h-4 w-4 mr-2" />
+            <FileUp className='mr-2 h-4 w-4' />
             Bulk Actions
-            <ChevronDown className="h-4 w-4 ml-2" />
+            <ChevronDown className='ml-2 h-4 w-4' />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="start" className="w-64">
-          <DropdownMenuItem 
-            onClick={handleDownloadTemplate} 
-            className="cursor-pointer"
+        <DropdownMenuContent align='start' className='w-64'>
+          <DropdownMenuItem
+            onClick={handleDownloadTemplate}
+            className='cursor-pointer'
             disabled={isDownloadingTemplate}
           >
             {isDownloadingTemplate ? (
-              <Loader2 className="h-4 w-4 mr-2 animate-spin text-blue-600" />
+              <Loader2 className='mr-2 h-4 w-4 animate-spin text-blue-600' />
             ) : (
-              <Download className="h-4 w-4 mr-2 text-blue-600" />
+              <Download className='mr-2 h-4 w-4 text-blue-600' />
             )}
             <span>Download Template</span>
           </DropdownMenuItem>
-          
-          <DropdownMenuItem onClick={() => setIsBulkUploadDialogOpen(true)} className="cursor-pointer">
-            <FileUp className="h-4 w-4 mr-2 text-orange-600" />
+
+          <DropdownMenuItem
+            onClick={() => setIsBulkUploadDialogOpen(true)}
+            className='cursor-pointer'
+          >
+            <FileUp className='mr-2 h-4 w-4 text-orange-600' />
             <span>Bulk Upload</span>
           </DropdownMenuItem>
-          
+
           <DropdownMenuSeparator />
-          
-          <DropdownMenuItem 
-            onClick={handleExport} 
-            className="cursor-pointer"
+
+          <DropdownMenuItem
+            onClick={handleExport}
+            className='cursor-pointer'
             disabled={isExporting}
           >
             {isExporting ? (
-              <Loader2 className="h-4 w-4 mr-2 animate-spin text-purple-600" />
+              <Loader2 className='mr-2 h-4 w-4 animate-spin text-purple-600' />
             ) : (
-              <FileSpreadsheet className="h-4 w-4 mr-2 text-purple-600" />
+              <FileSpreadsheet className='mr-2 h-4 w-4 text-purple-600' />
             )}
             <span>Export All Data</span>
           </DropdownMenuItem>
@@ -94,14 +109,14 @@ export function SitePrimaryButtons() {
       </DropdownMenu>
 
       {/* Primary Action */}
-      <Button 
+      <Button
         onClick={handleCreate}
-        size="sm"
-        className="h-9 px-4 text-sm font-medium"
+        size='sm'
+        className='h-9 px-4 text-sm font-medium'
       >
-        <Plus className="h-4 w-4 mr-2" />
+        <Plus className='mr-2 h-4 w-4' />
         Add Site
       </Button>
     </div>
-  );
+  )
 }

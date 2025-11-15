@@ -51,7 +51,7 @@ export function UserAuthForm({
   async function onSubmit(data: z.infer<typeof formSchema>) {
     try {
       clearError() // Clear any previous errors
-      
+
       await login(data.email, data.password)
 
       // Get the updated user state after login
@@ -60,15 +60,17 @@ export function UserAuthForm({
       // If login is successful, navigate to target path (dashboard by default)
       // Decode the redirect URL if it exists
       const targetPath = redirectTo ? decodeURIComponent(redirectTo) : '/'
-      
+
       navigate({ to: targetPath, replace: true })
-      
+
       // Use the actual user data from the response for the toast
       toast.success(`Welcome back, ${user?.name || user?.email || 'User'}!`)
     } catch (error: any) {
       console.error('Login error:', error)
       // Error is already set in the store, just show toast
-      toast.error(error.response?.data?.message || error.message || 'Login failed')
+      toast.error(
+        error.response?.data?.message || error.message || 'Login failed'
+      )
     }
   }
 

@@ -1,6 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
-import { type BackendPageResponse, type FlatPageResponse, flattenPageResponse } from '@/lib/api-utils'
 import api from '@/lib/api'
+import {
+  type BackendPageResponse,
+  type FlatPageResponse,
+  flattenPageResponse,
+} from '@/lib/api-utils'
 
 export interface PersonType {
   id: number
@@ -42,10 +46,11 @@ export const personTypesApi = {
     if (!response.ok) {
       throw new Error('Failed to fetch person types')
     }
-    const json: ApiResponse<BackendPageResponse<PersonType>> = await response.json()
+    const json: ApiResponse<BackendPageResponse<PersonType>> =
+      await response.json()
     return {
       ...json,
-      data: flattenPageResponse(json.data)
+      data: flattenPageResponse(json.data),
     }
   },
 
@@ -71,10 +76,11 @@ export const personTypesApi = {
     if (!response.ok) {
       throw new Error('Failed to search person types')
     }
-    const json: ApiResponse<BackendPageResponse<PersonType>> = await response.json()
+    const json: ApiResponse<BackendPageResponse<PersonType>> =
+      await response.json()
     return {
       ...json,
-      data: flattenPageResponse(json.data)
+      data: flattenPageResponse(json.data),
     }
   },
 
@@ -97,7 +103,9 @@ export const personTypesApi = {
   },
 
   // Create person type
-  create: async (data: PersonTypeFormData): Promise<ApiResponse<PersonType>> => {
+  create: async (
+    data: PersonTypeFormData
+  ): Promise<ApiResponse<PersonType>> => {
     const response = await fetch(BASE_URL, {
       method: 'POST',
       headers: {
@@ -145,7 +153,7 @@ export const personTypesApi = {
 
   // Search person types using TanStack Query
   useSearch: (searchTerm: string) => {
-    const endpoint = searchTerm?.trim() ? `${BASE_URL}/search` : BASE_URL;
+    const endpoint = searchTerm?.trim() ? `${BASE_URL}/search` : BASE_URL
     return useQuery({
       queryKey: ['person-types', 'search', searchTerm],
       queryFn: async () => {
@@ -154,14 +162,16 @@ export const personTypesApi = {
           size: 20,
           sortBy: 'typeName',
           sortDirection: 'ASC',
-        };
-        if (searchTerm?.trim()) {
-          params.searchTerm = searchTerm.trim();
         }
-        const response = await api.get<ApiResponse<BackendPageResponse<PersonType>>>(endpoint, { params });
-        return flattenPageResponse(response.data.data).content;
+        if (searchTerm?.trim()) {
+          params.searchTerm = searchTerm.trim()
+        }
+        const response = await api.get<
+          ApiResponse<BackendPageResponse<PersonType>>
+        >(endpoint, { params })
+        return flattenPageResponse(response.data.data).content
       },
       staleTime: 30000,
-    });
+    })
   },
 }

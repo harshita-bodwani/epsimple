@@ -1,55 +1,57 @@
-import { type Row } from '@tanstack/react-table';
-import { MoreHorizontal, Pencil, Trash } from 'lucide-react';
-
-import { Button } from '@/components/ui/button';
+import { type Row } from '@tanstack/react-table'
+import { MoreHorizontal, Pencil, Trash } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-
-import { useAssetTypes } from '../context/asset-types-provider';
-import type { AssetType } from '../api/schema';
+} from '@/components/ui/dropdown-menu'
+import type { AssetType } from '../api/schema'
+import { useAssetTypes } from '../context/asset-types-provider'
 
 interface DataTableRowActionsProps {
-  row: Row<AssetType>;
+  row: Row<AssetType>
 }
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
-  const assetType = row.original;
-  const { setSelectedAssetType, setIsDrawerOpen, setIsDeleteDialogOpen } = useAssetTypes();
+  const assetType = row.original
+  const { setSelectedAssetType, setIsDrawerOpen, setIsDeleteDialogOpen } =
+    useAssetTypes()
 
   const handleEdit = () => {
-    setSelectedAssetType(assetType);
-    setIsDrawerOpen(true);
-  };
+    setSelectedAssetType(assetType)
+    setIsDrawerOpen(true)
+  }
 
   const handleDelete = () => {
-    setSelectedAssetType(assetType);
-    setIsDeleteDialogOpen(true);
-  };
+    setSelectedAssetType(assetType)
+    setIsDeleteDialogOpen(true)
+  }
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="flex h-8 w-8 p-0 data-[state=open]:bg-muted">
-          <MoreHorizontal className="h-4 w-4" />
-          <span className="sr-only">Open menu</span>
+        <Button
+          variant='ghost'
+          className='data-[state=open]:bg-muted flex h-8 w-8 p-0'
+        >
+          <MoreHorizontal className='h-4 w-4' />
+          <span className='sr-only'>Open menu</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[160px]">
+      <DropdownMenuContent align='end' className='w-[160px]'>
         <DropdownMenuItem onClick={handleEdit}>
-          <Pencil className="mr-2 h-4 w-4" />
+          <Pencil className='mr-2 h-4 w-4' />
           Edit
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleDelete} className="text-destructive">
-          <Trash className="mr-2 h-4 w-4" />
+        <DropdownMenuItem onClick={handleDelete} className='text-destructive'>
+          <Trash className='mr-2 h-4 w-4' />
           Delete
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  );
+  )
 }

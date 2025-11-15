@@ -1,9 +1,16 @@
-import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Check, ChevronsUpDown, Loader2 } from 'lucide-react';
-
-import { Button } from '@/components/ui/button';
+import { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Check, ChevronsUpDown, Loader2 } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
+import {
+  Command,
+  CommandInput,
+  CommandList,
+  CommandEmpty,
+  CommandItem,
+} from '@/components/ui/command'
 import {
   Form,
   FormControl,
@@ -11,11 +18,13 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Command, CommandInput, CommandList, CommandEmpty, CommandItem } from "@/components/ui/command";
-import { cn } from "@/lib/utils";
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 import {
   Sheet,
   SheetContent,
@@ -23,28 +32,25 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle,
-} from '@/components/ui/sheet';
-import { usePayeeDetails } from '../context/payee-details-provider';
+} from '@/components/ui/sheet'
+import { useSearchBanks, type Bank } from '@/features/banks/api/banks-api'
 import {
   useCreatePayeeDetails,
   useUpdatePayeeDetails,
-} from '../api/payee-details-api';
-import {
-  payeeDetailsSchema,
-  type PayeeDetailsFormData,
-} from '../api/schema';
-import { useSearchBanks, type Bank } from '@/features/banks/api/banks-api';
+} from '../api/payee-details-api'
+import { payeeDetailsSchema, type PayeeDetailsFormData } from '../api/schema'
+import { usePayeeDetails } from '../context/payee-details-provider'
 
 export function PayeeDetailsDrawer() {
-  const { isDrawerOpen, selectedPayeeDetails, closeDrawer } =
-    usePayeeDetails();
-  const [bankSearch, setBankSearch] = useState("");
-  const [bankOpen, setBankOpen] = useState(false);
+  const { isDrawerOpen, selectedPayeeDetails, closeDrawer } = usePayeeDetails()
+  const [bankSearch, setBankSearch] = useState('')
+  const [bankOpen, setBankOpen] = useState(false)
 
-  const createMutation = useCreatePayeeDetails();
-  const updateMutation = useUpdatePayeeDetails();
+  const createMutation = useCreatePayeeDetails()
+  const updateMutation = useUpdatePayeeDetails()
 
-  const { data: banks = [], isLoading: isLoadingBanks } = useSearchBanks(bankSearch);
+  const { data: banks = [], isLoading: isLoadingBanks } =
+    useSearchBanks(bankSearch)
 
   const form = useForm<PayeeDetailsFormData>({
     resolver: zodResolver(payeeDetailsSchema),
@@ -57,7 +63,7 @@ export function PayeeDetailsDrawer() {
       beneficiaryName: '',
       accountNumber: '',
     },
-  });
+  })
 
   useEffect(() => {
     if (selectedPayeeDetails) {
@@ -69,7 +75,7 @@ export function PayeeDetailsDrawer() {
         ifscCode: selectedPayeeDetails.ifscCode || '',
         beneficiaryName: selectedPayeeDetails.beneficiaryName || '',
         accountNumber: selectedPayeeDetails.accountNumber || '',
-      });
+      })
     } else {
       form.reset({
         payeeName: '',
@@ -79,9 +85,9 @@ export function PayeeDetailsDrawer() {
         ifscCode: '',
         beneficiaryName: '',
         accountNumber: '',
-      });
+      })
     }
-  }, [selectedPayeeDetails, form]);
+  }, [selectedPayeeDetails, form])
 
   const onSubmit = async (data: PayeeDetailsFormData) => {
     // Convert empty strings to undefined for optional fields
@@ -93,7 +99,7 @@ export function PayeeDetailsDrawer() {
       ifscCode: data.ifscCode || undefined,
       beneficiaryName: data.beneficiaryName || undefined,
       accountNumber: data.accountNumber || undefined,
-    };
+    }
 
     if (selectedPayeeDetails) {
       updateMutation.mutate(
@@ -103,41 +109,41 @@ export function PayeeDetailsDrawer() {
         },
         {
           onSuccess: () => {
-            closeDrawer();
-            form.reset();
+            closeDrawer()
+            form.reset()
           },
         }
-      );
+      )
     } else {
       createMutation.mutate(payload, {
         onSuccess: () => {
-          closeDrawer();
-          form.reset();
+          closeDrawer()
+          form.reset()
         },
-      });
+      })
     }
-  };
+  }
 
   const handlePANChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     field: any
   ) => {
-    const value = e.target.value.toUpperCase();
-    field.onChange(value);
-  };
+    const value = e.target.value.toUpperCase()
+    field.onChange(value)
+  }
 
   const handleIFSCChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     field: any
   ) => {
-    const value = e.target.value.toUpperCase();
-    field.onChange(value);
-  };
+    const value = e.target.value.toUpperCase()
+    field.onChange(value)
+  }
 
   return (
     <Sheet open={isDrawerOpen} onOpenChange={closeDrawer}>
-      <SheetContent className="flex flex-col">
-        <SheetHeader className="text-start">
+      <SheetContent className='flex flex-col'>
+        <SheetHeader className='text-start'>
           <SheetTitle>
             {selectedPayeeDetails ? 'Update' : 'Create'} Payee Details
           </SheetTitle>
@@ -151,19 +157,19 @@ export function PayeeDetailsDrawer() {
 
         <Form {...form}>
           <form
-            id="payee-details-form"
+            id='payee-details-form'
             onSubmit={form.handleSubmit(onSubmit)}
-            className="flex-1 space-y-6 overflow-y-auto px-4"
+            className='flex-1 space-y-6 overflow-y-auto px-4'
           >
             {/* Payee Name */}
             <FormField
               control={form.control}
-              name="payeeName"
+              name='payeeName'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Payee Name *</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter payee name" {...field} />
+                    <Input placeholder='Enter payee name' {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -171,18 +177,18 @@ export function PayeeDetailsDrawer() {
             />
 
             {/* PAN and Aadhaar */}
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
               <FormField
                 control={form.control}
-                name="panNumber"
+                name='panNumber'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>PAN Number</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="ABCDE1234F"
+                        placeholder='ABCDE1234F'
                         maxLength={10}
-                        className="font-mono uppercase"
+                        className='font-mono uppercase'
                         {...field}
                         onChange={(e) => handlePANChange(e, field)}
                       />
@@ -194,15 +200,15 @@ export function PayeeDetailsDrawer() {
 
               <FormField
                 control={form.control}
-                name="aadhaarNumber"
+                name='aadhaarNumber'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Aadhaar Number</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="123456789012"
+                        placeholder='123456789012'
                         maxLength={12}
-                        className="font-mono"
+                        className='font-mono'
                         {...field}
                       />
                     </FormControl>
@@ -215,7 +221,7 @@ export function PayeeDetailsDrawer() {
             {/* Bank */}
             <FormField
               control={form.control}
-              name="bankId"
+              name='bankId'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Bank</FormLabel>
@@ -223,36 +229,37 @@ export function PayeeDetailsDrawer() {
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
-                          variant="outline"
-                          role="combobox"
+                          variant='outline'
+                          role='combobox'
                           aria-expanded={bankOpen}
                           className={cn(
-                            "w-full justify-between",
-                            !field.value && "text-muted-foreground"
+                            'w-full justify-between',
+                            !field.value && 'text-muted-foreground'
                           )}
                         >
                           {field.value
-                            ? banks.find((b: Bank) => b.id === field.value)?.bankName || "Select bank"
-                            : "Select a bank"}
-                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            ? banks.find((b: Bank) => b.id === field.value)
+                                ?.bankName || 'Select bank'
+                            : 'Select a bank'}
+                          <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
-                    <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
+                    <PopoverContent className='w-[var(--radix-popover-trigger-width)] p-0'>
                       <Command shouldFilter={false}>
                         <CommandInput
-                          placeholder="Search banks..."
+                          placeholder='Search banks...'
                           value={bankSearch}
                           onValueChange={setBankSearch}
                         />
                         <CommandList>
                           <CommandEmpty>
                             {isLoadingBanks ? (
-                              <div className="flex items-center justify-center py-6">
-                                <Loader2 className="h-4 w-4 animate-spin" />
+                              <div className='flex items-center justify-center py-6'>
+                                <Loader2 className='h-4 w-4 animate-spin' />
                               </div>
                             ) : (
-                              "No bank found."
+                              'No bank found.'
                             )}
                           </CommandEmpty>
                           {banks.map((bank: Bank) => (
@@ -260,15 +267,17 @@ export function PayeeDetailsDrawer() {
                               key={bank.id}
                               value={String(bank.id)}
                               onSelect={() => {
-                                field.onChange(bank.id);
-                                setBankOpen(false);
-                                setBankSearch("");
+                                field.onChange(bank.id)
+                                setBankOpen(false)
+                                setBankSearch('')
                               }}
                             >
                               <Check
                                 className={cn(
-                                  "mr-2 h-4 w-4",
-                                  field.value === bank.id ? "opacity-100" : "opacity-0"
+                                  'mr-2 h-4 w-4',
+                                  field.value === bank.id
+                                    ? 'opacity-100'
+                                    : 'opacity-0'
                                 )}
                               />
                               {bank.bankName}
@@ -284,18 +293,18 @@ export function PayeeDetailsDrawer() {
             />
 
             {/* IFSC Code and Beneficiary Name */}
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
               <FormField
                 control={form.control}
-                name="ifscCode"
+                name='ifscCode'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>IFSC Code</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="SBIN0001234"
+                        placeholder='SBIN0001234'
                         maxLength={11}
-                        className="font-mono uppercase"
+                        className='font-mono uppercase'
                         {...field}
                         onChange={(e) => handleIFSCChange(e, field)}
                       />
@@ -307,12 +316,12 @@ export function PayeeDetailsDrawer() {
 
               <FormField
                 control={form.control}
-                name="beneficiaryName"
+                name='beneficiaryName'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Beneficiary Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter beneficiary name" {...field} />
+                      <Input placeholder='Enter beneficiary name' {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -323,15 +332,15 @@ export function PayeeDetailsDrawer() {
             {/* Account Number */}
             <FormField
               control={form.control}
-              name="accountNumber"
+              name='accountNumber'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Account Number</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Enter account number (9-18 digits)"
+                      placeholder='Enter account number (9-18 digits)'
                       maxLength={18}
-                      className="font-mono"
+                      className='font-mono'
                       {...field}
                     />
                   </FormControl>
@@ -342,26 +351,26 @@ export function PayeeDetailsDrawer() {
           </form>
         </Form>
 
-        <SheetFooter className="flex-shrink-0 gap-2 px-4 sm:space-x-0">
+        <SheetFooter className='flex-shrink-0 gap-2 px-4 sm:space-x-0'>
           <Button
-            variant="outline"
+            variant='outline'
             onClick={closeDrawer}
             disabled={createMutation.isPending || updateMutation.isPending}
           >
             Cancel
           </Button>
           <Button
-            type="submit"
-            form="payee-details-form"
+            type='submit'
+            form='payee-details-form'
             disabled={createMutation.isPending || updateMutation.isPending}
           >
             {(createMutation.isPending || updateMutation.isPending) && (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              <Loader2 className='mr-2 h-4 w-4 animate-spin' />
             )}
             {selectedPayeeDetails ? 'Update' : 'Save'}
           </Button>
         </SheetFooter>
       </SheetContent>
     </Sheet>
-  );
+  )
 }

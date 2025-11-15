@@ -1,57 +1,57 @@
-import { type ColumnDef } from "@tanstack/react-table";
-import { type ExpendituresVoucher } from "../api/schema";
-import { DataTableColumnHeader } from "@/components/data-table";
-import { format } from "date-fns";
+import { format } from 'date-fns'
+import { type ColumnDef } from '@tanstack/react-table'
+import { DataTableColumnHeader } from '@/components/data-table'
+import { type ExpendituresVoucher } from '../api/schema'
 
 export const columns: ColumnDef<ExpendituresVoucher>[] = [
   {
-    accessorKey: "costItemFor",
+    accessorKey: 'costItemFor',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Cost Item" />
+      <DataTableColumnHeader column={column} title='Cost Item' />
     ),
   },
   {
-    accessorKey: "costCategoryName",
+    accessorKey: 'costCategoryName',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Category" />
+      <DataTableColumnHeader column={column} title='Category' />
     ),
   },
   {
-    accessorKey: "voucherNumber",
+    accessorKey: 'voucherNumber',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Voucher Number" />
+      <DataTableColumnHeader column={column} title='Voucher Number' />
     ),
   },
   {
-    accessorKey: "voucherDate",
+    accessorKey: 'voucherDate',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Voucher Date" />
+      <DataTableColumnHeader column={column} title='Voucher Date' />
     ),
     cell: ({ row }) => {
-      const date = row.getValue("voucherDate") as string;
-      return date ? format(new Date(date), "MMM dd, yyyy") : "-";
+      const date = row.getValue('voucherDate') as string
+      return date ? format(new Date(date), 'MMM dd, yyyy') : '-'
     },
   },
   {
-    accessorKey: "projectName",
+    accessorKey: 'projectName',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Project" />
+      <DataTableColumnHeader column={column} title='Project' />
     ),
   },
   {
-    accessorKey: "payeeName",
+    accessorKey: 'payeeName',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Payee" />
+      <DataTableColumnHeader column={column} title='Payee' />
     ),
   },
   {
-    accessorKey: "incurredDate",
+    accessorKey: 'incurredDate',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Incurred Date" />
+      <DataTableColumnHeader column={column} title='Incurred Date' />
     ),
     cell: ({ row }) => {
-      const date = row.getValue("incurredDate") as string | undefined;
-      return date ? format(new Date(date), "MMM dd, yyyy") : "-";
+      const date = row.getValue('incurredDate') as string | undefined
+      return date ? format(new Date(date), 'MMM dd, yyyy') : '-'
     },
   },
-];
+]

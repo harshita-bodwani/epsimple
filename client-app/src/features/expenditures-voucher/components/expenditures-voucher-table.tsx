@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import {
   type ColumnDef,
   flexRender,
@@ -8,13 +8,21 @@ import {
   type SortingState,
   useReactTable,
   type VisibilityState,
-} from '@tanstack/react-table';
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
-import { type ExpendituresVoucher } from '../api/schema';
-import { expendituresVoucherApi } from '../api/expenditures-voucher-api';
-import { useExpendituresVoucherContext } from '../context/expenditures-voucher-provider';
-import { DataTableRowActions } from './data-table-row-actions';
-import { Button } from '@/components/ui/button';
+} from '@tanstack/react-table'
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+} from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import {
   Table,
   TableBody,
@@ -22,27 +30,26 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+} from '@/components/ui/table'
+import { expendituresVoucherApi } from '../api/expenditures-voucher-api'
+import { type ExpendituresVoucher } from '../api/schema'
+import { useExpendituresVoucherContext } from '../context/expenditures-voucher-provider'
+import { DataTableRowActions } from './data-table-row-actions'
 
 interface ExpendituresVoucherTableProps {
-  columns: ColumnDef<ExpendituresVoucher>[];
+  columns: ColumnDef<ExpendituresVoucher>[]
 }
 
-export function ExpendituresVoucherTable({ columns }: ExpendituresVoucherTableProps) {
-  const { globalFilter } = useExpendituresVoucherContext();
-  const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(10);
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+export function ExpendituresVoucherTable({
+  columns,
+}: ExpendituresVoucherTableProps) {
+  const { globalFilter } = useExpendituresVoucherContext()
+  const [page, setPage] = useState(0)
+  const [pageSize, setPageSize] = useState(10)
+  const [sorting, setSorting] = useState<SortingState>([])
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
 
-  const hasSearch = globalFilter && globalFilter.trim().length > 0;
+  const hasSearch = globalFilter && globalFilter.trim().length > 0
 
   // Query for all data
   const { data: allData, isLoading: isAllLoading } = useQuery({
@@ -55,11 +62,18 @@ export function ExpendituresVoucherTable({ columns }: ExpendituresVoucherTablePr
         sorting[0]?.desc ? 'DESC' : 'ASC'
       ),
     enabled: !hasSearch,
-  });
+  })
 
   // Query for search data
   const { data: searchData, isLoading: isSearchLoading } = useQuery({
-    queryKey: ['expenditures-vouchers', 'search', globalFilter, page, pageSize, sorting],
+    queryKey: [
+      'expenditures-vouchers',
+      'search',
+      globalFilter,
+      page,
+      pageSize,
+      sorting,
+    ],
     queryFn: () =>
       expendituresVoucherApi.search(
         globalFilter,
@@ -69,10 +83,10 @@ export function ExpendituresVoucherTable({ columns }: ExpendituresVoucherTablePr
         sorting[0]?.desc ? 'DESC' : 'ASC'
       ),
     enabled: !!hasSearch,
-  });
+  })
 
-  const data = hasSearch ? searchData : allData;
-  const isLoading = hasSearch ? isSearchLoading : isAllLoading;
+  const data = hasSearch ? searchData : allData
+  const isLoading = hasSearch ? isSearchLoading : isAllLoading
 
   const columnsWithActions: ColumnDef<ExpendituresVoucher>[] = [
     ...columns,
@@ -81,7 +95,7 @@ export function ExpendituresVoucherTable({ columns }: ExpendituresVoucherTablePr
       header: 'Actions',
       cell: ({ row }) => <DataTableRowActions row={row} />,
     },
-  ];
+  ]
 
   const table = useReactTable({
     data: data?.data?.content || [],
@@ -97,11 +111,11 @@ export function ExpendituresVoucherTable({ columns }: ExpendituresVoucherTablePr
     manualPagination: true,
     manualSorting: true,
     pageCount: data?.data?.page?.totalPages || 0,
-  });
+  })
 
   return (
-    <div className="space-y-4">
-      <div className="rounded-md border">
+    <div className='space-y-4'>
+      <div className='rounded-md border'>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -124,7 +138,7 @@ export function ExpendituresVoucherTable({ columns }: ExpendituresVoucherTablePr
               <TableRow>
                 <TableCell
                   colSpan={columnsWithActions.length}
-                  className="h-24 text-center"
+                  className='h-24 text-center'
                 >
                   Loading...
                 </TableCell>
@@ -149,7 +163,7 @@ export function ExpendituresVoucherTable({ columns }: ExpendituresVoucherTablePr
               <TableRow>
                 <TableCell
                   colSpan={columnsWithActions.length}
-                  className="h-24 text-center"
+                  className='h-24 text-center'
                 >
                   No results.
                 </TableCell>
@@ -159,20 +173,20 @@ export function ExpendituresVoucherTable({ columns }: ExpendituresVoucherTablePr
         </Table>
       </div>
 
-      <div className="flex items-center justify-between px-2">
-        <div className="flex items-center space-x-2">
-          <p className="text-sm font-medium">Rows per page</p>
+      <div className='flex items-center justify-between px-2'>
+        <div className='flex items-center space-x-2'>
+          <p className='text-sm font-medium'>Rows per page</p>
           <Select
             value={`${pageSize}`}
             onValueChange={(value) => {
-              setPageSize(Number(value));
-              setPage(0);
+              setPageSize(Number(value))
+              setPage(0)
             }}
           >
-            <SelectTrigger className="h-8 w-[70px]">
+            <SelectTrigger className='h-8 w-[70px]'>
               <SelectValue placeholder={pageSize} />
             </SelectTrigger>
-            <SelectContent side="top">
+            <SelectContent side='top'>
               {[10, 20, 30, 40, 50].map((size) => (
                 <SelectItem key={size} value={`${size}`}>
                   {size}
@@ -182,46 +196,54 @@ export function ExpendituresVoucherTable({ columns }: ExpendituresVoucherTablePr
           </Select>
         </div>
 
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground">
+        <div className='flex items-center gap-2'>
+          <span className='text-muted-foreground text-sm'>
             Page {page + 1} of {data?.data?.page?.totalPages || 1}
           </span>
-          <div className="flex gap-1">
+          <div className='flex gap-1'>
             <Button
-              variant="outline"
-              size="icon"
+              variant='outline'
+              size='icon'
               onClick={() => setPage(0)}
               disabled={page === 0 || isLoading}
             >
-              <ChevronsLeft className="h-4 w-4" />
+              <ChevronsLeft className='h-4 w-4' />
             </Button>
             <Button
-              variant="outline"
-              size="icon"
+              variant='outline'
+              size='icon'
               onClick={() => setPage((p) => Math.max(0, p - 1))}
               disabled={page === 0 || isLoading}
             >
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className='h-4 w-4' />
             </Button>
             <Button
-              variant="outline"
-              size="icon"
+              variant='outline'
+              size='icon'
               onClick={() => setPage((p) => p + 1)}
-              disabled={!data || page >= (data.data?.page?.totalPages || 1) - 1 || isLoading}
+              disabled={
+                !data ||
+                page >= (data.data?.page?.totalPages || 1) - 1 ||
+                isLoading
+              }
             >
-              <ChevronRight className="h-4 w-4" />
+              <ChevronRight className='h-4 w-4' />
             </Button>
             <Button
-              variant="outline"
-              size="icon"
+              variant='outline'
+              size='icon'
               onClick={() => setPage((data?.data?.page?.totalPages || 1) - 1)}
-              disabled={!data || page >= (data.data?.page?.totalPages || 1) - 1 || isLoading}
+              disabled={
+                !data ||
+                page >= (data.data?.page?.totalPages || 1) - 1 ||
+                isLoading
+              }
             >
-              <ChevronsRight className="h-4 w-4" />
+              <ChevronsRight className='h-4 w-4' />
             </Button>
           </div>
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -7,9 +7,9 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { useSiteCategoryContext } from "../context/site-category-provider";
-import { siteCategoryApi } from "../api/site-category-api";
+} from '@/components/ui/alert-dialog'
+import { siteCategoryApi } from '../api/site-category-api'
+import { useSiteCategoryContext } from '../context/site-category-provider'
 
 export function SiteCategoryDeleteDialog() {
   const {
@@ -17,20 +17,20 @@ export function SiteCategoryDeleteDialog() {
     setIsDeleteDialogOpen,
     editingCategory,
     setEditingCategory,
-  } = useSiteCategoryContext();
+  } = useSiteCategoryContext()
 
-  const deleteMutation = siteCategoryApi.useDelete();
+  const deleteMutation = siteCategoryApi.useDelete()
 
   const handleDelete = () => {
     if (editingCategory) {
       deleteMutation.mutate(editingCategory.id, {
         onSuccess: () => {
-          setIsDeleteDialogOpen(false);
-          setEditingCategory(null);
+          setIsDeleteDialogOpen(false)
+          setEditingCategory(null)
         },
-      });
+      })
     }
-  };
+  }
 
   return (
     <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
@@ -50,10 +50,10 @@ export function SiteCategoryDeleteDialog() {
             onClick={handleDelete}
             disabled={deleteMutation.isPending}
           >
-            {deleteMutation.isPending ? "Deleting..." : "Delete"}
+            {deleteMutation.isPending ? 'Deleting...' : 'Delete'}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  );
+  )
 }

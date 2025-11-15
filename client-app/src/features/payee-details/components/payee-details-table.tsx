@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react'
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -11,8 +11,7 @@ import {
   getFilteredRowModel,
   getSortedRowModel,
   useReactTable,
-} from '@tanstack/react-table';
-
+} from '@tanstack/react-table'
 import {
   Table,
   TableBody,
@@ -20,43 +19,43 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-
-import { DataTablePagination, DataTableToolbar } from '@/components/data-table';
-import { useGetAllPayeeDetails } from '../api/payee-details-api';
+} from '@/components/ui/table'
+import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
+import { useGetAllPayeeDetails } from '../api/payee-details-api'
 
 interface PayeeDetailsTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
+  columns: ColumnDef<TData, TValue>[]
 }
 
 export function PayeeDetailsTable<TData, TValue>({
   columns,
 }: PayeeDetailsTableProps<TData, TValue>) {
-  const [globalFilter, setGlobalFilter] = useState('');
-  const [rowSelection, setRowSelection] = useState({});
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const [globalFilter, setGlobalFilter] = useState('')
+  const [rowSelection, setRowSelection] = useState({})
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [sorting, setSorting] = useState<SortingState>([])
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,
-  });
+  })
 
   const { data, isLoading } = useGetAllPayeeDetails({
     page: pagination.pageIndex,
     size: pagination.pageSize,
     sortBy: sorting.length > 0 ? sorting[0].id : 'payeeName',
     sortDirection: sorting.length > 0 && sorting[0].desc ? 'DESC' : 'ASC',
-    search: globalFilter && globalFilter.trim() !== "" ? globalFilter : undefined,
-  });
+    search:
+      globalFilter && globalFilter.trim() !== '' ? globalFilter : undefined,
+  })
 
-  const payeeDetailsList = (data?.content || []) as TData[];
-  const totalPages = data?.totalPages || 0;
+  const payeeDetailsList = (data?.content || []) as TData[]
+  const totalPages = data?.totalPages || 0
 
   // Reset to first page when search query changes
   useEffect(() => {
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
-  }, [globalFilter]);
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }))
+  }, [globalFilter])
 
   const table = useReactTable({
     data: payeeDetailsList,
@@ -84,12 +83,12 @@ export function PayeeDetailsTable<TData, TValue>({
     getFacetedUniqueValues: getFacetedUniqueValues(),
     manualPagination: true,
     manualSorting: true,
-  });
+  })
 
   return (
-    <div className="space-y-4">
+    <div className='space-y-4'>
       <DataTableToolbar table={table} />
-      <div className="rounded-md border">
+      <div className='rounded-md border'>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -104,7 +103,7 @@ export function PayeeDetailsTable<TData, TValue>({
                             header.getContext()
                           )}
                     </TableHead>
-                  );
+                  )
                 })}
               </TableRow>
             ))}
@@ -114,7 +113,7 @@ export function PayeeDetailsTable<TData, TValue>({
               <TableRow>
                 <TableCell
                   colSpan={columns.length + 1}
-                  className="h-24 text-center"
+                  className='h-24 text-center'
                 >
                   Loading...
                 </TableCell>
@@ -139,7 +138,7 @@ export function PayeeDetailsTable<TData, TValue>({
               <TableRow>
                 <TableCell
                   colSpan={columns.length + 1}
-                  className="h-24 text-center"
+                  className='h-24 text-center'
                 >
                   No results.
                 </TableCell>
@@ -150,5 +149,5 @@ export function PayeeDetailsTable<TData, TValue>({
       </div>
       <DataTablePagination table={table} />
     </div>
-  );
+  )
 }

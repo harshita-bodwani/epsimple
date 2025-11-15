@@ -16,7 +16,8 @@ interface DataTableRowActionsProps {
 }
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
-  const { setSelectedState, openDrawer, openDeleteDialog, setIsEditMode } = useStates()
+  const { setSelectedState, openDrawer, openDeleteDialog, setIsEditMode } =
+    useStates()
 
   const handleEdit = () => {
     setSelectedState(row.original)
@@ -33,17 +34,17 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          variant="ghost"
-          className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
+          variant='ghost'
+          className='data-[state=open]:bg-muted flex h-8 w-8 p-0'
         >
-          <DotsHorizontalIcon className="h-4 w-4" />
-          <span className="sr-only">Open menu</span>
+          <DotsHorizontalIcon className='h-4 w-4' />
+          <span className='sr-only'>Open menu</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[160px]">
+      <DropdownMenuContent align='end' className='w-[160px]'>
         <DropdownMenuItem onClick={handleEdit}>Edit</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleDelete} className="text-destructive">
+        <DropdownMenuItem onClick={handleDelete} className='text-destructive'>
           Delete
         </DropdownMenuItem>
       </DropdownMenuContent>

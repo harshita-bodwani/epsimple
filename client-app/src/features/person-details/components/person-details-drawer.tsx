@@ -1,8 +1,31 @@
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Check, ChevronsUpDown, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Check, ChevronsUpDown, Loader2 } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 import {
   Sheet,
   SheetClose,
@@ -11,35 +34,18 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle,
-} from "@/components/ui/sheet";
+} from '@/components/ui/sheet'
+import { Textarea } from '@/components/ui/textarea'
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+  personTypesApi,
+  type PersonType,
+} from '@/features/person-types/api/person-types-api'
+import { personDetailsApi } from '../api/person-details-api'
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import { cn } from "@/lib/utils";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { usePersonDetailsContext } from "../context/person-details-provider";
-import { personDetailsApi } from "../api/person-details-api";
-import { personDetailsFormSchema, type PersonDetailsFormData } from "../api/schema";
-import { personTypesApi, type PersonType } from "@/features/person-types/api/person-types-api";
+  personDetailsFormSchema,
+  type PersonDetailsFormData,
+} from '../api/schema'
+import { usePersonDetailsContext } from '../context/person-details-provider'
 
 export function PersonDetailsDrawer() {
   const {
@@ -47,64 +53,69 @@ export function PersonDetailsDrawer() {
     setIsDrawerOpen,
     editingPersonDetails,
     setEditingPersonDetails,
-  } = usePersonDetailsContext();
+  } = usePersonDetailsContext()
 
-  const [personTypeSearch, setPersonTypeSearch] = useState("");
-  const [personTypeOpen, setPersonTypeOpen] = useState(false);
+  const [personTypeSearch, setPersonTypeSearch] = useState('')
+  const [personTypeOpen, setPersonTypeOpen] = useState(false)
 
   const form = useForm<PersonDetailsFormData>({
     resolver: zodResolver(personDetailsFormSchema),
     defaultValues: {
       personTypeId: 0,
-      firstName: "",
-      middleName: "",
-      lastName: "",
-      contactNumber: "",
-      permanentAddress: "",
-      correspondenceAddress: "",
+      firstName: '',
+      middleName: '',
+      lastName: '',
+      contactNumber: '',
+      permanentAddress: '',
+      correspondenceAddress: '',
     },
-  });
+  })
 
-  const { data: personTypes = [], isLoading: isLoadingPersonTypes } = 
-    personTypesApi.useSearch(personTypeSearch);
-  const { data: allPersonTypes = [] } = personTypesApi.useSearch('');
+  const { data: personTypes = [], isLoading: isLoadingPersonTypes } =
+    personTypesApi.useSearch(personTypeSearch)
+  const { data: allPersonTypes = [] } = personTypesApi.useSearch('')
 
-  const createMutation = personDetailsApi.useCreate();
-  const updateMutation = personDetailsApi.useUpdate();
+  const createMutation = personDetailsApi.useCreate()
+  const updateMutation = personDetailsApi.useUpdate()
 
   // Display logic for person types dropdown
   const displayPersonTypes = (() => {
-    if (!editingPersonDetails?.personTypeId) return personTypes;
-    const selectedType = allPersonTypes.find((t: PersonType) => t.id === editingPersonDetails.personTypeId);
-    if (!selectedType || personTypes.some((t: PersonType) => t.id === selectedType.id)) {
-      return personTypes;
+    if (!editingPersonDetails?.personTypeId) return personTypes
+    const selectedType = allPersonTypes.find(
+      (t: PersonType) => t.id === editingPersonDetails.personTypeId
+    )
+    if (
+      !selectedType ||
+      personTypes.some((t: PersonType) => t.id === selectedType.id)
+    ) {
+      return personTypes
     }
-    return [selectedType, ...personTypes];
-  })();
+    return [selectedType, ...personTypes]
+  })()
 
   useEffect(() => {
     if (editingPersonDetails) {
       form.reset({
         personTypeId: editingPersonDetails.personTypeId,
-        firstName: editingPersonDetails.firstName || "",
-        middleName: editingPersonDetails.middleName || "",
-        lastName: editingPersonDetails.lastName || "",
-        contactNumber: editingPersonDetails.contactNumber || "",
-        permanentAddress: editingPersonDetails.permanentAddress || "",
-        correspondenceAddress: editingPersonDetails.correspondenceAddress || "",
-      });
+        firstName: editingPersonDetails.firstName || '',
+        middleName: editingPersonDetails.middleName || '',
+        lastName: editingPersonDetails.lastName || '',
+        contactNumber: editingPersonDetails.contactNumber || '',
+        permanentAddress: editingPersonDetails.permanentAddress || '',
+        correspondenceAddress: editingPersonDetails.correspondenceAddress || '',
+      })
     } else {
       form.reset({
         personTypeId: 0,
-        firstName: "",
-        middleName: "",
-        lastName: "",
-        contactNumber: "",
-        permanentAddress: "",
-        correspondenceAddress: "",
-      });
+        firstName: '',
+        middleName: '',
+        lastName: '',
+        contactNumber: '',
+        permanentAddress: '',
+        correspondenceAddress: '',
+      })
     }
-  }, [editingPersonDetails, form]);
+  }, [editingPersonDetails, form])
 
   const onSubmit = (data: PersonDetailsFormData) => {
     if (editingPersonDetails) {
@@ -112,85 +123,90 @@ export function PersonDetailsDrawer() {
         { id: editingPersonDetails.id, data },
         {
           onSuccess: () => {
-            setIsDrawerOpen(false);
-            setEditingPersonDetails(null);
-            form.reset();
+            setIsDrawerOpen(false)
+            setEditingPersonDetails(null)
+            form.reset()
           },
         }
-      );
+      )
     } else {
       createMutation.mutate(data, {
         onSuccess: () => {
-          setIsDrawerOpen(false);
-          form.reset();
+          setIsDrawerOpen(false)
+          form.reset()
         },
-      });
+      })
     }
-  };
+  }
 
   const handleClose = () => {
-    setIsDrawerOpen(false);
-    setEditingPersonDetails(null);
-    form.reset();
-  };
+    setIsDrawerOpen(false)
+    setEditingPersonDetails(null)
+    form.reset()
+  }
 
-  const isLoading = createMutation.isPending || updateMutation.isPending;
+  const isLoading = createMutation.isPending || updateMutation.isPending
 
   return (
     <Sheet open={isDrawerOpen} onOpenChange={handleClose}>
-      <SheetContent className="flex flex-col sm:max-w-[600px]">
-        <SheetHeader className="text-start">
+      <SheetContent className='flex flex-col sm:max-w-[600px]'>
+        <SheetHeader className='text-start'>
           <SheetTitle>
-            {editingPersonDetails ? "Update" : "Create"} Person Details
+            {editingPersonDetails ? 'Update' : 'Create'} Person Details
           </SheetTitle>
           <SheetDescription>
             {editingPersonDetails
-              ? "Update the person details by providing necessary info."
-              : "Add a new person by providing necessary info."}
+              ? 'Update the person details by providing necessary info.'
+              : 'Add a new person by providing necessary info.'}
             Click save when you&apos;re done.
           </SheetDescription>
         </SheetHeader>
         <Form {...form}>
           <form
-            id="person-details-form"
+            id='person-details-form'
             onSubmit={form.handleSubmit(onSubmit)}
-            className="flex-1 space-y-6 overflow-y-auto px-4"
+            className='flex-1 space-y-6 overflow-y-auto px-4'
           >
             <FormField
               control={form.control}
-              name="personTypeId"
+              name='personTypeId'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Person Type *</FormLabel>
-                  <Popover open={personTypeOpen} onOpenChange={setPersonTypeOpen}>
+                  <Popover
+                    open={personTypeOpen}
+                    onOpenChange={setPersonTypeOpen}
+                  >
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
-                          variant="outline"
-                          role="combobox"
+                          variant='outline'
+                          role='combobox'
                           className={cn(
-                            "w-full justify-between",
-                            !field.value && "text-muted-foreground"
+                            'w-full justify-between',
+                            !field.value && 'text-muted-foreground'
                           )}
                         >
                           {field.value
-                            ? displayPersonTypes.find((type: PersonType) => type.id === field.value)?.typeName
-                            : "Select a person type"}
-                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            ? displayPersonTypes.find(
+                                (type: PersonType) => type.id === field.value
+                              )?.typeName
+                            : 'Select a person type'}
+                          <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
-                    <PopoverContent className="w-full p-0" align="start">
+                    <PopoverContent className='w-full p-0' align='start'>
                       <Command shouldFilter={false}>
                         <CommandInput
-                          placeholder="Search person types..."
+                          placeholder='Search person types...'
                           value={personTypeSearch}
                           onValueChange={setPersonTypeSearch}
                         />
                         <CommandList>
                           {isLoadingPersonTypes ? (
-                            <div className="flex items-center justify-center py-6">
-                              <Loader2 className="h-4 w-4 animate-spin" />
+                            <div className='flex items-center justify-center py-6'>
+                              <Loader2 className='h-4 w-4 animate-spin' />
                             </div>
                           ) : displayPersonTypes.length === 0 ? (
                             <CommandEmpty>No person types found.</CommandEmpty>
@@ -201,15 +217,17 @@ export function PersonDetailsDrawer() {
                                   key={type.id}
                                   value={String(type.id)}
                                   onSelect={() => {
-                                    field.onChange(type.id);
-                                    setPersonTypeOpen(false);
-                                    setPersonTypeSearch("");
+                                    field.onChange(type.id)
+                                    setPersonTypeOpen(false)
+                                    setPersonTypeSearch('')
                                   }}
                                 >
                                   <Check
                                     className={cn(
-                                      "mr-2 h-4 w-4",
-                                      type.id === field.value ? "opacity-100" : "opacity-0"
+                                      'mr-2 h-4 w-4',
+                                      type.id === field.value
+                                        ? 'opacity-100'
+                                        : 'opacity-0'
                                     )}
                                   />
                                   {type.typeName}
@@ -226,15 +244,15 @@ export function PersonDetailsDrawer() {
               )}
             />
 
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+            <div className='grid grid-cols-1 gap-6 sm:grid-cols-3'>
               <FormField
                 control={form.control}
-                name="firstName"
+                name='firstName'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>First Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., John" {...field} />
+                      <Input placeholder='e.g., John' {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -242,12 +260,12 @@ export function PersonDetailsDrawer() {
               />
               <FormField
                 control={form.control}
-                name="middleName"
+                name='middleName'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Middle Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., Robert" {...field} />
+                      <Input placeholder='e.g., Robert' {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -255,12 +273,12 @@ export function PersonDetailsDrawer() {
               />
               <FormField
                 control={form.control}
-                name="lastName"
+                name='lastName'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Last Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., Doe" {...field} />
+                      <Input placeholder='e.g., Doe' {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -270,13 +288,13 @@ export function PersonDetailsDrawer() {
 
             <FormField
               control={form.control}
-              name="contactNumber"
+              name='contactNumber'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Contact Number</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="10-digit number"
+                      placeholder='10-digit number'
                       maxLength={10}
                       {...field}
                     />
@@ -288,14 +306,14 @@ export function PersonDetailsDrawer() {
 
             <FormField
               control={form.control}
-              name="permanentAddress"
+              name='permanentAddress'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Permanent Address</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Enter permanent address"
-                      className="min-h-[80px]"
+                      placeholder='Enter permanent address'
+                      className='min-h-[80px]'
                       {...field}
                     />
                   </FormControl>
@@ -306,14 +324,14 @@ export function PersonDetailsDrawer() {
 
             <FormField
               control={form.control}
-              name="correspondenceAddress"
+              name='correspondenceAddress'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Correspondence Address</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Enter correspondence address"
-                      className="min-h-[80px]"
+                      placeholder='Enter correspondence address'
+                      className='min-h-[80px]'
                       {...field}
                     />
                   </FormControl>
@@ -323,34 +341,26 @@ export function PersonDetailsDrawer() {
             />
           </form>
         </Form>
-        <SheetFooter className="mt-4 gap-2 px-4 sm:space-x-0">
+        <SheetFooter className='mt-4 gap-2 px-4 sm:space-x-0'>
           <SheetClose asChild>
-            <Button
-              type="button"
-              variant="outline"
-              disabled={isLoading}
-            >
+            <Button type='button' variant='outline' disabled={isLoading}>
               Cancel
             </Button>
           </SheetClose>
-          <Button
-            type="submit"
-            form="person-details-form"
-            disabled={isLoading}
-          >
+          <Button type='submit' form='person-details-form' disabled={isLoading}>
             {isLoading ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Loader2 className='mr-2 h-4 w-4 animate-spin' />
                 Saving...
               </>
             ) : editingPersonDetails ? (
-              "Update"
+              'Update'
             ) : (
-              "Create"
+              'Create'
             )}
           </Button>
         </SheetFooter>
       </SheetContent>
     </Sheet>
-  );
+  )
 }

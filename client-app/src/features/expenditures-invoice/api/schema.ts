@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod'
 
 export const expendituresInvoiceSchema = z.object({
   id: z.number(),
@@ -21,23 +21,24 @@ export const expendituresInvoiceSchema = z.object({
   updatedAt: z.string(),
   createdBy: z.string().optional(),
   updatedBy: z.string().optional(),
-});
+})
 
 export const expendituresInvoiceFormSchema = z.object({
   costItemId: z.number({
-    message: "Cost item is required",
+    message: 'Cost item is required',
   }),
   invoiceId: z.number({
-    message: "Invoice is required",
+    message: 'Invoice is required',
   }),
   managedProjectId: z.number({
-    message: "Project is required",
+    message: 'Project is required',
   }),
-  incurredDate: z.string().optional().or(z.literal("")),
-  description: z.string().max(5000).optional().or(z.literal("")),
-  claimAmount: z.number().min(0, "Amount must be a positive number").optional(),
-});
+  incurredDate: z.string().optional().or(z.literal('')),
+  description: z.string().max(5000).optional().or(z.literal('')),
+  claimAmount: z.number().min(0, 'Amount must be a positive number').optional(),
+})
 
-export type ExpendituresInvoice = z.infer<typeof expendituresInvoiceSchema>;
-export type ExpendituresInvoiceFormData = z.infer<typeof expendituresInvoiceFormSchema>;
-
+export type ExpendituresInvoice = z.infer<typeof expendituresInvoiceSchema>
+export type ExpendituresInvoiceFormData = z.infer<
+  typeof expendituresInvoiceFormSchema
+>

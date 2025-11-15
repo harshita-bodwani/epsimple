@@ -37,9 +37,9 @@ export const useAuthStore = create<AuthStore>()(
 
       // Actions
       setUser: (user: AuthUser | null) => set({ user }),
-      
+
       setLoading: (isLoading: boolean) => set({ isLoading }),
-      
+
       setError: (error: string | null) => set({ error }),
 
       clearError: () => set({ error: null }),

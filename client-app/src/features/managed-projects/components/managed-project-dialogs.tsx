@@ -2,7 +2,8 @@ import { GenericBulkUploadDialog } from '@/components/bulk-upload/GenericBulkUpl
 import { useManagedProjectContext } from '../context/managed-project-provider'
 
 export function ManagedProjectDialogs() {
-  const { isBulkUploadDialogOpen, closeBulkUploadDialog } = useManagedProjectContext()
+  const { isBulkUploadDialogOpen, closeBulkUploadDialog } =
+    useManagedProjectContext()
 
   return (
     <>

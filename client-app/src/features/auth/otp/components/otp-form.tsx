@@ -43,7 +43,7 @@ export function OtpForm({ className, ...props }: OtpFormProps) {
 
   async function onSubmit(_data: z.infer<typeof formSchema>) {
     setIsLoading(true)
-    
+
     try {
       // TODO: Implement OTP verification with backend API
       toast.success('OTP verified successfully!')
@@ -61,7 +61,7 @@ export function OtpForm({ className, ...props }: OtpFormProps) {
         onSubmit={form.handleSubmit(onSubmit)}
         className={cn('grid gap-2', className)}
         {...props}
-      >        
+      >
         <FormField
           control={form.control}
           name='otp'

@@ -1,13 +1,13 @@
-import { useState, type ReactNode } from "react";
-import { VoucherContext } from "./voucher-context";
-import type { Voucher } from "../api/schema";
+import { useState, type ReactNode } from 'react'
+import type { Voucher } from '../api/schema'
+import { VoucherContext } from './voucher-context'
 
 export function VoucherProvider({ children }: { children: ReactNode }) {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [editingVoucher, setEditingVoucher] = useState<Voucher | null>(null);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [voucherToDelete, setVoucherToDelete] = useState<Voucher | null>(null);
-  const [isBulkUploadDialogOpen, setIsBulkUploadDialogOpen] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const [editingVoucher, setEditingVoucher] = useState<Voucher | null>(null)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [voucherToDelete, setVoucherToDelete] = useState<Voucher | null>(null)
+  const [isBulkUploadDialogOpen, setIsBulkUploadDialogOpen] = useState(false)
 
   return (
     <VoucherContext.Provider
@@ -26,5 +26,5 @@ export function VoucherProvider({ children }: { children: ReactNode }) {
     >
       {children}
     </VoucherContext.Provider>
-  );
+  )
 }

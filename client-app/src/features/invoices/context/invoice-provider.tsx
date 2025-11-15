@@ -1,15 +1,15 @@
-import React, { useState } from "react";
-import { InvoiceContext } from "./invoice-context";
-import type { Invoice } from "../api/schema";
+import React, { useState } from 'react'
+import type { Invoice } from '../api/schema'
+import { InvoiceContext } from './invoice-context'
 
 export const InvoiceProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [isEditMode, setIsEditMode] = useState(false);
-  const [isBulkUploadDialogOpen, setIsBulkUploadDialogOpen] = useState(false);
+  const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null)
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [isEditMode, setIsEditMode] = useState(false)
+  const [isBulkUploadDialogOpen, setIsBulkUploadDialogOpen] = useState(false)
 
   return (
     <InvoiceContext.Provider
@@ -28,5 +28,5 @@ export const InvoiceProvider: React.FC<{ children: React.ReactNode }> = ({
     >
       {children}
     </InvoiceContext.Provider>
-  );
-};
+  )
+}

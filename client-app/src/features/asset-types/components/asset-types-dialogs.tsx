@@ -1,12 +1,12 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'sonner';
-import { ConfirmDialog } from '@/components/confirm-dialog';
-import { AssetTypesMutateDrawer } from './asset-types-mutate-drawer';
-import { useAssetTypes } from '../context/asset-types-provider';
-import { assetTypesApi } from '../api/asset-types-api';
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { toast } from 'sonner'
+import { ConfirmDialog } from '@/components/confirm-dialog'
+import { assetTypesApi } from '../api/asset-types-api'
+import { useAssetTypes } from '../context/asset-types-provider'
+import { AssetTypesMutateDrawer } from './asset-types-mutate-drawer'
 
 export function AssetTypesDialogs() {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
   const {
     selectedAssetType,
     setSelectedAssetType,
@@ -14,23 +14,23 @@ export function AssetTypesDialogs() {
     setIsDrawerOpen,
     isDeleteDialogOpen,
     setIsDeleteDialogOpen,
-  } = useAssetTypes();
+  } = useAssetTypes()
 
   const deleteMutation = useMutation({
     mutationFn: assetTypesApi.delete,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['asset-types'] });
-      toast.success('Asset type deleted successfully');
-      setIsDeleteDialogOpen(false);
-      setSelectedAssetType(null);
+      queryClient.invalidateQueries({ queryKey: ['asset-types'] })
+      toast.success('Asset type deleted successfully')
+      setIsDeleteDialogOpen(false)
+      setSelectedAssetType(null)
     },
-  });
+  })
 
   const handleDelete = () => {
     if (selectedAssetType) {
-      deleteMutation.mutate(selectedAssetType.id);
+      deleteMutation.mutate(selectedAssetType.id)
     }
-  };
+  }
 
   return (
     <>
@@ -42,12 +42,12 @@ export function AssetTypesDialogs() {
       <ConfirmDialog
         open={isDeleteDialogOpen}
         onOpenChange={setIsDeleteDialogOpen}
-        title="Delete Asset Type"
+        title='Delete Asset Type'
         desc={`Are you sure you want to delete the asset type "${selectedAssetType?.typeName}"? This action cannot be undone.`}
         handleConfirm={handleDelete}
         isLoading={deleteMutation.isPending}
         destructive
       />
     </>
-  );
+  )
 }

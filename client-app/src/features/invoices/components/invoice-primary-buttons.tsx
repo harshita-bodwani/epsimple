@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from 'react'
 import {
   Download,
   Plus,
@@ -7,19 +7,19 @@ import {
   FileSpreadsheet,
   ChevronDown,
   FileUp,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
+} from 'lucide-react'
+import { toast } from 'sonner'
+import { downloadFile } from '@/lib/api-utils'
+import { useExport } from '@/hooks/useExport'
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { useInvoice } from "../hooks/use-invoice";
-import { downloadFile } from "@/lib/api-utils";
-import { useExport } from "@/hooks/useExport";
-import { toast } from "sonner";
+} from '@/components/ui/dropdown-menu'
+import { useInvoice } from '../hooks/use-invoice'
 
 export function InvoicePrimaryButtons() {
   const {
@@ -27,82 +27,82 @@ export function InvoicePrimaryButtons() {
     setIsDrawerOpen,
     setIsEditMode,
     setIsBulkUploadDialogOpen,
-  } = useInvoice();
+  } = useInvoice()
 
-  const [isDownloadingTemplate, setIsDownloadingTemplate] = useState(false);
+  const [isDownloadingTemplate, setIsDownloadingTemplate] = useState(false)
 
   const { isExporting, handleExport } = useExport({
-    entityName: "Invoice",
-    exportEndpoint: "/api/invoices/export",
-  });
+    entityName: 'Invoice',
+    exportEndpoint: '/api/invoices/export',
+  })
 
   const handleCreate = () => {
-    setSelectedInvoice(null);
-    setIsEditMode(false);
-    setIsDrawerOpen(true);
-  };
+    setSelectedInvoice(null)
+    setIsEditMode(false)
+    setIsDrawerOpen(true)
+  }
 
   const handleDownloadTemplate = async () => {
-    setIsDownloadingTemplate(true);
+    setIsDownloadingTemplate(true)
     try {
       await downloadFile(
-        "/api/invoices/bulk-upload/template",
-        "Invoice_Upload_Template.xlsx"
-      );
-      toast.success("Template downloaded successfully");
+        '/api/invoices/bulk-upload/template',
+        'Invoice_Upload_Template.xlsx'
+      )
+      toast.success('Template downloaded successfully')
     } catch (_error) {
-      toast.error("Failed to download template");
+      toast.error('Failed to download template')
     } finally {
-      setIsDownloadingTemplate(false);
+      setIsDownloadingTemplate(false)
     }
-  };
+  }
 
   const handleBulkUpload = () => {
-    setIsBulkUploadDialogOpen(true);
-  };
+    setIsBulkUploadDialogOpen(true)
+  }
 
   return (
-    <div className="flex items-center gap-2">
+    <div className='flex items-center gap-2'>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="sm" className="h-9 px-3">
-            <FileUp className="mr-2 h-4 w-4" />
+          <Button variant='outline' size='sm' className='h-9 px-3'>
+            <FileUp className='mr-2 h-4 w-4' />
             Bulk Actions
-            <ChevronDown className="ml-2 h-4 w-4" />
+            <ChevronDown className='ml-2 h-4 w-4' />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-64">
+        <DropdownMenuContent align='end' className='w-64'>
           <DropdownMenuItem
             onClick={handleDownloadTemplate}
             disabled={isDownloadingTemplate}
           >
             {isDownloadingTemplate ? (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin text-blue-600" />
+              <Loader2 className='mr-2 h-4 w-4 animate-spin text-blue-600' />
             ) : (
-              <Download className="mr-2 h-4 w-4 text-blue-600" />
+              <Download className='mr-2 h-4 w-4 text-blue-600' />
             )}
             <span>Download Template</span>
           </DropdownMenuItem>
           <DropdownMenuItem onClick={handleBulkUpload}>
-            <Upload className="mr-2 h-4 w-4 text-orange-600" />
+            <Upload className='mr-2 h-4 w-4 text-orange-600' />
             <span>Bulk Upload</span>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={handleExport} disabled={isExporting}>
             {isExporting ? (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin text-green-600" />
+              <Loader2 className='mr-2 h-4 w-4 animate-spin text-green-600' />
             ) : (
-              <FileSpreadsheet className="mr-2 h-4 w-4 text-green-600" />
+              <FileSpreadsheet className='mr-2 h-4 w-4 text-green-600' />
             )}
             <span>Export All Data</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <Button onClick={handleCreate} size="sm" className="h-9">
-        <Plus className="mr-2 h-4 w-4" />
+      <Button onClick={handleCreate} size='sm' className='h-9'>
+        <Plus className='mr-2 h-4 w-4' />
         Add Invoice
       </Button>
     </div>
-  );
+  )
 }

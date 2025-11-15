@@ -17,11 +17,8 @@ interface DataTableRowActionsProps {
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
   const personType = row.original
-  const {
-    setSelectedPersonType,
-    setIsDrawerOpen,
-    setIsDeleteDialogOpen,
-  } = usePersonTypes()
+  const { setSelectedPersonType, setIsDrawerOpen, setIsDeleteDialogOpen } =
+    usePersonTypes()
 
   const handleEdit = () => {
     setSelectedPersonType(personType)
@@ -38,7 +35,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
       <DropdownMenuTrigger asChild>
         <Button
           variant='ghost'
-          className='flex size-8 p-0 data-[state=open]:bg-muted'
+          className='data-[state=open]:bg-muted flex size-8 p-0'
         >
           <MoreHorizontal className='size-4' />
           <span className='sr-only'>Open menu</span>

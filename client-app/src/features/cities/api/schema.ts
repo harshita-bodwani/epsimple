@@ -1,21 +1,21 @@
-import { z } from "zod";
+import { z } from 'zod'
 
 export const cityFormSchema = z.object({
   cityName: z
     .string()
-    .min(1, "City name is required")
-    .max(100, "City name cannot exceed 100 characters"),
+    .min(1, 'City name is required')
+    .max(100, 'City name cannot exceed 100 characters'),
   cityCode: z
     .string()
-    .max(10, "City code cannot exceed 10 characters")
+    .max(10, 'City code cannot exceed 10 characters')
     .regex(
       /^[A-Za-z0-9_-]*$/,
-      "City code can only contain letters, numbers, hyphens and underscores"
+      'City code can only contain letters, numbers, hyphens and underscores'
     )
     .optional()
-    .or(z.literal("")),
-  stateId: z.number().min(1, "State is required"),
-});
+    .or(z.literal('')),
+  stateId: z.number().min(1, 'State is required'),
+})
 
 export const cityResponseSchema = z.object({
   id: z.number(),
@@ -28,7 +28,7 @@ export const cityResponseSchema = z.object({
   updatedAt: z.string(),
   createdBy: z.string().nullable().optional(),
   updatedBy: z.string().nullable().optional(),
-});
+})
 
-export type CityFormData = z.infer<typeof cityFormSchema>;
-export type City = z.infer<typeof cityResponseSchema>;
+export type CityFormData = z.infer<typeof cityFormSchema>
+export type City = z.infer<typeof cityResponseSchema>

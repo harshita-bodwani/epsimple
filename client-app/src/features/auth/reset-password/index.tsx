@@ -18,7 +18,8 @@ export function ResetPassword() {
             Reset your password
           </CardTitle>
           <CardDescription>
-            Enter the verification code sent to your email and your new password.{' '}
+            Enter the verification code sent to your email and your new
+            password.{' '}
             <Link
               to='/sign-in'
               className='hover:text-primary underline underline-offset-4'

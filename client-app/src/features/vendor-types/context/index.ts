@@ -1,1 +1,1 @@
-export { VendorTypesProvider } from './vendor-types-provider';
+export { VendorTypesProvider } from './vendor-types-provider'

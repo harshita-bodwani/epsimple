@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod'
 
 // VendorCategory nested object in response
 export const vendorCategoryResponseSchema = z.object({
@@ -7,7 +7,7 @@ export const vendorCategoryResponseSchema = z.object({
   description: z.string().nullable(),
   createdAt: z.string(),
   updatedAt: z.string(),
-});
+})
 
 export const vendorTypeSchema = z.object({
   id: z.number(),
@@ -16,7 +16,7 @@ export const vendorTypeSchema = z.object({
   description: z.string(),
   createdAt: z.string(),
   updatedAt: z.string(),
-});
+})
 
 export const vendorTypeFormSchema = z.object({
   typeName: z
@@ -30,7 +30,7 @@ export const vendorTypeFormSchema = z.object({
     .string()
     .max(5000, 'Description must not exceed 5000 characters')
     .optional(),
-});
+})
 
-export type VendorType = z.infer<typeof vendorTypeSchema>;
-export type VendorTypeFormData = z.infer<typeof vendorTypeFormSchema>;
+export type VendorType = z.infer<typeof vendorTypeSchema>
+export type VendorTypeFormData = z.infer<typeof vendorTypeFormSchema>

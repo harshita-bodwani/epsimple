@@ -1,56 +1,59 @@
-import api from "@/lib/api";
-import { useQuery } from '@tanstack/react-query';
-import { flattenPageResponse as flatten, type BackendPageResponse } from '@/lib/api-utils';
+import { useQuery } from '@tanstack/react-query'
+import api from '@/lib/api'
+import {
+  flattenPageResponse as flatten,
+  type BackendPageResponse,
+} from '@/lib/api-utils'
+
 export interface GenericStatusType {
-  id: number;
-  statusName: string;
-  statusCode: string | null;
-  description: string | null;
-  createdAt: string;
-  updatedAt: string;
-  createdBy: string;
-  updatedBy: string;
+  id: number
+  statusName: string
+  statusCode: string | null
+  description: string | null
+  createdAt: string
+  updatedAt: string
+  createdBy: string
+  updatedBy: string
 }
 
 export interface GenericStatusTypeFormData {
-  statusName: string;
-  statusCode?: string;
-  description?: string;
+  statusName: string
+  statusCode?: string
+  description?: string
 }
 
 export interface ApiResponse<T> {
-  data: T;
-  message: string;
-  status: number;
+  data: T
+  message: string
+  status: number
 }
 
-const BASE_URL = "/api/generic-status-types";
+const BASE_URL = '/api/generic-status-types'
 
 export const genericStatusTypeApi = {
   useSearch: (searchTerm: string) => {
     return useQuery({
       queryKey: ['generic-status-types', 'search', searchTerm],
       queryFn: async () => {
-        const endpoint = searchTerm?.trim() ? `${BASE_URL}/search` : BASE_URL;
+        const endpoint = searchTerm?.trim() ? `${BASE_URL}/search` : BASE_URL
         const params: Record<string, unknown> = {
           page: 0,
           size: 20,
           sortBy: 'statusName',
           sortDirection: 'ASC',
-        };
-        
-        if (searchTerm?.trim()) {
-          params.searchTerm = searchTerm.trim();
         }
-        
-        const response = await api.get<ApiResponse<BackendPageResponse<GenericStatusType>>>(
-          endpoint,
-          { params }
-        );
-        return flatten(response.data.data).content;
+
+        if (searchTerm?.trim()) {
+          params.searchTerm = searchTerm.trim()
+        }
+
+        const response = await api.get<
+          ApiResponse<BackendPageResponse<GenericStatusType>>
+        >(endpoint, { params })
+        return flatten(response.data.data).content
       },
       staleTime: 30000,
-    });
+    })
   },
 
   create: async (
@@ -59,51 +62,51 @@ export const genericStatusTypeApi = {
     const response = await api.post<ApiResponse<GenericStatusType>>(
       BASE_URL,
       data
-    );
-    return response.data;
+    )
+    return response.data
   },
 
   getAll: async (
     page = 0,
     size = 10,
-    sortBy = "id",
-    sortDirection: "ASC" | "DESC" = "ASC"
+    sortBy = 'id',
+    sortDirection: 'ASC' | 'DESC' = 'ASC'
   ): Promise<ApiResponse<BackendPageResponse<GenericStatusType>>> => {
     const response = await api.get<
       ApiResponse<BackendPageResponse<GenericStatusType>>
     >(BASE_URL, {
       params: { page, size, sortBy, sortDirection },
-    });
-    return response.data;
+    })
+    return response.data
   },
 
   search: async (
     searchTerm: string,
     page = 0,
     size = 10,
-    sortBy = "id",
-    sortDirection: "ASC" | "DESC" = "ASC"
+    sortBy = 'id',
+    sortDirection: 'ASC' | 'DESC' = 'ASC'
   ): Promise<ApiResponse<BackendPageResponse<GenericStatusType>>> => {
     const response = await api.get<
       ApiResponse<BackendPageResponse<GenericStatusType>>
     >(`${BASE_URL}/search`, {
       params: { searchTerm, page, size, sortBy, sortDirection },
-    });
-    return response.data;
+    })
+    return response.data
   },
 
   getList: async (): Promise<ApiResponse<GenericStatusType[]>> => {
     const response = await api.get<ApiResponse<GenericStatusType[]>>(
       `${BASE_URL}/list`
-    );
-    return response.data;
+    )
+    return response.data
   },
 
   getById: async (id: number): Promise<ApiResponse<GenericStatusType>> => {
     const response = await api.get<ApiResponse<GenericStatusType>>(
       `${BASE_URL}/${id}`
-    );
-    return response.data;
+    )
+    return response.data
   },
 
   update: async (
@@ -113,12 +116,12 @@ export const genericStatusTypeApi = {
     const response = await api.put<ApiResponse<GenericStatusType>>(
       `${BASE_URL}/${id}`,
       data
-    );
-    return response.data;
+    )
+    return response.data
   },
 
   delete: async (id: number): Promise<ApiResponse<void>> => {
-    const response = await api.delete<ApiResponse<void>>(`${BASE_URL}/${id}`);
-    return response.data;
+    const response = await api.delete<ApiResponse<void>>(`${BASE_URL}/${id}`)
+    return response.data
   },
-};
+}

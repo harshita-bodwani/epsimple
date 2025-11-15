@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react'
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -11,8 +11,7 @@ import {
   getFilteredRowModel,
   getSortedRowModel,
   useReactTable,
-} from '@tanstack/react-table';
-
+} from '@tanstack/react-table'
 import {
   Table,
   TableBody,
@@ -20,57 +19,57 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-
-import { DataTablePagination, DataTableToolbar } from '@/components/data-table';
-import { datacenterApi } from '../api/datacenter-api';
-import { useDatacenter } from '../hooks/use-datacenter';
+} from '@/components/ui/table'
+import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
+import { datacenterApi } from '../api/datacenter-api'
+import { useDatacenter } from '../hooks/use-datacenter'
 
 interface DatacenterTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
+  columns: ColumnDef<TData, TValue>[]
 }
 
 export function DatacenterTable<TData, TValue>({
   columns,
 }: DatacenterTableProps<TData, TValue>) {
-  const { globalFilter, setGlobalFilter } = useDatacenter();
-  const [rowSelection, setRowSelection] = useState({});
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const { globalFilter, setGlobalFilter } = useDatacenter()
+  const [rowSelection, setRowSelection] = useState({})
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [sorting, setSorting] = useState<SortingState>([])
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,
-  });
+  })
 
   // Use search API when globalFilter is present, otherwise use getAll
-  const hasSearch = globalFilter && globalFilter.trim() !== '';
-  
-  const { data: searchData, isLoading: isSearchLoading } = datacenterApi.useSearch({
-    searchTerm: globalFilter,
-    page: pagination.pageIndex,
-    size: pagination.pageSize,
-    sortBy: sorting.length > 0 ? sorting[0].id : 'datacenterName',
-    sortDirection: sorting.length > 0 && sorting[0].desc ? 'DESC' : 'ASC',
-  });
+  const hasSearch = globalFilter && globalFilter.trim() !== ''
+
+  const { data: searchData, isLoading: isSearchLoading } =
+    datacenterApi.useSearch({
+      searchTerm: globalFilter,
+      page: pagination.pageIndex,
+      size: pagination.pageSize,
+      sortBy: sorting.length > 0 ? sorting[0].id : 'datacenterName',
+      sortDirection: sorting.length > 0 && sorting[0].desc ? 'DESC' : 'ASC',
+    })
 
   const { data: allData, isLoading: isAllLoading } = datacenterApi.useGetAll({
     page: pagination.pageIndex,
     size: pagination.pageSize,
     sortBy: sorting.length > 0 ? sorting[0].id : 'datacenterName',
     sortDirection: sorting.length > 0 && sorting[0].desc ? 'DESC' : 'ASC',
-  });
+  })
 
-  const data = hasSearch ? searchData : allData;
-  const isLoading = hasSearch ? isSearchLoading : isAllLoading;
-  
-  const datacenters = (data?.content || []) as TData[];
-  const totalPages = data?.totalPages || 0;
+  const data = hasSearch ? searchData : allData
+  const isLoading = hasSearch ? isSearchLoading : isAllLoading
+
+  const datacenters = (data?.content || []) as TData[]
+  const totalPages = data?.totalPages || 0
 
   // Reset to first page when search query changes
   useEffect(() => {
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
-  }, [globalFilter]);
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }))
+  }, [globalFilter])
 
   const table = useReactTable({
     data: datacenters,
@@ -98,12 +97,12 @@ export function DatacenterTable<TData, TValue>({
     getFacetedUniqueValues: getFacetedUniqueValues(),
     manualPagination: true,
     manualSorting: true,
-  });
+  })
 
   return (
-    <div className="space-y-4">
+    <div className='space-y-4'>
       <DataTableToolbar table={table} />
-      <div className="rounded-md border">
+      <div className='rounded-md border'>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -118,7 +117,7 @@ export function DatacenterTable<TData, TValue>({
                             header.getContext()
                           )}
                     </TableHead>
-                  );
+                  )
                 })}
               </TableRow>
             ))}
@@ -128,7 +127,7 @@ export function DatacenterTable<TData, TValue>({
               <TableRow>
                 <TableCell
                   colSpan={columns.length + 1}
-                  className="h-24 text-center"
+                  className='h-24 text-center'
                 >
                   Loading...
                 </TableCell>
@@ -153,7 +152,7 @@ export function DatacenterTable<TData, TValue>({
               <TableRow>
                 <TableCell
                   colSpan={columns.length + 1}
-                  className="h-24 text-center"
+                  className='h-24 text-center'
                 >
                   No results.
                 </TableCell>
@@ -164,5 +163,5 @@ export function DatacenterTable<TData, TValue>({
       </div>
       <DataTablePagination table={table} />
     </div>
-  );
+  )
 }
